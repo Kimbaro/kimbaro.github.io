@@ -136,17 +136,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-08-04T23:38:41.000Z">2019-08-05</time>
+                <time class="level-item has-text-grey" datetime="2019-07-30T01:44:49.000Z">2019-07-30</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/%ED%8F%AC%ED%8A%B8-%EB%AA%A9%EB%A1%9D/">포트 목록</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%ED%8F%AC%ED%8A%B8-%EB%AA%A9%EB%A1%9D/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8-well-known-port/">잘 알려진 포트(well-known port)</a>
+                <a class="has-link-grey -link" href="/categories/SpringBoot-Netty-build-gradle/">SpringBoot-Netty / build.gradle</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/SpringBoot-Netty-build-gradle/2/">2</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    1분 읽기 (대략 154 단어)
+                    5분 읽기 (대략 767 단어)
                 </span>
                 
                 
@@ -155,58 +155,38 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/08/05/Well-Known-Port-%EC%A0%95%EB%A6%AC/">Well-Known Port 정리</a>
+                <a class="has-link-black-ter" href="/2019/07/30/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B02/">SpringBoot Netty서버 gradle 환경에서 배포하기 2</a>
             
         </h1>
         <div class="content">
-            <h2 id="0번-1023번-잘-알려진-포트-Well-Known-Port"><a href="#0번-1023번-잘-알려진-포트-Well-Known-Port" class="headerlink" title="0번 ~ 1023번 : 잘 알려진 포트(Well-Known Port)"></a>0번 ~ 1023번 : 잘 알려진 포트(Well-Known Port)</h2><p>특정한 쓰임새를 위해서 <a href="https://ko.wikipedia.org/wiki/IANA">IANA</a>에서 할당한 TCP 및 UDP 포트 번호의 일부이다.</p>
-<ul>
-<li>본인이 서버 포트포워딩 시 기본적으로 사용하는 포트목록.</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th><strong>포트</strong></th>
-<th><strong>TCP/UDP</strong></th>
-<th><strong>설명</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0</td>
-<td>UDP</td>
-<td>예약됨; 사용하지 않음</td>
-</tr>
-<tr>
-<td>20</td>
-<td>TCP</td>
-<td>FTP (파일 전송 프로토콜) - 데이터 포트</td>
-</tr>
-<tr>
-<td>21</td>
-<td>TCP</td>
-<td>FTP - 제어 포트</td>
-</tr>
-<tr>
-<td>22</td>
-<td>TCP</td>
-<td>SSH (Secure Shell) - ssh scp, sftp같은 프로토콜 및 포트 포워딩</td>
-</tr>
-<tr>
-<td>53</td>
-<td>TCP/UDP</td>
-<td>DNS (Domain Name System)</td>
-</tr>
-<tr>
-<td>80</td>
-<td>TCP/UDP</td>
-<td>HTTP (HyperText Transfer Protocol) - 웹 페이지 전송</td>
-</tr>
-<tr>
-<td>443</td>
-<td>TCP</td>
-<td>HTTPS - SSL 위의 HTTP (암호화 전송)</td>
-</tr>
-</tbody></table>
+            <blockquote>
+<h1 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h1><p>이전 포스팅은 SpringBoot를 로컬환경에서 배포해봤다. 이번엔 GCP의 Cloud Compute에 리눅스를 베이스로 SpringBoot를 배포를 위한 GCP환경을 구성한다.</p>
+</blockquote>
+<h2 id="준비"><a href="#준비" class="headerlink" title="준비"></a>준비</h2><p>GCP의 가상머신 생성절차를 진행한다.<br><strong>컴퓨팅 - ComputeEngine - VM인스턴스</strong><br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B02/0.png" alt=""></p>
+<p>이후 아래의 이미지와 같이 본인이 원하는 서버를 구성하여 만들어줘야한다.<br>여기서 본인은 아래 이미지와 같은 환경을 구성하였다.</p>
+<ol>
+<li>이름 : 본인이 생성할 VM 인스턴스의 이름이다.</li>
+<li>리전 : 가상머신을 실행할 서버의 위치이다.</li>
+<li>머신구성 : 자신이 구성할 서버의 사양. </li>
+<li>부팅디스크 : 서버를 구성할 OS.</li>
+<li>방화벽 : 서버의 접근 방식이다. 초기 생성 시 적용할 프로토콜의 Default를 구성하는 값이다.<br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B02/1.png" alt=""></li>
+</ol>
+<p>이제 해당 서버의 고정IP를 할당해준다.<br><strong>네트워킹 - VPC네트워크 - 외부 IP 주소</strong><br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B02/2.png" alt=""></p>
+<p>‘유형=임시’ 를 ‘유형=고정’ 으로 변경해준다.<br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B02/3.png" alt=""></p>
+<p>‘외부 접근허용을 위해’ 방화벽규칙을 적용한다.<br><strong>네트워킹 - VPC네트워크 - 방화벽 규칙</strong></p>
+<ol>
+<li>이름 : 본인이 생성할 방화벽 규칙의 이름이다.</li>
+<li>우선순위 : 방화벽규칙에 적용될 우선순위이다. 사용환경에 따라 기본값을 달리하여 규칙을 적용할 수 있다.</li>
+<li>대상 : 본인이 생성한 서버의 인스턴스를 대상으로 할것인지 여부를 묻는다.</li>
+<li>소스 IP 범위 : 본인이 적용할 방화벽규칙의 IP 범위이다. 외부의 타 IP접근을 차단하거나 모두공개(0.0.0.0/0)할 수 있다.</li>
+<li>프로토콜 및 포트 : 지정할 방화벽 규칙이다. 각 포트중 일부는 약속된 포트가 있으므로 개인의 포트를 적용할 땐 주의해야한다.<br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B02/4.png" alt=""><br>다음 링크는 본인이 구성하는 기본 포트유형이다. 참고바란다.<br><a href="https://kimbaro.github.io/categories/%ED%8F%AC%ED%8A%B8-%EB%AA%A9%EB%A1%9D/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8-well-known-port/">웹서버 기본 구성 포트</a><br/>
+방화벽 규칙을 적용한 후 다음의 규칙이 적용되어 있어야한다.
+8080 과 8443은 임의로 적용한 포트이며 각각 웹페이지 접근에 이용할 포트이다.
+![](/images/SpringBoot-Netty서버-gradle-환경에서-배포하기2/5.png)
+
+</li>
+</ol>
+<p>GCP의 환경설정을 마무리하였다. 다음으로 외부에서 접근하기 위한 SSH키 생성 및 등록, 리눅스의 디렉토리 접근 권한을 변경해 FTP를 통해<br>나의 VM에 파일을 전송한다.</p>
 <hr/>
 <hr/>
 <hr/>
@@ -247,9 +227,9 @@
             
             <li><a class="pagination-link has-text-black-ter" href="/page/8/">8</a></li>
             
-            <li><span class="pagination-ellipsis has-text-black-ter">&hellip;</span></li>
+            <li><a class="pagination-link has-text-black-ter" href="/page/9/">9</a></li>
             
-            <li><a class="pagination-link has-text-black-ter" href="/page/12/">12</a></li>
+            <li><a class="pagination-link has-text-black-ter" href="/page/10/">10</a></li>
             
         </ul>
     </nav>
@@ -294,7 +274,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            12
+                            10
                         </p>
                     </a>
                 </div>
@@ -306,7 +286,7 @@
                     </p>
                     <a href="/categories">
                         <p class="title has-text-weight-normal">
-                            11
+                            14
                         </p>
                     </a>
                 </div>
@@ -318,7 +298,7 @@
                     </p>
                     <a href="/tags">
                         <p class="title has-text-weight-normal">
-                            20
+                            18
                         </p>
                     </a>
                 </div>
@@ -373,7 +353,7 @@
         <h3 class="menu-label">
             태그 클라우드
         </h3>
-        <a href="/tags/Bluetooth/" style="font-size: 13.33px;">Bluetooth</a> <a href="/tags/GCP/" style="font-size: 16.67px;">GCP</a> <a href="/tags/Https/" style="font-size: 13.33px;">Https</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/SSH/" style="font-size: 13.33px;">SSH</a> <a href="/tags/SSL/" style="font-size: 13.33px;">SSL</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/deploy/" style="font-size: 16.67px;">deploy</a> <a href="/tags/gradle/" style="font-size: 13.33px;">gradle</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/test/" style="font-size: 10px;">test</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 16.67px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 13.33px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 13.33px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
+        <a href="/tags/Bluetooth/" style="font-size: 13.33px;">Bluetooth</a> <a href="/tags/GCP/" style="font-size: 16.67px;">GCP</a> <a href="/tags/Https/" style="font-size: 13.33px;">Https</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/SSH/" style="font-size: 13.33px;">SSH</a> <a href="/tags/SSL/" style="font-size: 13.33px;">SSL</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/deploy/" style="font-size: 16.67px;">deploy</a> <a href="/tags/gradle/" style="font-size: 13.33px;">gradle</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 16.67px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 13.33px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 13.33px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
     </div>
 </div>
     
@@ -456,20 +436,6 @@
                 </div>
                 
                 <div class="control">
-                    <a class="tags has-addons" href="/tags/markdown/">
-                        <span class="tag">markdown</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/test/">
-                        <span class="tag">test</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
                     <a class="tags has-addons" href="/tags/%EB%B0%B0%ED%8F%AC/">
                         <span class="tag">배포</span>
                         <span class="tag is-grey">4</span>
@@ -542,28 +508,60 @@
             </h3>
             <ul class="menu-list">
             <li>
-        <a class="level is-marginless" href="/categories/SpringBoot/">
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/">
             <span class="level-start">
-                <span class="level-item">SpringBoot</span>
+                <span class="level-item">SpringBoot-Netty / build.gradle</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">6</span>
             </span>
         </a><ul><li>
-        <a class="level is-marginless" href="/categories/SpringBoot/Deploy-Netty/">
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/1-%EA%B8%B0%EB%B3%B8%EB%B0%B0%ED%8F%AC/">
             <span class="level-start">
-                <span class="level-item">Deploy - Netty</span>
+                <span class="level-item">1 - 기본배포</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">4</span>
+                <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot/SSL/">
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/2/">
             <span class="level-start">
-                <span class="level-item">SSL</span>
+                <span class="level-item">2</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/3/">
+            <span class="level-start">
+                <span class="level-item">3</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/4/">
+            <span class="level-start">
+                <span class="level-item">4</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/5-SSL%EC%A0%81%EC%9A%A9/">
+            <span class="level-start">
+                <span class="level-item">5 - SSL적용</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/6/">
+            <span class="level-start">
+                <span class="level-item">6</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
             </span>
         </a></li></ul></li><li>
         <a class="level is-marginless" href="/categories/java8-JDK1-8/">
@@ -582,36 +580,28 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li></ul></li><li>
-        <a class="level is-marginless" href="/categories/test/">
+        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/">
             <span class="level-start">
-                <span class="level-item">test</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
-            </span>
-        </a><ul><li>
-        <a class="level is-marginless" href="/categories/test/pages/">
-            <span class="level-start">
-                <span class="level-item">pages</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
-            </span>
-        </a></li></ul></li><li>
-        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C/">
-            <span class="level-start">
-                <span class="level-item">안드로이드</span>
+                <span class="level-item">안드로이드 블루투스</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">2</span>
             </span>
         </a><ul><li>
-        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/">
+        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/BLE-%ED%86%B5%EC%8B%A0/">
             <span class="level-start">
-                <span class="level-item">블루투스</span>
+                <span class="level-item">BLE 통신</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/Classic-%ED%86%B5%EC%8B%A0/">
+            <span class="level-start">
+                <span class="level-item">Classic 통신</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
             </span>
         </a></li></ul></li><li>
         <a class="level is-marginless" href="/categories/%ED%8F%AC%ED%8A%B8-%EB%AA%A9%EB%A1%9D/">
@@ -622,9 +612,9 @@
                 <span class="level-item tag">1</span>
             </span>
         </a><ul><li>
-        <a class="level is-marginless" href="/categories/%ED%8F%AC%ED%8A%B8-%EB%AA%A9%EB%A1%9D/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8-well-known-port/">
+        <a class="level is-marginless" href="/categories/%ED%8F%AC%ED%8A%B8-%EB%AA%A9%EB%A1%9D/well-known-port/">
             <span class="level-start">
-                <span class="level-item">잘 알려진 포트(well-known port)</span>
+                <span class="level-item">well-known port</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">1</span>
@@ -642,17 +632,6 @@
             아카이브
         </h3>
         <ul class="menu-list">
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2020/01/">
-                <span class="level-start">
-                    <span class="level-item">1월 2020</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2019/09/">
@@ -691,17 +670,6 @@
             <a class="level is-marginless" href="/archives/2019/05/">
                 <span class="level-start">
                     <span class="level-item">5월 2019</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2019/04/">
-                <span class="level-start">
-                    <span class="level-item">4월 2019</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -734,28 +702,60 @@
             </h3>
             <ul class="menu-list">
             <li>
-        <a class="level is-marginless" href="/categories/SpringBoot/">
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/">
             <span class="level-start">
-                <span class="level-item">SpringBoot</span>
+                <span class="level-item">SpringBoot-Netty / build.gradle</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">6</span>
             </span>
         </a><ul><li>
-        <a class="level is-marginless" href="/categories/SpringBoot/Deploy-Netty/">
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/1-%EA%B8%B0%EB%B3%B8%EB%B0%B0%ED%8F%AC/">
             <span class="level-start">
-                <span class="level-item">Deploy - Netty</span>
+                <span class="level-item">1 - 기본배포</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">4</span>
+                <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot/SSL/">
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/2/">
             <span class="level-start">
-                <span class="level-item">SSL</span>
+                <span class="level-item">2</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/3/">
+            <span class="level-start">
+                <span class="level-item">3</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/4/">
+            <span class="level-start">
+                <span class="level-item">4</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/5-SSL%EC%A0%81%EC%9A%A9/">
+            <span class="level-start">
+                <span class="level-item">5 - SSL적용</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/6/">
+            <span class="level-start">
+                <span class="level-item">6</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
             </span>
         </a></li></ul></li><li>
         <a class="level is-marginless" href="/categories/java8-JDK1-8/">
@@ -774,36 +774,28 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li></ul></li><li>
-        <a class="level is-marginless" href="/categories/test/">
+        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/">
             <span class="level-start">
-                <span class="level-item">test</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
-            </span>
-        </a><ul><li>
-        <a class="level is-marginless" href="/categories/test/pages/">
-            <span class="level-start">
-                <span class="level-item">pages</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
-            </span>
-        </a></li></ul></li><li>
-        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C/">
-            <span class="level-start">
-                <span class="level-item">안드로이드</span>
+                <span class="level-item">안드로이드 블루투스</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">2</span>
             </span>
         </a><ul><li>
-        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/">
+        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/BLE-%ED%86%B5%EC%8B%A0/">
             <span class="level-start">
-                <span class="level-item">블루투스</span>
+                <span class="level-item">BLE 통신</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/Classic-%ED%86%B5%EC%8B%A0/">
+            <span class="level-start">
+                <span class="level-item">Classic 통신</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
             </span>
         </a></li></ul></li><li>
         <a class="level is-marginless" href="/categories/%ED%8F%AC%ED%8A%B8-%EB%AA%A9%EB%A1%9D/">
@@ -814,9 +806,9 @@
                 <span class="level-item tag">1</span>
             </span>
         </a><ul><li>
-        <a class="level is-marginless" href="/categories/%ED%8F%AC%ED%8A%B8-%EB%AA%A9%EB%A1%9D/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8-well-known-port/">
+        <a class="level is-marginless" href="/categories/%ED%8F%AC%ED%8A%B8-%EB%AA%A9%EB%A1%9D/well-known-port/">
             <span class="level-start">
-                <span class="level-item">잘 알려진 포트(well-known port)</span>
+                <span class="level-item">well-known port</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">1</span>
@@ -834,17 +826,6 @@
             아카이브
         </h3>
         <ul class="menu-list">
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2020/01/">
-                <span class="level-start">
-                    <span class="level-item">1월 2020</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2019/09/">
@@ -883,17 +864,6 @@
             <a class="level is-marginless" href="/archives/2019/05/">
                 <span class="level-start">
                     <span class="level-item">5월 2019</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2019/04/">
-                <span class="level-start">
-                    <span class="level-item">4월 2019</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>

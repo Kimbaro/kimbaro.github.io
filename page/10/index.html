@@ -132,21 +132,27 @@
     
 <div class="card">
     
+    <div class="card-image">
+        <a href="/2019/05/01/Lambda-Expression%EA%B8%B0%EC%B4%88/" class="image is-7by1">
+            <img class="thumbnail" src="/thumbnails/test/thumbnail/Lambda-Expression-%EA%B8%B0%EC%B4%88.png" alt="Lambda Expression 기초">
+        </a>
+    </div>
+    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-07-29T02:05:16.000Z">2019-07-29</time>
+                <time class="level-item has-text-grey" datetime="2019-05-01T12:23:37.000Z">2019-05-01</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/SpringBoot/">SpringBoot</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/SpringBoot/SSL/">SSL</a>
+                <a class="has-link-grey -link" href="/categories/java8-JDK1-8/">java8(JDK1.8)</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/java8-JDK1-8/Lambda-Expression-1/">Lambda Expression - 1</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    5분 읽기 (대략 757 단어)
+                    7분 읽기 (대략 1013 단어)
                 </span>
                 
                 
@@ -155,55 +161,49 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/07/29/SpringBoot-Netty-%EC%84%9C%EB%B2%84%EC%97%90-SSL-%EC%A0%81%EC%9A%A9%EA%B8%B0/">SpringBoot Netty 서버에 SSL 적용기 1</a>
+                <a class="has-link-black-ter" href="/2019/05/01/Lambda-Expression%EA%B8%B0%EC%B4%88/">Lambda Expression 기초</a>
             
         </h1>
         <div class="content">
             <blockquote>
-<h1 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h1><p>본 포스팅 내용은 Google Cloud Platform의 가상머신을 통해 SpringBoot 프레임워크가 적용된 Web Application Server이며, 자신이 소유한 도메인이 있는 것으로 가정한다.<br>이어서, 소유한 도메인을 자신의 가상컴퓨팅에 맵핑하는 과정을 정리했다.</p>
-</blockquote>
-<p>설치가 되어 있다는 가정하에 진행한다.</p>
-<blockquote>
-<h1 id="준비"><a href="#준비" class="headerlink" title="준비"></a>준비</h1><ul>
-<li>openSSL 라이브러리( sslforfree에서 제공해준 서명된 인증파일을 JavaKeyStore(jks)로 변환하기 위해 필요.)</li>
-<li>도메인 ( https:// 접근을 위해 필요하다. )</li>
+<h1 id="목차"><a href="#목차" class="headerlink" title="목차"></a>목차</h1><ul>
+<li>기존 메서드와의 문법 비교</li>
+<li>@Functional Interface</li>
+<li>java.util.function 패키지</li>
 </ul>
 </blockquote>
-</hr>
+<blockquote>
+<p>JDK1.8 이 추가되면서 자바의 문법구조가 크게 변화하였다.<br>기존 JAVA의 문법에 너무 익숙해져 있는 바람에 람다식을 구지 사용해야하나 라는 의문을 가지고 있었으나 익명함수 선언 과정에서 람다식은 코드의 구조를 매우 간결하게 만들어준다.<br>JDK1.5에 추가된 Generics을 함께 사용하여 <strong>RxJava와 Spring5.0 이후 추가된 WebFlux를 이루는 ReactiveStream</strong>은 람다와 제네릭이 매우 중요하게 다뤄지는데 비동기 논블럭킹 방식의 앱을 구성하는데 있어 꼭 알아야할 기능이다.</p>
+</blockquote>
+<hr>
+<h2 id="기존-메서드와의-문법-비교"><a href="#기존-메서드와의-문법-비교" class="headerlink" title="기존 메서드와의 문법 비교"></a>기존 메서드와의 문법 비교</h2><h1 id=""><a href="#" class="headerlink" title="+"></a>+</h1><p>Lambda Expression에서 Lambda는 익명함수를, Expression은 식 이다. 이는 선언하고자하는 메서드의 선언을 익명으로 객체에 주입한다.</p>
+<h3 id="기존의-메서드-정의"><a href="#기존의-메서드-정의" class="headerlink" title="기존의 메서드 정의"></a>기존의 메서드 정의</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">compare</span><span class="hljs-params">(<span class="hljs-keyword">int</span> num1, <span class="hljs-keyword">int</span> num2)</span> </span>&#123;<br><br>       <span class="hljs-keyword">return</span> num1 &gt; num2 ? num1 : num2;<br>   &#125;<br></code></pre></td></tr></table></figure>
 
-<h1 id="도베인적용"><a href="#도베인적용" class="headerlink" title="도베인적용"></a>도베인적용</h1><h2 id="DNS-영역-설정"><a href="#DNS-영역-설정" class="headerlink" title="DNS 영역 설정"></a>DNS 영역 설정</h2><p><a href="https://kimbaro.github.io/2019/09/02/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B04/">SpringBoot Netty서버 gradle환경에서 배포하기</a>에서 배포한<br>SpringBoot Netty서버에 자신의 도메인을 등록한다. 컴퓨팅환경은 Google Cloud Platform 을 통해 배포되었다.<br>다음 예제에서 DNS와 연결할 컴퓨팅환경은 다음과 같다.<br><img src="/images/SpringBoot-Netty-%EC%84%9C%EB%B2%84%EC%97%90-SSL-%EC%A0%81%EC%9A%A9%EA%B8%B0/1.png" alt=""></p>
-<p><strong>네트워크 서비스 - Cloud DNS - 영역만들기</strong></p>
-<ol>
-<li><p>영역이름 : 해당 DNS 영역의 이름</p>
-</li>
-<li><p>DNS이름 : 자신이 구매한 DNS의 이름<br><img src="/images/SpringBoot-Netty-%EC%84%9C%EB%B2%84%EC%97%90-SSL-%EC%A0%81%EC%9A%A9%EA%B8%B0/2.png" alt=""></p>
-</li>
-</ol>
-<p><strong>영역 세부정보</strong><br>DNS 도메인의 레코드를 설정한다. ‘레코드 모음 추가’를 선택한다.<br><img src="/images/SpringBoot-Netty-%EC%84%9C%EB%B2%84%EC%97%90-SSL-%EC%A0%81%EC%9A%A9%EA%B8%B0/3.png" alt=""></p>
-<p>기본적인 입력정보는 다음과 같다.</p>
-<ol>
-<li><p>A (Address Mapping records) : 도메인에 호스트의 IP주소(설정한외부IP)를 알려준다. 도메인과 IP주소의 맵핑작업이다.<br>도메인주소 -&gt; IP주소<br><img src="/images/SpringBoot-Netty-%EC%84%9C%EB%B2%84%EC%97%90-SSL-%EC%A0%81%EC%9A%A9%EA%B8%B0/4.png" alt=""></p>
-</li>
-<li><p>CNAME (Canonical Name) : 도메인을 따로 지정한 임의 도메인과 맵핑한다.<br>임의도메인주소 -&gt; 도메인주소<br><img src="/images/SpringBoot-Netty-%EC%84%9C%EB%B2%84%EC%97%90-SSL-%EC%A0%81%EC%9A%A9%EA%B8%B0/5.png" alt=""></p>
-</li>
-<li><p>NS (Name Server) : 해당 호스트의 공식 이름 서버이다.</p>
-</li>
-<li><p>SOA (Start of Authority) : DNS서버의 설정정보가 담겨있다.<br><img src="/images/SpringBoot-Netty-%EC%84%9C%EB%B2%84%EC%97%90-SSL-%EC%A0%81%EC%9A%A9%EA%B8%B0/6.png" alt=""></p>
-</li>
-</ol>
-<h2 id="DNS-네임서버-설정"><a href="#DNS-네임서버-설정" class="headerlink" title="DNS 네임서버 설정"></a>DNS 네임서버 설정</h2><p>구매한 자신의 도메인의 네임서버를 설정한다.<br>아래는 GoDaddy에서 구매한 도메인의 네임서버를 입력해 주는 장면이다. Google Cloud Platform의 자신의 DNS레코드에 생성된<br>NS (Name Server)의 값을 모두 넣어준다. <strong>앞에 ‘.’ 이 붙어있는데 이는 오류를 불러온다 지우자.</strong><br><img src="/images/SpringBoot-Netty-%EC%84%9C%EB%B2%84%EC%97%90-SSL-%EC%A0%81%EC%9A%A9%EA%B8%B0/7.png" alt=""></p>
-<h2 id="DNS-레코드-맵핑-확인"><a href="#DNS-레코드-맵핑-확인" class="headerlink" title="DNS 레코드 맵핑 확인"></a>DNS 레코드 맵핑 확인</h2><p>A (Address Mapping records)에 맵핑된 도메인정보와 IP주소가 올바른지 확인한다. </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">nslookup 도메인주소<br></code></pre></td></tr></table></figure>
-<p><img src="/images/SpringBoot-Netty-%EC%84%9C%EB%B2%84%EC%97%90-SSL-%EC%A0%81%EC%9A%A9%EA%B8%B0/8.png" alt=""></p>
-<h2 id="도메인-접속해보기"><a href="#도메인-접속해보기" class="headerlink" title="도메인 접속해보기"></a>도메인 접속해보기</h2><p><img src="/images/SpringBoot-Netty-%EC%84%9C%EB%B2%84%EC%97%90-SSL-%EC%A0%81%EC%9A%A9%EA%B8%B0/9.png" alt=""><br><img src="/images/SpringBoot-Netty-%EC%84%9C%EB%B2%84%EC%97%90-SSL-%EC%A0%81%EC%9A%A9%EA%B8%B0/10.png" alt=""></p>
-<h2 id="ps"><a href="#ps" class="headerlink" title="ps"></a>ps</h2><p>Goddy를 통해 도메인을 구입했다. 해당 DNS 네임서버에 내 GCP서버의 갱신하는데 있어 약 10~15분 걸린거같다. </p>
+<h3 id="람다식-메서드-정의"><a href="#람다식-메서드-정의" class="headerlink" title="람다식 메서드 정의"></a>람다식 메서드 정의</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">(num1, num2) -&gt; num1 &gt; num2 ? num1 : num2;<br></code></pre></td></tr></table></figure>
+
+<p>람다식은 앞서 말한 듯 익명함수를 뜻한다 메서드 선언을 비교하니 기존의 ‘반환타입’ 과 ‘메서드명’ 이 제거되고<br>매개변수의 타입 대신에 추론 가능한 변수명을 대입한다. </p>
+<p>아래의 경우는 자바에서 선언한 메서드를 람다식으로 표현 한 경우의 ‘예’ 이다.<br>람다식은 <a href="">Functional Interface</a> 항목에서 구현해본다. 기존 메서드 선언과 어떻게 다른지 비교만 해보자.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">printVar</span><span class="hljs-params">(String name, <span class="hljs-keyword">int</span> age)</span> </span>&#123;<br>        System.out.println(name + <span class="hljs-string">"="</span> + age);<br>    &#125;<br>    <br>    ↓↓↓↓<br>    <br>(name, age) -&gt; System.out.println(name + <span class="hljs-string">"|"</span> + age);<br></code></pre></td></tr></table></figure>
+<p>매개변수가 하나인 경우 ‘()괄호’ 생략 가능. </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"> <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">sumArr</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] arr)</span> </span>&#123;<br>        <span class="hljs-keyword">int</span> sum = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i : arr) &#123;<br>            sum += i;<br>        &#125;<br>        <span class="hljs-keyword">return</span> sum;<br>    &#125;<br>    <br>    ↓↓↓↓<br>    <br>arr -&gt; &#123;<br>            <span class="hljs-keyword">int</span> sum = <span class="hljs-number">0</span>;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i : arr) &#123;<br>                sum += i;<br>            &#125;<br>            <span class="hljs-keyword">return</span> sum;<br>        &#125;;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">roll</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> (<span class="hljs-keyword">int</span>) (Math.random() * <span class="hljs-number">6</span>);<br>    &#125;<br>    <br>    ↓↓↓↓<br>    <br>() -&gt; (<span class="hljs-keyword">int</span>) (Math.random() * <span class="hljs-number">6</span>);<br></code></pre></td></tr></table></figure>
+
+<p>기존의 메서드 구성방식과 람다식의 방식을 비교해봤다. <strong>람다의 익명함수는 지금껏 사용해온 익명객체선언과 동일하다.</strong></p>
+<h3 id="익명객체선언"><a href="#익명객체선언" class="headerlink" title="익명객체선언"></a>익명객체선언</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">new</span> LambdaTest() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">roll</span><span class="hljs-params">()</span> </span>&#123;<br>                <span class="hljs-keyword">return</span> (<span class="hljs-keyword">int</span>) (Math.random() * <span class="hljs-number">6</span>);<br>            &#125;<br>        &#125;;<br></code></pre></td></tr></table></figure>
+<h3 id="익명함수선언"><a href="#익명함수선언" class="headerlink" title="익명함수선언"></a>익명함수선언</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">() -&gt; (<span class="hljs-keyword">int</span>) (Math.random() * <span class="hljs-number">6</span>);<br></code></pre></td></tr></table></figure>
+<hr>
+<h2 id="Functional-Interface"><a href="#Functional-Interface" class="headerlink" title="@Functional Interface"></a>@Functional Interface</h2><h1 id="-1"><a href="#-1" class="headerlink" title="+"></a>+</h1><p>Functional Interface는 람다식 호출을 위해 필요하며 interface에서 구현할 람다식의 추상메서드를 선언하고 해당 interface를 구현 할 객체에 선언해주면 된다.<br>단, 익명객체를 익명함수인 람다로 대체하기 위해선 해당 메서드의 타입과 매개변수의 개수를동일하게 선언해야만 한다.<br>아래의 예는 함수형 interface, LambdaTest를 정의한 것이다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@FunctionalInterface</span><br><span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">LambdaTest</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> String <span class="hljs-title">test</span><span class="hljs-params">(String data,<span class="hljs-keyword">int</span> id)</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>여기서 눈에 띄는 것은 <strong>@FunctionalInterface 애노테이션</strong>인데 이는 컴파일 과정에서 LambdaTest를 올바르게 구현했는지 여부를 확인해 준다.</p>
+<p>해당 구현체를 선언한다면 다음과 같다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Test</span> </span>&#123;<br>       <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Test</span><span class="hljs-params">()</span> </span>&#123;<br>        &#125;<br><br>       <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Test</span><span class="hljs-params">(LambdaTest lambdaTest)</span> </span>&#123;<br>        &#125;<br><br>       <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">testMethod</span><span class="hljs-params">(LambdaTest lambdaTest)</span> </span>&#123;<br>        &#125;<br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        <br>         <span class="hljs-comment">//익명함수객체주입</span><br>                LambdaTest lambdaTest = (data, id) -&gt; &#123;<br>                    String str = data;<br>                    <span class="hljs-keyword">int</span> i = id;<br>                    ...<br>                &#125;;<br>        <br>         <span class="hljs-comment">//익명함수생성자주입</span><br>                Test test = <span class="hljs-keyword">new</span> Test((data, id) -&gt; &#123;<br>                    String str = data;<br>                    <span class="hljs-keyword">int</span> i = id;<br>                    ...<br>                &#125;);<br>        <br>         <span class="hljs-comment">//익명함수메서드주입</span><br>                Test test = <span class="hljs-keyword">new</span> Test();<br>                test.testMethod((data, id) -&gt; &#123;<br>                    String str = data;<br>                    <span class="hljs-keyword">int</span> i = id;<br>                    ...<br>                &#125;);<br>         <span class="hljs-comment">//기존의익명클래스객체주입</span><br>                LambdaTest lambdaTest = <span class="hljs-keyword">new</span> LambdaTest() &#123;<br>                    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">test</span><span class="hljs-params">(String data, <span class="hljs-keyword">int</span> id)</span> </span>&#123;<br>                        ...<br>                        <span class="hljs-keyword">return</span> <span class="hljs-string">""</span>;<br>                    &#125;<br>                &#125;;<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+<p>람다식을 통한 선언방식은 위와같이 익명함수를 통한 방법, 생성자 매개변수 선언을 통한 방법, 메서드의 매개변수 선언을 통한 방법<br>다음의 3가지 방법이 있다. 이 방식은 기존의 익명클래스 선언과 다르지 않고 동일하나 람다식을 통해 코드의 구성이 좀더 직관성을 이루며 간결해진다.</p>
+<h3 id="List객체에-Lambda를-적용한-예"><a href="#List객체에-Lambda를-적용한-예" class="headerlink" title="List객체에 Lambda를 적용한 예"></a>List객체에 Lambda를 적용한 예</h3><p>토비스프링 강의참고</p>
+<hr>
+<h2 id="java-util-function-패키지"><a href="#java-util-function-패키지" class="headerlink" title="java.util.function 패키지"></a>java.util.function 패키지</h2><h1 id="-2"><a href="#-2" class="headerlink" title="+"></a>+</h1><hr/>
 <hr/>
 <hr/>
-<hr/>
-
-
-
-
 
         </div>
         
@@ -226,7 +226,7 @@
         <div class="pagination-previous">
             <a class="is-flex-grow has-text-black-ter" href="/page/9/">이전</a>
         </div>
-        <div class="pagination-next">
+        <div class="pagination-next is-invisible is-hidden-mobile">
             <a class="is-flex-grow has-text-black-ter" href="/page/11/">다음</a>
         </div>
         <ul class="pagination-list is-hidden-mobile">
@@ -238,10 +238,6 @@
             <li><a class="pagination-link has-text-black-ter" href="/page/9/">9</a></li>
             
             <li><a class="pagination-link is-current" href="/page/10/">10</a></li>
-            
-            <li><a class="pagination-link has-text-black-ter" href="/page/11/">11</a></li>
-            
-            <li><a class="pagination-link has-text-black-ter" href="/page/12/">12</a></li>
             
         </ul>
     </nav>
@@ -286,7 +282,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            12
+                            10
                         </p>
                     </a>
                 </div>
@@ -298,7 +294,7 @@
                     </p>
                     <a href="/categories">
                         <p class="title has-text-weight-normal">
-                            11
+                            14
                         </p>
                     </a>
                 </div>
@@ -310,7 +306,7 @@
                     </p>
                     <a href="/tags">
                         <p class="title has-text-weight-normal">
-                            20
+                            18
                         </p>
                     </a>
                 </div>
@@ -365,7 +361,7 @@
         <h3 class="menu-label">
             태그 클라우드
         </h3>
-        <a href="/tags/Bluetooth/" style="font-size: 13.33px;">Bluetooth</a> <a href="/tags/GCP/" style="font-size: 16.67px;">GCP</a> <a href="/tags/Https/" style="font-size: 13.33px;">Https</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/SSH/" style="font-size: 13.33px;">SSH</a> <a href="/tags/SSL/" style="font-size: 13.33px;">SSL</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/deploy/" style="font-size: 16.67px;">deploy</a> <a href="/tags/gradle/" style="font-size: 13.33px;">gradle</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/test/" style="font-size: 10px;">test</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 16.67px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 13.33px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 13.33px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
+        <a href="/tags/Bluetooth/" style="font-size: 13.33px;">Bluetooth</a> <a href="/tags/GCP/" style="font-size: 16.67px;">GCP</a> <a href="/tags/Https/" style="font-size: 13.33px;">Https</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/SSH/" style="font-size: 13.33px;">SSH</a> <a href="/tags/SSL/" style="font-size: 13.33px;">SSL</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/deploy/" style="font-size: 16.67px;">deploy</a> <a href="/tags/gradle/" style="font-size: 13.33px;">gradle</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 16.67px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 13.33px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 13.33px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
     </div>
 </div>
     
@@ -448,20 +444,6 @@
                 </div>
                 
                 <div class="control">
-                    <a class="tags has-addons" href="/tags/markdown/">
-                        <span class="tag">markdown</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/test/">
-                        <span class="tag">test</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
                     <a class="tags has-addons" href="/tags/%EB%B0%B0%ED%8F%AC/">
                         <span class="tag">배포</span>
                         <span class="tag is-grey">4</span>
@@ -534,28 +516,60 @@
             </h3>
             <ul class="menu-list">
             <li>
-        <a class="level is-marginless" href="/categories/SpringBoot/">
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/">
             <span class="level-start">
-                <span class="level-item">SpringBoot</span>
+                <span class="level-item">SpringBoot-Netty / build.gradle</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">6</span>
             </span>
         </a><ul><li>
-        <a class="level is-marginless" href="/categories/SpringBoot/Deploy-Netty/">
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/1-%EA%B8%B0%EB%B3%B8%EB%B0%B0%ED%8F%AC/">
             <span class="level-start">
-                <span class="level-item">Deploy - Netty</span>
+                <span class="level-item">1 - 기본배포</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">4</span>
+                <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot/SSL/">
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/2/">
             <span class="level-start">
-                <span class="level-item">SSL</span>
+                <span class="level-item">2</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/3/">
+            <span class="level-start">
+                <span class="level-item">3</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/4/">
+            <span class="level-start">
+                <span class="level-item">4</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/5-SSL%EC%A0%81%EC%9A%A9/">
+            <span class="level-start">
+                <span class="level-item">5 - SSL적용</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/6/">
+            <span class="level-start">
+                <span class="level-item">6</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
             </span>
         </a></li></ul></li><li>
         <a class="level is-marginless" href="/categories/java8-JDK1-8/">
@@ -574,36 +588,28 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li></ul></li><li>
-        <a class="level is-marginless" href="/categories/test/">
+        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/">
             <span class="level-start">
-                <span class="level-item">test</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
-            </span>
-        </a><ul><li>
-        <a class="level is-marginless" href="/categories/test/pages/">
-            <span class="level-start">
-                <span class="level-item">pages</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
-            </span>
-        </a></li></ul></li><li>
-        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C/">
-            <span class="level-start">
-                <span class="level-item">안드로이드</span>
+                <span class="level-item">안드로이드 블루투스</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">2</span>
             </span>
         </a><ul><li>
-        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/">
+        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/BLE-%ED%86%B5%EC%8B%A0/">
             <span class="level-start">
-                <span class="level-item">블루투스</span>
+                <span class="level-item">BLE 통신</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/Classic-%ED%86%B5%EC%8B%A0/">
+            <span class="level-start">
+                <span class="level-item">Classic 통신</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
             </span>
         </a></li></ul></li><li>
         <a class="level is-marginless" href="/categories/%ED%8F%AC%ED%8A%B8-%EB%AA%A9%EB%A1%9D/">
@@ -614,9 +620,9 @@
                 <span class="level-item tag">1</span>
             </span>
         </a><ul><li>
-        <a class="level is-marginless" href="/categories/%ED%8F%AC%ED%8A%B8-%EB%AA%A9%EB%A1%9D/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8-well-known-port/">
+        <a class="level is-marginless" href="/categories/%ED%8F%AC%ED%8A%B8-%EB%AA%A9%EB%A1%9D/well-known-port/">
             <span class="level-start">
-                <span class="level-item">잘 알려진 포트(well-known port)</span>
+                <span class="level-item">well-known port</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">1</span>
@@ -634,17 +640,6 @@
             아카이브
         </h3>
         <ul class="menu-list">
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2020/01/">
-                <span class="level-start">
-                    <span class="level-item">1월 2020</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2019/09/">
@@ -683,17 +678,6 @@
             <a class="level is-marginless" href="/archives/2019/05/">
                 <span class="level-start">
                     <span class="level-item">5월 2019</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2019/04/">
-                <span class="level-start">
-                    <span class="level-item">4월 2019</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -726,28 +710,60 @@
             </h3>
             <ul class="menu-list">
             <li>
-        <a class="level is-marginless" href="/categories/SpringBoot/">
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/">
             <span class="level-start">
-                <span class="level-item">SpringBoot</span>
+                <span class="level-item">SpringBoot-Netty / build.gradle</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">6</span>
             </span>
         </a><ul><li>
-        <a class="level is-marginless" href="/categories/SpringBoot/Deploy-Netty/">
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/1-%EA%B8%B0%EB%B3%B8%EB%B0%B0%ED%8F%AC/">
             <span class="level-start">
-                <span class="level-item">Deploy - Netty</span>
+                <span class="level-item">1 - 기본배포</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">4</span>
+                <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot/SSL/">
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/2/">
             <span class="level-start">
-                <span class="level-item">SSL</span>
+                <span class="level-item">2</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/3/">
+            <span class="level-start">
+                <span class="level-item">3</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/4/">
+            <span class="level-start">
+                <span class="level-item">4</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/5-SSL%EC%A0%81%EC%9A%A9/">
+            <span class="level-start">
+                <span class="level-item">5 - SSL적용</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/6/">
+            <span class="level-start">
+                <span class="level-item">6</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
             </span>
         </a></li></ul></li><li>
         <a class="level is-marginless" href="/categories/java8-JDK1-8/">
@@ -766,36 +782,28 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li></ul></li><li>
-        <a class="level is-marginless" href="/categories/test/">
+        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/">
             <span class="level-start">
-                <span class="level-item">test</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
-            </span>
-        </a><ul><li>
-        <a class="level is-marginless" href="/categories/test/pages/">
-            <span class="level-start">
-                <span class="level-item">pages</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
-            </span>
-        </a></li></ul></li><li>
-        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C/">
-            <span class="level-start">
-                <span class="level-item">안드로이드</span>
+                <span class="level-item">안드로이드 블루투스</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">2</span>
             </span>
         </a><ul><li>
-        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/">
+        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/BLE-%ED%86%B5%EC%8B%A0/">
             <span class="level-start">
-                <span class="level-item">블루투스</span>
+                <span class="level-item">BLE 통신</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/Classic-%ED%86%B5%EC%8B%A0/">
+            <span class="level-start">
+                <span class="level-item">Classic 통신</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
             </span>
         </a></li></ul></li><li>
         <a class="level is-marginless" href="/categories/%ED%8F%AC%ED%8A%B8-%EB%AA%A9%EB%A1%9D/">
@@ -806,9 +814,9 @@
                 <span class="level-item tag">1</span>
             </span>
         </a><ul><li>
-        <a class="level is-marginless" href="/categories/%ED%8F%AC%ED%8A%B8-%EB%AA%A9%EB%A1%9D/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8-well-known-port/">
+        <a class="level is-marginless" href="/categories/%ED%8F%AC%ED%8A%B8-%EB%AA%A9%EB%A1%9D/well-known-port/">
             <span class="level-start">
-                <span class="level-item">잘 알려진 포트(well-known port)</span>
+                <span class="level-item">well-known port</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">1</span>
@@ -826,17 +834,6 @@
             아카이브
         </h3>
         <ul class="menu-list">
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2020/01/">
-                <span class="level-start">
-                    <span class="level-item">1월 2020</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2019/09/">
@@ -875,17 +872,6 @@
             <a class="level is-marginless" href="/archives/2019/05/">
                 <span class="level-start">
                     <span class="level-item">5월 2019</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2019/04/">
-                <span class="level-start">
-                    <span class="level-item">4월 2019</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
