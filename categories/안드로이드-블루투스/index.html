@@ -157,7 +157,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    15분 읽기 (대략 2227 단어)
+                    15분 읽기 (대략 2221 단어)
                 </span>
                 
                 
@@ -166,7 +166,7 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/09/05/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-Socket%ED%86%B5%EC%8B%A0/">안드로이드 Classic 통신</a>
+                <a class="has-link-black-ter" href="/2019/09/05/%E1%84%8B%E1%85%A1%E1%86%AB%E1%84%83%E1%85%B3%E1%84%85%E1%85%A9%E1%84%8B%E1%85%B5%E1%84%83%E1%85%B3-Socket%E1%84%90%E1%85%A9%E1%86%BC%E1%84%89%E1%85%B5%E1%86%AB/">안드로이드 Classic 통신</a>
             
         </h1>
         <div class="content">
@@ -202,7 +202,7 @@
 <h1 id="리뷰"><a href="#리뷰" class="headerlink" title="리뷰"></a>리뷰</h1><p>블루투스 기능 사용을 위한 권한은 다음과 같다.</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">manifest</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.BLUETOOTH"</span> /&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.BLUETOOTH_ADMIN"</span> /&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.ACCESS_COARSE_LOCATION"</span> /&gt;</span><br>    <br>    이하내용생략<br>    .<br>    .<br>    .<br></code></pre></td></tr></table></figure>
 
-<h2 id="패키지-구조"><a href="#패키지-구조" class="headerlink" title="패키지 구조"></a>패키지 구조</h2><p><strong>블루투스체크 -&gt; 기기연결</strong> 과정을 두 클래스로 나눠 진행하고 디바이스정보를 담고있는 Device클래스를 포함한다.<br>util.BT_check , util.BT_connect , util.Device<br><img src="/images/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-Socket%ED%86%B5%EC%8B%A0/1.png" alt=""><br></br></p>
+<h2 id="패키지-구조"><a href="#패키지-구조" class="headerlink" title="패키지 구조"></a>패키지 구조</h2><p><strong>블루투스체크 -&gt; 기기연결</strong> 과정을 두 클래스로 나눠 진행하고 디바이스정보를 담고있는 Device클래스를 포함한다.<br>util.BT_check , util.BT_connect , util.Device<br><img src="/images/Android-Classic/1.png" alt=""><br></br></p>
 <h2 id="util-BT-check"><a href="#util-BT-check" class="headerlink" title="util.BT_check"></a>util.BT_check</h2><p>인스턴스를 불러오는 방법은 간단하다. 사용자가 위치한 activity , 블루투스 수신받은 데이터를 보여주기 위한 textView,<br>상황에 따라 textView를 다른 아이템으로 바꿔 사용 할 수 있겠다.</p>
 <p>여기서 BT_check 클래스는 그 activity와 textView를 인자로 전달받아 초기화한다.</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MainActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AppCompatActivity</span> </span>&#123;<br><br>Button button = <span class="hljs-keyword">null</span>;<br>    TextView textView = <span class="hljs-keyword">null</span>;<br>    Activity activity = <span class="hljs-keyword">null</span>;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span><span class="hljs-params">(Bundle savedInstanceState)</span> </span>&#123;<br>        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);<br>        setContentView(R.layout.activity_main);<br>        activity = <span class="hljs-keyword">this</span>;<br>        button = findViewById(R.id.bt1);<br>        textView = findViewById(R.id.tv1);<br>        button.setOnClickListener(<span class="hljs-keyword">new</span> View.OnClickListener() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span><span class="hljs-params">(View v)</span> </span>&#123;<br><br>                BT_check bt_check = <span class="hljs-keyword">new</span> BT_check(activity, textView);<br>                bt_check.checkBluetooth();<br></code></pre></td></tr></table></figure>
@@ -260,7 +260,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    8분 읽기 (대략 1151 단어)
+                    8분 읽기 (대략 1139 단어)
                 </span>
                 
                 
@@ -269,14 +269,14 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/09/02/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-BLE-%ED%86%B5%EC%8B%A0/">안드로이드 BLE 통신</a>
+                <a class="has-link-black-ter" href="/2019/09/02/%E1%84%8B%E1%85%A1%E1%86%AB%E1%84%83%E1%85%B3%E1%84%85%E1%85%A9%E1%84%8B%E1%85%B5%E1%84%83%E1%85%B3-BLE-%E1%84%90%E1%85%A9%E1%86%BC%E1%84%89%E1%85%B5%E1%86%AB/">안드로이드 BLE 통신</a>
             
         </h1>
         <div class="content">
             <blockquote>
 <h1 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h1><p>구글이 깃에 올려둔 Sample project 중에서 블루투스 BLE의 코드는 API21 이상의 버전과 호완성 문제를 보인다.<br>타겟을 21로 낮추면 되겠지만 앱을 플레이스토어에 배포하기 위해선 정책이 바뀌어 API28(Android Pie)이상을 타겟으로 잡아야한다.<br>이로인한 문제는 다음과 같고 필수적으로 변경시켜야한다.</p>
 <ul>
-<li>BluetoothAdapter 클래스의 stopLeScan 과 startLeScan 을 지원하지 않는다.<br>BluetoothLeScanner 클래스를 사용한 stopScan, startScan 두 메서드를 사용해야한다.<br><img src="/images/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-BLE-%ED%86%B5%EC%8B%A0/1.png" alt=""></br></li>
+<li>BluetoothAdapter 클래스의 stopLeScan 과 startLeScan 을 지원하지 않는다.<br>BluetoothLeScanner 클래스를 사용한 stopScan, startScan 두 메서드를 사용해야한다.<br><img src="/images/Android-BLE/1.png" alt=""></br></li>
 <li>블루투스 통신에 있어서 위치권한과 GPS를 함께 사용한다.<br>갤럭시S8 기기에서 테스트 했었는데, 위치권한 뿐 아니라 GPS가 켜있어야 함을 알 수 있었다.<br><a href="https://stackoverflow.com/questions/33043582/bluetooth-low-energy-startscan-on-android-6-0-does-not-find-devices/33045489#33045489">https://stackoverflow.com/questions/33043582/bluetooth-low-energy-startscan-on-android-6-0-does-not-find-devices/33045489#33045489</a></br>
 
 </li>
@@ -310,7 +310,7 @@
 <p>결론으로 전체적인 흐름은 다음과 같다.<br>*<em>BluetoothManager =&gt; BluetoothAdapter =&gt; BluetoothLeScanner =&gt; 스캔기능 수행 *</em></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> BluetoothLeScanner mBLEScanner;<br><span class="hljs-keyword">private</span> BluetoothAdapter mBluetoothAdapter;<br><span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span><span class="hljs-params">(Bundle savedInstanceState)</span> </span>&#123;<br>        .<br>        .<br>        .<br>        위내용생략<br>        <br>        <span class="hljs-keyword">final</span> BluetoothManager bluetoothManager =<br>                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);<br>        mBluetoothAdapter = bluetoothManager.getAdapter();<br><br>        <span class="hljs-comment">// Checks if Bluetooth is supported on the device.</span><br>        <span class="hljs-keyword">if</span> (mBluetoothAdapter == <span class="hljs-keyword">null</span>) &#123;<br>            Toast.makeText(<span class="hljs-keyword">this</span>, R.string.error_bluetooth_not_supported, Toast.LENGTH_SHORT).show();<br>            finish();<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>        <span class="hljs-comment">//추가</span><br>        mBLEScanner = mBluetoothAdapter.getBluetoothLeScanner();<br>        <span class="hljs-comment">// Checks if Bluetooth LE Scanner is available.</span><br>        <span class="hljs-keyword">if</span> (mBLEScanner == <span class="hljs-keyword">null</span>) &#123;<br>            Toast.makeText(<span class="hljs-keyword">this</span>, <span class="hljs-string">"Can not find BLE Scanner"</span>, Toast.LENGTH_SHORT).show();<br>            finish();<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
 
-<h2 id="변경점-BLE통신-콜백-클래스-변경"><a href="#변경점-BLE통신-콜백-클래스-변경" class="headerlink" title="변경점, BLE통신 콜백 클래스 변경"></a>변경점, BLE통신 콜백 클래스 변경</h2><p>BluetoothAdapter의 스캔기능이 지원되지 않으면서 그에따라 BluetoothAdapter.LeScanCallback 또한 사용하지 않는다.<br>LeScanCallback은 interface로 단독적으로 오버라이딩하였으나 BluetoothLeScanner에 사용되는 콜백클래스인 ScanCallback은 Object를 상속받는 abstract 추상객체로 이뤄져있다.<br><img src="/images/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-BLE-%ED%86%B5%EC%8B%A0/2.png" alt=""></p>
+<h2 id="변경점-BLE통신-콜백-클래스-변경"><a href="#변경점-BLE통신-콜백-클래스-변경" class="headerlink" title="변경점, BLE통신 콜백 클래스 변경"></a>변경점, BLE통신 콜백 클래스 변경</h2><p>BluetoothAdapter의 스캔기능이 지원되지 않으면서 그에따라 BluetoothAdapter.LeScanCallback 또한 사용하지 않는다.<br>LeScanCallback은 interface로 단독적으로 오버라이딩하였으나 BluetoothLeScanner에 사용되는 콜백클래스인 ScanCallback은 Object를 상속받는 abstract 추상객체로 이뤄져있다.<br><img src="/images/Android-BLE/2.png" alt=""></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs java">  <span class="hljs-keyword">private</span> ScanCallback mScanCallback = <span class="hljs-keyword">new</span> ScanCallback() &#123;<br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onScanResult</span><span class="hljs-params">(<span class="hljs-keyword">int</span> callbackType, ScanResult result)</span> </span>&#123;<br>            <span class="hljs-keyword">super</span>.onScanResult(callbackType, result);<br>            processResult(result);<br>        &#125;<br><br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onBatchScanResults</span><span class="hljs-params">(List&lt;ScanResult&gt; results)</span> </span>&#123;<br>            <span class="hljs-keyword">super</span>.onBatchScanResults(results);<br>            <span class="hljs-keyword">for</span> (ScanResult result : results) &#123;<br>                processResult(result);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onScanFailed</span><span class="hljs-params">(<span class="hljs-keyword">int</span> errorCode)</span> </span>&#123;<br>            <span class="hljs-keyword">super</span>.onScanFailed(errorCode);<br>        &#125;<br><br>        <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">processResult</span><span class="hljs-params">(<span class="hljs-keyword">final</span> ScanResult result)</span> </span>&#123;<br>            runOnUiThread(<span class="hljs-keyword">new</span> Runnable() &#123;<br>                <span class="hljs-meta">@Override</span><br>                <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;<br>                    mLeDeviceListAdapter.addDevice(result.getDevice());<br>                    mLeDeviceListAdapter.notifyDataSetChanged();<br>                &#125;<br>            &#125;);<br>        &#125;<br>    &#125;;<br><br>    <span class="hljs-comment">// 사용하지 않음.</span><br><span class="hljs-comment">//    private BluetoothAdapter.LeScanCallback mLeScanCallback =</span><br><span class="hljs-comment">//            new BluetoothAdapter.LeScanCallback() &#123;</span><br><span class="hljs-comment">//</span><br><span class="hljs-comment">//                @Override</span><br><span class="hljs-comment">//                public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) &#123;</span><br><span class="hljs-comment">//                    runOnUiThread(new Runnable() &#123;</span><br><span class="hljs-comment">//                        @Override</span><br><span class="hljs-comment">//                        public void run() &#123;</span><br><span class="hljs-comment">//                            mLeDeviceListAdapter.addDevice(device);</span><br><span class="hljs-comment">//                            mLeDeviceListAdapter.notifyDataSetChanged();</span><br><span class="hljs-comment">//                        &#125;</span><br><span class="hljs-comment">//                    &#125;);</span><br><span class="hljs-comment">//                &#125;</span><br><span class="hljs-comment">//            &#125;;</span><br></code></pre></td></tr></table></figure>
 
 <h2 id="추가-GPS의-사용"><a href="#추가-GPS의-사용" class="headerlink" title="추가, GPS의 사용"></a>추가, GPS의 사용</h2><p>블루투스 기능을 사용하기 위해선 위치권한 허용 뿐만 아니라 해당 GPS가 켜있어야한다. 그렇지 않으면 기능사용이 불가하므로 이를 방지한다.</p>
@@ -375,7 +375,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            10
+                            14
                         </p>
                     </a>
                 </div>
@@ -387,7 +387,7 @@
                     </p>
                     <a href="/categories">
                         <p class="title has-text-weight-normal">
-                            14
+                            20
                         </p>
                     </a>
                 </div>
@@ -399,7 +399,7 @@
                     </p>
                     <a href="/tags">
                         <p class="title has-text-weight-normal">
-                            18
+                            26
                         </p>
                     </a>
                 </div>
@@ -454,7 +454,7 @@
         <h3 class="menu-label">
             태그 클라우드
         </h3>
-        <a href="/tags/Bluetooth/" style="font-size: 13.33px;">Bluetooth</a> <a href="/tags/GCP/" style="font-size: 16.67px;">GCP</a> <a href="/tags/Https/" style="font-size: 13.33px;">Https</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/SSH/" style="font-size: 13.33px;">SSH</a> <a href="/tags/SSL/" style="font-size: 13.33px;">SSL</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/deploy/" style="font-size: 16.67px;">deploy</a> <a href="/tags/gradle/" style="font-size: 13.33px;">gradle</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 16.67px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 13.33px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 13.33px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
+        <a href="/tags/Bluetooth/" style="font-size: 12.5px;">Bluetooth</a> <a href="/tags/Carla/" style="font-size: 10px;">Carla</a> <a href="/tags/Carla-0-9-7/" style="font-size: 10px;">Carla_0.9.7</a> <a href="/tags/Entity/" style="font-size: 10px;">Entity</a> <a href="/tags/GCP/" style="font-size: 17.5px;">GCP</a> <a href="/tags/Hibernate/" style="font-size: 12.5px;">Hibernate</a> <a href="/tags/Https/" style="font-size: 12.5px;">Https</a> <a href="/tags/JPA/" style="font-size: 15px;">JPA</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/ORM/" style="font-size: 12.5px;">ORM</a> <a href="/tags/SSH/" style="font-size: 12.5px;">SSH</a> <a href="/tags/SSL/" style="font-size: 12.5px;">SSL</a> <a href="/tags/Simulator/" style="font-size: 10px;">Simulator</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/Springboot/" style="font-size: 15px;">Springboot</a> <a href="/tags/deploy/" style="font-size: 17.5px;">deploy</a> <a href="/tags/gradle/" style="font-size: 12.5px;">gradle</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 17.5px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 12.5px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 12.5px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
     </div>
 </div>
     
@@ -474,9 +474,37 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/Carla/">
+                        <span class="tag">Carla</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Carla-0-9-7/">
+                        <span class="tag">Carla_0.9.7</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Entity/">
+                        <span class="tag">Entity</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/GCP/">
                         <span class="tag">GCP</span>
                         <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Hibernate/">
+                        <span class="tag">Hibernate</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -488,9 +516,23 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/JPA/">
+                        <span class="tag">JPA</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/Lambda/">
                         <span class="tag">Lambda</span>
                         <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/ORM/">
+                        <span class="tag">ORM</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -509,6 +551,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/Simulator/">
+                        <span class="tag">Simulator</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/Socket/">
                         <span class="tag">Socket</span>
                         <span class="tag is-grey">1</span>
@@ -519,6 +568,13 @@
                     <a class="tags has-addons" href="/tags/SpringBoot/">
                         <span class="tag">SpringBoot</span>
                         <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Springboot/">
+                        <span class="tag">Springboot</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -609,15 +665,15 @@
             </h3>
             <ul class="menu-list">
             <li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/">
             <span class="level-start">
-                <span class="level-item">SpringBoot-Netty / build.gradle</span>
+                <span class="level-item">(Tutorial) Deploy-SpringBoot-Netty</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">6</span>
             </span>
         </a><ul><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/1-%EA%B8%B0%EB%B3%B8%EB%B0%B0%ED%8F%AC/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/1-%EA%B8%B0%EB%B3%B8%EB%B0%B0%ED%8F%AC/">
             <span class="level-start">
                 <span class="level-item">1 - 기본배포</span>
             </span>
@@ -625,7 +681,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/2/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/2/">
             <span class="level-start">
                 <span class="level-item">2</span>
             </span>
@@ -633,7 +689,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/3/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/3/">
             <span class="level-start">
                 <span class="level-item">3</span>
             </span>
@@ -641,7 +697,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/4/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/4/">
             <span class="level-start">
                 <span class="level-item">4</span>
             </span>
@@ -649,7 +705,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/5-SSL%EC%A0%81%EC%9A%A9/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/5-SSL%EC%A0%81%EC%9A%A9/">
             <span class="level-start">
                 <span class="level-item">5 - SSL적용</span>
             </span>
@@ -657,9 +713,57 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/6/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/6/">
             <span class="level-start">
                 <span class="level-item">6</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/">
+            <span class="level-start">
+                <span class="level-item">SpringBoot-JPA</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/1-Hibernate/">
+            <span class="level-start">
+                <span class="level-item">1 - Hibernate</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/2-SpringData-JPA/">
+            <span class="level-start">
+                <span class="level-item">2 - SpringData-JPA</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/3-Entity/">
+            <span class="level-start">
+                <span class="level-item">3 - Entity</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/ex1/">
+            <span class="level-start">
+                <span class="level-item">ex1</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/ex1/ex1-1/">
+            <span class="level-start">
+                <span class="level-item">ex1-1</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">1</span>
@@ -735,6 +839,28 @@
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2019/09/">
                 <span class="level-start">
                     <span class="level-item">9월 2019</span>
@@ -803,15 +929,15 @@
             </h3>
             <ul class="menu-list">
             <li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/">
             <span class="level-start">
-                <span class="level-item">SpringBoot-Netty / build.gradle</span>
+                <span class="level-item">(Tutorial) Deploy-SpringBoot-Netty</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">6</span>
             </span>
         </a><ul><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/1-%EA%B8%B0%EB%B3%B8%EB%B0%B0%ED%8F%AC/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/1-%EA%B8%B0%EB%B3%B8%EB%B0%B0%ED%8F%AC/">
             <span class="level-start">
                 <span class="level-item">1 - 기본배포</span>
             </span>
@@ -819,7 +945,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/2/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/2/">
             <span class="level-start">
                 <span class="level-item">2</span>
             </span>
@@ -827,7 +953,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/3/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/3/">
             <span class="level-start">
                 <span class="level-item">3</span>
             </span>
@@ -835,7 +961,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/4/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/4/">
             <span class="level-start">
                 <span class="level-item">4</span>
             </span>
@@ -843,7 +969,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/5-SSL%EC%A0%81%EC%9A%A9/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/5-SSL%EC%A0%81%EC%9A%A9/">
             <span class="level-start">
                 <span class="level-item">5 - SSL적용</span>
             </span>
@@ -851,9 +977,57 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/6/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/6/">
             <span class="level-start">
                 <span class="level-item">6</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/">
+            <span class="level-start">
+                <span class="level-item">SpringBoot-JPA</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/1-Hibernate/">
+            <span class="level-start">
+                <span class="level-item">1 - Hibernate</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/2-SpringData-JPA/">
+            <span class="level-start">
+                <span class="level-item">2 - SpringData-JPA</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/3-Entity/">
+            <span class="level-start">
+                <span class="level-item">3 - Entity</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/ex1/">
+            <span class="level-start">
+                <span class="level-item">ex1</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/ex1/ex1-1/">
+            <span class="level-start">
+                <span class="level-item">ex1-1</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">1</span>
@@ -929,6 +1103,28 @@
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2019/09/">
                 <span class="level-start">
                     <span class="level-item">9월 2019</span>
@@ -993,7 +1189,7 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2020 DongYeon Kim&nbsp;
+                &copy; 2021 DongYeon Kim&nbsp;
                 Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
                         href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
                 
@@ -1112,7 +1308,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 
-<a id="back-to-top" title="Zurück nach oben" href="javascript:;">
+<a id="back-to-top" title="Back to Top" href="javascript:;">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>

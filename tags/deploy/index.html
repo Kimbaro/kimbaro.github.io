@@ -149,14 +149,14 @@
                 <time class="level-item has-text-grey" datetime="2019-09-01T19:43:38.000Z">2019-09-02</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/SpringBoot-Netty-build-gradle/">SpringBoot-Netty / build.gradle</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/SpringBoot-Netty-build-gradle/4/">4</a>
+                <a class="has-link-grey -link" href="/categories/Tutorial-Deploy-SpringBoot-Netty/">(Tutorial) Deploy-SpringBoot-Netty</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Tutorial-Deploy-SpringBoot-Netty/4/">4</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    3분 읽기 (대략 448 단어)
+                    3분 읽기 (대략 398 단어)
                 </span>
                 
                 
@@ -165,7 +165,7 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/09/02/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B04/">SpringBoot Netty서버 gradle환경에서 배포하기 4</a>
+                <a class="has-link-black-ter" href="/2019/09/02/SpringBoot-Netty%E1%84%89%E1%85%A5%E1%84%87%E1%85%A5-gradle%E1%84%92%E1%85%AA%E1%86%AB%E1%84%80%E1%85%A7%E1%86%BC%E1%84%8B%E1%85%A6%E1%84%89%E1%85%A5-%E1%84%87%E1%85%A2%E1%84%91%E1%85%A9%E1%84%92%E1%85%A1%E1%84%80%E1%85%B54/">SpringBoot Netty서버 gradle 환경에서 배포하기 4</a>
             
         </h1>
         <div class="content">
@@ -175,17 +175,17 @@
 <h2 id="배포"><a href="#배포" class="headerlink" title="배포"></a>배포</h2><p>스프링서버 배포를 위해선 java가 설치되어 있어야 한다.<br>해당 링크를 참고하여 설치하자 <a href="https://zetawiki.com/wiki/%EC%9A%B0%EB%B6%84%ED%88%AC_JDK_%EC%84%A4%EC%B9%98">리눅스우분투자바설치</a></p>
 <p>저장된 배포파일로 이동하여 다음의 커맨드를 입력한다.<br>로그를 보면 8080 포트로 현재 서버가 실행 중 임을 알리고 있다.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">java -jar 배포파일.jar<br></code></pre></td></tr></table></figure>
-<p><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B04/1.png" alt=""><br></br><br>접속해보자 자신의 ‘아이피주소:8080’ 형태의 주소로 이뤄져있다.<br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B04/2.png" alt=""></p>
+<p><img src="/images/Simple-springboot-tutorial4/1.png" alt=""><br></br><br>접속해보자 자신의 ‘아이피주소:8080’ 형태의 주소로 이뤄져있다.<br><img src="/images/Simple-springboot-tutorial4/2.png" alt=""></p>
 <h2 id="nohup-적용"><a href="#nohup-적용" class="headerlink" title="nohup 적용"></a>nohup 적용</h2><p>ssh 터미널 종료 시 java -jar로 실행된 서버또한 종료되는데 해당 프로세스의 종료를 막기위해 nohup을 활용한다.</p>
 <h3 id="쉘-스크립트-생성-및-실행"><a href="#쉘-스크립트-생성-및-실행" class="headerlink" title="- 쉘 스크립트 생성 및 실행"></a>- 쉘 스크립트 생성 및 실행</h3><p>nohup은 쉘 스크립트 파일을 실행한다. java -jar 명령어를 쉘 스크립트 파일에 입력해야한다.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">vim start-server.sh<br></code></pre></td></tr></table></figure>
-<p>자신의 .jar 배포파일을 입력해주자<br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B04/3.png" alt=""></p>
+<p>자신의 .jar 배포파일을 입력해주자<br><img src="/images/Simple-springboot-tutorial4/3.png" alt=""></p>
 <p>생성된 쉘 스크립트를 실행한다.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">nohup .&#x2F;start-server.sh<br></code></pre></td></tr></table></figure>
-<p><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B04/4.png" alt=""></p>
+<p><img src="/images/Simple-springboot-tutorial4/4.png" alt=""></p>
 <p>만일 Permission 문제가 발생한다면 쉘스크립트와 스냅샷 파일의 권한을 변경해보자</p>
 <h3 id="프로세스-동작-확인"><a href="#프로세스-동작-확인" class="headerlink" title="- 프로세스 동작 확인"></a>- 프로세스 동작 확인</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">netstat -lntp | grep 포트번호<br></code></pre></td></tr></table></figure>
-<p><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B04/5.png" alt=""></p>
+<p><img src="/images/Simple-springboot-tutorial4/5.png" alt=""></p>
 <h3 id="ps"><a href="#ps" class="headerlink" title="- ps"></a>- ps</h3><p>서버단에서의 System.out.println 같은 출력문은 ‘nohup.out’에 로그가 남으니 참고.</p>
 <hr/>
 <hr/>
@@ -215,14 +215,14 @@
                 <time class="level-item has-text-grey" datetime="2019-09-01T16:39:26.000Z">2019-09-02</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/SpringBoot-Netty-build-gradle/">SpringBoot-Netty / build.gradle</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/SpringBoot-Netty-build-gradle/3/">3</a>
+                <a class="has-link-grey -link" href="/categories/Tutorial-Deploy-SpringBoot-Netty/">(Tutorial) Deploy-SpringBoot-Netty</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Tutorial-Deploy-SpringBoot-Netty/3/">3</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    8분 읽기 (대략 1202 단어)
+                    7분 읽기 (대략 1032 단어)
                 </span>
                 
                 
@@ -231,7 +231,7 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/09/02/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B03/">SpringBoot Netty서버 gradle환경에서 배포하기 3</a>
+                <a class="has-link-black-ter" href="/2019/09/02/SpringBoot-Netty%E1%84%89%E1%85%A5%E1%84%87%E1%85%A5-gradle%E1%84%92%E1%85%AA%E1%86%AB%E1%84%80%E1%85%A7%E1%86%BC%E1%84%8B%E1%85%A6%E1%84%89%E1%85%A5-%E1%84%87%E1%85%A2%E1%84%91%E1%85%A9%E1%84%92%E1%85%A1%E1%84%80%E1%85%B53/">SpringBoot Netty서버 gradle 환경에서 배포하기 3</a>
             
         </h1>
         <div class="content">
@@ -241,39 +241,39 @@
 <h2 id="SSH-공개키-생성"><a href="#SSH-공개키-생성" class="headerlink" title="SSH 공개키 생성"></a>SSH 공개키 생성</h2><p>운영체제 : OS X<br>윈도우인 경우 - <a href="https://archwin.net/402">윈도우 SSH키 생성</a></p>
 <p>맥의 경우 ssh-keygen프로그램이 내장되어 있으므로 command에 ‘ssh-keygen’을 입력해보자</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">ssh-keygen<br></code></pre></td></tr></table></figure>
-<p><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B03/1.png" alt=""><br>임의의 경로인 ‘/Users/dongyounkim/Documents/Me/생성할파일명’<br>에 생성하였다. 패스워드는 생성할때 미입력 시 이후 더이상 묻지 않는다.</p>
-<h3 id="생성된-개인키와-공개키"><a href="#생성된-개인키와-공개키" class="headerlink" title="- 생성된 개인키와 공개키"></a>- 생성된 개인키와 공개키</h3><p><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B03/2.png" alt=""></p>
+<p><img src="/images/Simple-springboot-tutorial3/1.png" alt=""><br>임의의 경로인 ‘/Users/dongyounkim/Documents/Me/생성할파일명’<br>에 생성하였다. 패스워드는 생성할때 미입력 시 이후 더이상 묻지 않는다.</p>
+<h3 id="생성된-개인키와-공개키"><a href="#생성된-개인키와-공개키" class="headerlink" title="- 생성된 개인키와 공개키"></a>- 생성된 개인키와 공개키</h3><p><img src="/images/Simple-springboot-tutorial3/2.png" alt=""></p>
 <h3 id="커멘드-cat"><a href="#커멘드-cat" class="headerlink" title="- 커멘드 cat"></a>- 커멘드 cat</h3><p>생성된 키 내용을 들여다 보자 </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">cat 생성한파일명.pub<br></code></pre></td></tr></table></figure>
-<p><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B03/3.png" alt=""><br>GCP 환경설정에 공개키 내용을 기입한다.</p>
-<h3 id="GCP-SSH키"><a href="#GCP-SSH키" class="headerlink" title="- GCP SSH키"></a>- GCP SSH키</h3><p><strong>메타데이터 - SSH키 - 수정/항목추가</strong><br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B03/4.png" alt=""><br>*복사한 값의 마지막을 ‘띄어쓰기’ 후 명칭을 따로 입력해줘야함을 잊지말자.<br></br></p>
+<p><img src="/images/Simple-springboot-tutorial3/3.png" alt=""><br>GCP 환경설정에 공개키 내용을 기입한다.</p>
+<h3 id="GCP-SSH키"><a href="#GCP-SSH키" class="headerlink" title="- GCP SSH키"></a>- GCP SSH키</h3><p><strong>메타데이터 - SSH키 - 수정/항목추가</strong><br><img src="/images/Simple-springboot-tutorial3/4.png" alt=""><br>*복사한 값의 마지막을 ‘띄어쓰기’ 후 명칭을 따로 입력해줘야함을 잊지말자.<br></br></p>
 <h1 id="FTP접속"><a href="#FTP접속" class="headerlink" title="FTP접속"></a>FTP접속</h1><p>맥의 경우 ftp클라이언트가 내장되어있어 따로 프로그램을 설치할 필요가 없으나 내장된 ftp프로그램은 읽기만 가능하다.<br>이에 본인은 <a href="https://filezilla-project.org/">FileZila</a>를 활용하였다.</p>
-<h3 id="FileZila-개인키-등록"><a href="#FileZila-개인키-등록" class="headerlink" title="FileZila 개인키 등록"></a>FileZila 개인키 등록</h3><p>접속을 위해 개인키를 등록해준다.<br><strong>설정 - 연결 - SFTP - 키 파일 추가</strong><br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B03/5.png" alt=""></p>
-<h3 id="접속"><a href="#접속" class="headerlink" title="접속"></a>접속</h3><p>본인의 GCP의 생성된 VM인스턴스를 참고한다.<br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B03/6.png" alt=""><br></br><br>본인의 설정정보에 맞게 FTP클라이언트에 입력한다.<br>GCP SSH키에 등록한 값의 명칭을 사용자명으로 사용한다.<br>IANA에서 할당한 SSH 프로토콜의 포트 : 22 를 사용한다.<br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B03/7.png" alt=""><br></br><br>본인의 가상컴퓨터에 접근이 완료되었다.<br>이제 배포할때이다.<br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B03/8.png" alt=""><br>배포파일은 이전 글에서 볼 수 있다. <a href="https://kimbaro.github.io/2019/07/30/SpringBoot-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EC%9B%B9%EC%84%9C%EB%B2%84%EC%97%90-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0/">이전글 바로가기</a><br></br></p>
+<h3 id="FileZila-개인키-등록"><a href="#FileZila-개인키-등록" class="headerlink" title="FileZila 개인키 등록"></a>FileZila 개인키 등록</h3><p>접속을 위해 개인키를 등록해준다.<br><strong>설정 - 연결 - SFTP - 키 파일 추가</strong><br><img src="/images/Simple-springboot-tutorial3/5.png" alt=""></p>
+<h3 id="접속"><a href="#접속" class="headerlink" title="접속"></a>접속</h3><p>본인의 GCP의 생성된 VM인스턴스를 참고한다.<br><img src="/images/Simple-springboot-tutorial3/6.png" alt=""><br></br><br>본인의 설정정보에 맞게 FTP클라이언트에 입력한다.<br>GCP SSH키에 등록한 값의 명칭을 사용자명으로 사용한다.<br>IANA에서 할당한 SSH 프로토콜의 포트 : 22 를 사용한다.<br><img src="/images/Simple-springboot-tutorial3/7.png" alt=""><br></br><br>본인의 가상컴퓨터에 접근이 완료되었다.<br>이제 배포할때이다.<br><img src="/images/Simple-springboot-tutorial3/8.png" alt=""><br>배포파일은 이전 글에서 볼 수 있다. <a href="https://kimbaro.github.io/2019/07/30/SpringBoot-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EC%9B%B9%EC%84%9C%EB%B2%84%EC%97%90-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0/">이전글 바로가기</a><br></br></p>
 <h1 id="SSH접속"><a href="#SSH접속" class="headerlink" title="SSH접속"></a>SSH접속</h1><blockquote>
-<p>FTP를 통한 전송과정에 앞서 접근권한을 설정해준다.<br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B03/9.png" alt=""><br>이를 위해선 SSH환경의 원격접속이 필요하다. 맥환경에선 내장된 접속 프로그램이 있어 쉽게 접근이 가능하다.</p>
+<p>FTP를 통한 전송과정에 앞서 접근권한을 설정해준다.<br><img src="/images/Simple-springboot-tutorial3/9.png" alt=""><br>이를 위해선 SSH환경의 원격접속이 필요하다. 맥환경에선 내장된 접속 프로그램이 있어 쉽게 접근이 가능하다.</p>
 </blockquote>
 <p>FTP접속을 위해 생성해둔 자신의 키파일 경로로 이동해 다음의 커맨드를 입력해준다.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">ssh -i 자신개인키 사용자명@호스트주소<br></code></pre></td></tr></table></figure>
 </br>
 * FTP 접속할때의 자신의 입력정보를 참고해보자
 
-<p><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B03/10.png" alt=""></p>
+<p><img src="/images/Simple-springboot-tutorial3/10.png" alt=""></p>
 <p>자신의 Spring SNAPSHOT 배포파일을 저장할 디렉토리의 경로 권한을 수정해준다.<br>본인은 다음의 경로에 파일을 관리하고자한다.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">&#x2F;usr&#x2F;games&#x2F;<br></code></pre></td></tr></table></figure>
 <h3 id="관리자-계정-패스워드설정"><a href="#관리자-계정-패스워드설정" class="headerlink" title="- 관리자 계정 패스워드설정"></a>- 관리자 계정 패스워드설정</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">sudo passwd root<br></code></pre></td></tr></table></figure>
-<p><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B03/11.png" alt=""></p>
+<p><img src="/images/Simple-springboot-tutorial3/11.png" alt=""></p>
 <h3 id="관리자-계정-접속"><a href="#관리자-계정-접속" class="headerlink" title="- 관리자 계정 접속"></a>- 관리자 계정 접속</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">su root<br></code></pre></td></tr></table></figure>
-<p><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B03/12.png" alt=""></p>
+<p><img src="/images/Simple-springboot-tutorial3/12.png" alt=""></p>
 <h3 id="경로-권한-확인"><a href="#경로-권한-확인" class="headerlink" title="- 경로 권한 확인"></a>- 경로 권한 확인</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">cd &#x2F;usr&#x2F;games&#x2F;<br>ls -la<br></code></pre></td></tr></table></figure>
-<p><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B03/13.png" alt=""></p>
+<p><img src="/images/Simple-springboot-tutorial3/13.png" alt=""></p>
 <h3 id="사용자-생성-및-그룹추가"><a href="#사용자-생성-및-그룹추가" class="headerlink" title="- 사용자 생성 및 그룹추가"></a>- 사용자 생성 및 그룹추가</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">sudo useradd 사용자명<br>sudo passwd 사용자명<br><br>usermod -aG 그룹명 사용자명<br>cat &#x2F;etc&#x2F;group<br></code></pre></td></tr></table></figure>
-<p><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B03/14.png" alt=""></p>
-<p><strong>‘cd /home’ 경로로 이동해 생성한 사용자명을 확인하고 해당하는 그룹에 추가한다.</strong><br><strong>‘cat /etc/group’ 추가한 자신의 계정이 정상적으로 추가되었는지 확인한다.</strong><br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B03/15.png" alt=""></p>
+<p><img src="/images/Simple-springboot-tutorial3/14.png" alt=""></p>
+<p><strong>‘cd /home’ 경로로 이동해 생성한 사용자명을 확인하고 해당하는 그룹에 추가한다.</strong><br><strong>‘cat /etc/group’ 추가한 자신의 계정이 정상적으로 추가되었는지 확인한다.</strong><br><img src="/images/Simple-springboot-tutorial3/15.png" alt=""></p>
 <h3 id="그룹권한-변경"><a href="#그룹권한-변경" class="headerlink" title="- 그룹권한 변경"></a>- 그룹권한 변경</h3><p>자신이 배포할 경로의 권한여부를 확인 후 필요에 따라 변경해준다.<br>여기선 /usr/games/의 경로를 다루므로 다음의 경로의 권한을 변경해준다.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">cd &#x2F;usr&#x2F;games&#x2F;<br>mkdir server<br>chmod 771 server&#x2F;<br></code></pre></td></tr></table></figure>
 <p>생성한 ‘server’명의 디렉터리의 접근권한 중 root그룹에 속한 계정에게 권한을 부여해준다</p>
-<p><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B03/16.png" alt=""><br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B03/17.png" alt=""></p>
+<p><img src="/images/Simple-springboot-tutorial3/16.png" alt=""><br><img src="/images/Simple-springboot-tutorial3/17.png" alt=""></p>
 <hr/>
 <hr/>
 <hr/>
@@ -302,14 +302,14 @@
                 <time class="level-item has-text-grey" datetime="2019-07-30T01:44:49.000Z">2019-07-30</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/SpringBoot-Netty-build-gradle/">SpringBoot-Netty / build.gradle</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/SpringBoot-Netty-build-gradle/2/">2</a>
+                <a class="has-link-grey -link" href="/categories/Tutorial-Deploy-SpringBoot-Netty/">(Tutorial) Deploy-SpringBoot-Netty</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Tutorial-Deploy-SpringBoot-Netty/2/">2</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    5분 읽기 (대략 767 단어)
+                    5분 읽기 (대략 704 단어)
                 </span>
                 
                 
@@ -318,34 +318,34 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/07/30/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B02/">SpringBoot Netty서버 gradle 환경에서 배포하기 2</a>
+                <a class="has-link-black-ter" href="/2019/07/30/SpringBoot-Netty%E1%84%89%E1%85%A5%E1%84%87%E1%85%A5-gradle-%E1%84%92%E1%85%AA%E1%86%AB%E1%84%80%E1%85%A7%E1%86%BC%E1%84%8B%E1%85%A6%E1%84%89%E1%85%A5-%E1%84%87%E1%85%A2%E1%84%91%E1%85%A9%E1%84%92%E1%85%A1%E1%84%80%E1%85%B52/">SpringBoot Netty서버 gradle 환경에서 배포하기 2</a>
             
         </h1>
         <div class="content">
             <blockquote>
-<h1 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h1><p>이전 포스팅은 SpringBoot를 로컬환경에서 배포해봤다. 이번엔 GCP의 Cloud Compute에 리눅스를 베이스로 SpringBoot를 배포를 위한 GCP환경을 구성한다.</p>
+<h1 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h1><p>이전 포스팅은 SpringBoot를 로컬환경에서 배포해봤다. 이번엔 GCP의 Cloud Compute의 Ubuntu OS에서 SpringBoot를 배포를 위한 가상환경을 구성한다.</p>
 </blockquote>
-<h2 id="준비"><a href="#준비" class="headerlink" title="준비"></a>준비</h2><p>GCP의 가상머신 생성절차를 진행한다.<br><strong>컴퓨팅 - ComputeEngine - VM인스턴스</strong><br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B02/0.png" alt=""></p>
+<h2 id="준비"><a href="#준비" class="headerlink" title="준비"></a>준비</h2><p>GCP의 가상머신 생성절차를 진행한다.<br><strong>컴퓨팅 - ComputeEngine - VM인스턴스</strong><br><img src="/images/Simple-springboot-tutorial2/0.png" alt=""></p>
 <p>이후 아래의 이미지와 같이 본인이 원하는 서버를 구성하여 만들어줘야한다.<br>여기서 본인은 아래 이미지와 같은 환경을 구성하였다.</p>
 <ol>
 <li>이름 : 본인이 생성할 VM 인스턴스의 이름이다.</li>
 <li>리전 : 가상머신을 실행할 서버의 위치이다.</li>
 <li>머신구성 : 자신이 구성할 서버의 사양. </li>
 <li>부팅디스크 : 서버를 구성할 OS.</li>
-<li>방화벽 : 서버의 접근 방식이다. 초기 생성 시 적용할 프로토콜의 Default를 구성하는 값이다.<br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B02/1.png" alt=""></li>
+<li>방화벽 : 서버의 접근 방식이다. 초기 생성 시 적용할 프로토콜의 Default를 구성하는 값이다.<br><img src="/images/Simple-springboot-tutorial2/1.png" alt=""></li>
 </ol>
-<p>이제 해당 서버의 고정IP를 할당해준다.<br><strong>네트워킹 - VPC네트워크 - 외부 IP 주소</strong><br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B02/2.png" alt=""></p>
-<p>‘유형=임시’ 를 ‘유형=고정’ 으로 변경해준다.<br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B02/3.png" alt=""></p>
+<p>이제 해당 서버의 고정IP를 할당해준다.<br><strong>네트워킹 - VPC네트워크 - 외부 IP 주소</strong><br><img src="/images/Simple-springboot-tutorial2/2.png" alt=""></p>
+<p>‘유형=임시’ 를 ‘유형=고정’ 으로 변경해준다.<br><img src="/images/Simple-springboot-tutorial2/3.png" alt=""></p>
 <p>‘외부 접근허용을 위해’ 방화벽규칙을 적용한다.<br><strong>네트워킹 - VPC네트워크 - 방화벽 규칙</strong></p>
 <ol>
 <li>이름 : 본인이 생성할 방화벽 규칙의 이름이다.</li>
 <li>우선순위 : 방화벽규칙에 적용될 우선순위이다. 사용환경에 따라 기본값을 달리하여 규칙을 적용할 수 있다.</li>
 <li>대상 : 본인이 생성한 서버의 인스턴스를 대상으로 할것인지 여부를 묻는다.</li>
 <li>소스 IP 범위 : 본인이 적용할 방화벽규칙의 IP 범위이다. 외부의 타 IP접근을 차단하거나 모두공개(0.0.0.0/0)할 수 있다.</li>
-<li>프로토콜 및 포트 : 지정할 방화벽 규칙이다. 각 포트중 일부는 약속된 포트가 있으므로 개인의 포트를 적용할 땐 주의해야한다.<br><img src="/images/SpringBoot-Netty%EC%84%9C%EB%B2%84-gradle-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B02/4.png" alt=""><br>다음 링크는 본인이 구성하는 기본 포트유형이다. 참고바란다.<br><a href="https://kimbaro.github.io/categories/%ED%8F%AC%ED%8A%B8-%EB%AA%A9%EB%A1%9D/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8-well-known-port/">웹서버 기본 구성 포트</a><br/>
+<li>프로토콜 및 포트 : 지정할 방화벽 규칙이다. 각 포트중 일부는 약속된 포트가 있으므로 개인의 포트를 적용할 땐 주의해야한다.<br><img src="/images/Simple-springboot-tutorial2/4.png" alt=""><br>다음 링크는 본인이 구성하는 기본 포트유형이다. 참고바란다.<br><a href="https://kimbaro.github.io/categories/%ED%8F%AC%ED%8A%B8-%EB%AA%A9%EB%A1%9D/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8-well-known-port/">웹서버 기본 구성 포트</a><br/>
 방화벽 규칙을 적용한 후 다음의 규칙이 적용되어 있어야한다.
 8080 과 8443은 임의로 적용한 포트이며 각각 웹페이지 접근에 이용할 포트이다.
-![](/images/SpringBoot-Netty서버-gradle-환경에서-배포하기2/5.png)
+![](/images/Simple-springboot-tutorial2/5.png)
 
 </li>
 </ol>
@@ -375,17 +375,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-07-29T20:50:07.000Z">2019-07-30</time>
+                <time class="level-item has-text-grey" datetime="2019-07-30T01:44:49.000Z">2019-07-30</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/SpringBoot-Netty-build-gradle/">SpringBoot-Netty / build.gradle</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/SpringBoot-Netty-build-gradle/1-%EA%B8%B0%EB%B3%B8%EB%B0%B0%ED%8F%AC/">1 - 기본배포</a>
+                <a class="has-link-grey -link" href="/categories/Tutorial-Deploy-SpringBoot-Netty/">(Tutorial) Deploy-SpringBoot-Netty</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Tutorial-Deploy-SpringBoot-Netty/1-%EA%B8%B0%EB%B3%B8%EB%B0%B0%ED%8F%AC/">1 - 기본배포</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    3분 읽기 (대략 460 단어)
+                    2분 읽기 (대략 337 단어)
                 </span>
                 
                 
@@ -394,29 +394,22 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/07/30/SpringBoot-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EC%9B%B9%EC%84%9C%EB%B2%84%EC%97%90-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0/">SpringBoot Netty서버 gradle 환경에서 배포하기 1</a>
+                <a class="has-link-black-ter" href="/2019/07/30/SpringBoot-gradle%E1%84%92%E1%85%AA%E1%86%AB%E1%84%80%E1%85%A7%E1%86%BC%E1%84%8B%E1%85%A6%E1%84%89%E1%85%A5-%E1%84%8B%E1%85%B0%E1%86%B8%E1%84%89%E1%85%A5%E1%84%87%E1%85%A5%E1%84%8B%E1%85%A6-%E1%84%87%E1%85%A2%E1%84%91%E1%85%A9%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5/">SpringBoot Netty서버 gradle 환경에서 배포하기 1</a>
             
         </h1>
         <div class="content">
             <blockquote>
-<h1 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h1><p>본 내용의 과정은 SpringBoot Netty를 gradle 환경에서 GCP Linux 서버에 배포하고 이후 SSL을 적용한<br><a href="https://kimbaro.github.io/categories/SpringBoot/SSL/">https://kimbaro.github.io/categories/SpringBoot/SSL/</a> 까지의 내용을 담았다. </p>
+<h1 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h1><p>본 내용은 gradle환경의 SpringBoot-Netty서버를 GCP의 Ubuntu에 배포하고 이후 SSL을 적용한 https 환경을 구성하는 내용이다.<br>localhost 에서 동작 가능한 Gradle 환경의 Simple SpringBoot-Netty 서버는 MSA를 기반으로 두고 있다.<br>본 예제의 프로젝트는 다음의 깃 경로에 배포한다. <a href="https://github.com/Kimbaro/springboot-sample.git">https://github.com/Kimbaro/springboot-sample.git</a></p>
 </blockquote>
-<h2 id="앞서…"><a href="#앞서…" class="headerlink" title="앞서…"></a>앞서…</h2><p>본인은 SpringBoot 2.0을 처음접하며 만난 non-blocking 방식의 webflux를<br>함께 다뤄보았고 기존 blocking 방식의 jdbc를 벗어나 Reactive 에 내장되어 있는 mongodb-driver를 webflux와 함께 사용해 <a href="https://dzone.com/articles/reactive-microservices-with-spring-webflux-and-spr">Reactive Microservice</a>의 나만의 서버를 배포하려한다.</p>
-<hr>
+<br>
 
-<h2 id="준비"><a href="#준비" class="headerlink" title="준비"></a>준비</h2><blockquote>
-<ul>
-<li>localhost환경에서 동작 가능한 Gradle 환경의 SpringBoot-netty</li>
-</ul>
-</blockquote>
-<p><a href="https://github.com/Kimbaro/springboot-sample.git">Sample-Project다운로드</a><br><br></p>
-<h2 id="배포용-snapshot을-생성한다"><a href="#배포용-snapshot을-생성한다" class="headerlink" title="배포용 snapshot을 생성한다."></a>배포용 snapshot을 생성한다.</h2><p>해당 프로젝트 폴더에 이동해 터미널에서 다음의 커맨드를 던져준다.</p>
+<h2 id="배포용-snapshot을-생성한다"><a href="#배포용-snapshot을-생성한다" class="headerlink" title="배포용 snapshot을 생성한다."></a>배포용 snapshot을 생성한다.</h2><p>해당 프로젝트 경로의 터미널에서 다음의 커맨드를 입력한다.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">.&#x2F;gradlew clean<br>.&#x2F;gradlew build<br></code></pre></td></tr></table></figure>
-<p>./gradlew clean은 빌드전에 디렉토리와 그래들 환경을 초기화한다.<br>./gradlew build는 배포를 위한 snapshow을 생성한다.<br><img src="/images/SpringBoot-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EC%9B%B9%EC%84%9C%EB%B2%84%EC%97%90-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0/1.png" alt=""></p>
-<p>build/libs 아래에 (프로젝트명)-0.0.1-SNAPSHOT.jar 의 디렉토리와 jar 파일의 생성을 확인 할 수 있다.<br><img src="/images/SpringBoot-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EC%9B%B9%EC%84%9C%EB%B2%84%EC%97%90-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0/2.png" alt=""><br><br><br>이제 해당 경로에서<br>다음의 커맨드를 날려주자 이후 성공적으로 빌드가 되는지 여부를 확인해본다.<br>로그는 다음과 같이 8080포트로 네티서버가 실행중임을 알 수 있다.</p>
+<p>./gradlew clean은 빌드전에 디렉토리와 그래들 환경을 초기화한다.<br>./gradlew build는 배포를 위한 snapshot을 생성한다.<br><img src="/images/Simple-springboot-tutorial/1.png" alt=""></p>
+<p>build/libs 아래에 (프로젝트명)-0.0.1-SNAPSHOT.jar 의 디렉토리와 jar 파일의 생성을 확인 할 수 있다.<br><img src="/images/Simple-springboot-tutorial/2.png" alt=""><br><br><br>이제 해당 경로에서<br>다음의 커맨드를 입력한다. 이후 성공적으로 빌드가 되는지 여부를 확인해본다.<br>로그는 다음과 같이 8080 PORT로 서버가 실행중임을 알 수 있다.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">java -jar (프로젝트명)-0.0.1-SNAPSHOT.jar<br></code></pre></td></tr></table></figure>
-<p><img src="/images/SpringBoot-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EC%9B%B9%EC%84%9C%EB%B2%84%EC%97%90-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0/3.png" alt=""><br><img src="/images/SpringBoot-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EC%9B%B9%EC%84%9C%EB%B2%84%EC%97%90-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0/4.png" alt=""></p>
-<p>로컬환경에서 배포가 완료되었다면 다음으로 GCP을 활용해 Cloud Compute 환경에서 리눅스를 설치하고<br>위와같이 배포하려한다.</p>
+<p><img src="/images/Simple-springboot-tutorial/3.png" alt=""><br><img src="/images/Simple-springboot-tutorial/4.png" alt=""></p>
+<p>로컬환경에서 배포가 완료되었다면 다음으로 GCP의 Cloud Computing 에서 Ubuntu를 설치하고<br>위와같이 배포하려한다.</p>
 <hr/>
 <hr/>
 <hr/>
@@ -475,7 +468,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            10
+                            14
                         </p>
                     </a>
                 </div>
@@ -487,7 +480,7 @@
                     </p>
                     <a href="/categories">
                         <p class="title has-text-weight-normal">
-                            14
+                            20
                         </p>
                     </a>
                 </div>
@@ -499,7 +492,7 @@
                     </p>
                     <a href="/tags">
                         <p class="title has-text-weight-normal">
-                            18
+                            26
                         </p>
                     </a>
                 </div>
@@ -554,7 +547,7 @@
         <h3 class="menu-label">
             태그 클라우드
         </h3>
-        <a href="/tags/Bluetooth/" style="font-size: 13.33px;">Bluetooth</a> <a href="/tags/GCP/" style="font-size: 16.67px;">GCP</a> <a href="/tags/Https/" style="font-size: 13.33px;">Https</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/SSH/" style="font-size: 13.33px;">SSH</a> <a href="/tags/SSL/" style="font-size: 13.33px;">SSL</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/deploy/" style="font-size: 16.67px;">deploy</a> <a href="/tags/gradle/" style="font-size: 13.33px;">gradle</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 16.67px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 13.33px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 13.33px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
+        <a href="/tags/Bluetooth/" style="font-size: 12.5px;">Bluetooth</a> <a href="/tags/Carla/" style="font-size: 10px;">Carla</a> <a href="/tags/Carla-0-9-7/" style="font-size: 10px;">Carla_0.9.7</a> <a href="/tags/Entity/" style="font-size: 10px;">Entity</a> <a href="/tags/GCP/" style="font-size: 17.5px;">GCP</a> <a href="/tags/Hibernate/" style="font-size: 12.5px;">Hibernate</a> <a href="/tags/Https/" style="font-size: 12.5px;">Https</a> <a href="/tags/JPA/" style="font-size: 15px;">JPA</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/ORM/" style="font-size: 12.5px;">ORM</a> <a href="/tags/SSH/" style="font-size: 12.5px;">SSH</a> <a href="/tags/SSL/" style="font-size: 12.5px;">SSL</a> <a href="/tags/Simulator/" style="font-size: 10px;">Simulator</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/Springboot/" style="font-size: 15px;">Springboot</a> <a href="/tags/deploy/" style="font-size: 17.5px;">deploy</a> <a href="/tags/gradle/" style="font-size: 12.5px;">gradle</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 17.5px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 12.5px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 12.5px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
     </div>
 </div>
     
@@ -574,9 +567,37 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/Carla/">
+                        <span class="tag">Carla</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Carla-0-9-7/">
+                        <span class="tag">Carla_0.9.7</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Entity/">
+                        <span class="tag">Entity</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/GCP/">
                         <span class="tag">GCP</span>
                         <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Hibernate/">
+                        <span class="tag">Hibernate</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -588,9 +609,23 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/JPA/">
+                        <span class="tag">JPA</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/Lambda/">
                         <span class="tag">Lambda</span>
                         <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/ORM/">
+                        <span class="tag">ORM</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -609,6 +644,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/Simulator/">
+                        <span class="tag">Simulator</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/Socket/">
                         <span class="tag">Socket</span>
                         <span class="tag is-grey">1</span>
@@ -619,6 +661,13 @@
                     <a class="tags has-addons" href="/tags/SpringBoot/">
                         <span class="tag">SpringBoot</span>
                         <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Springboot/">
+                        <span class="tag">Springboot</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -709,15 +758,15 @@
             </h3>
             <ul class="menu-list">
             <li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/">
             <span class="level-start">
-                <span class="level-item">SpringBoot-Netty / build.gradle</span>
+                <span class="level-item">(Tutorial) Deploy-SpringBoot-Netty</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">6</span>
             </span>
         </a><ul><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/1-%EA%B8%B0%EB%B3%B8%EB%B0%B0%ED%8F%AC/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/1-%EA%B8%B0%EB%B3%B8%EB%B0%B0%ED%8F%AC/">
             <span class="level-start">
                 <span class="level-item">1 - 기본배포</span>
             </span>
@@ -725,7 +774,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/2/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/2/">
             <span class="level-start">
                 <span class="level-item">2</span>
             </span>
@@ -733,7 +782,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/3/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/3/">
             <span class="level-start">
                 <span class="level-item">3</span>
             </span>
@@ -741,7 +790,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/4/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/4/">
             <span class="level-start">
                 <span class="level-item">4</span>
             </span>
@@ -749,7 +798,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/5-SSL%EC%A0%81%EC%9A%A9/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/5-SSL%EC%A0%81%EC%9A%A9/">
             <span class="level-start">
                 <span class="level-item">5 - SSL적용</span>
             </span>
@@ -757,9 +806,57 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/6/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/6/">
             <span class="level-start">
                 <span class="level-item">6</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/">
+            <span class="level-start">
+                <span class="level-item">SpringBoot-JPA</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/1-Hibernate/">
+            <span class="level-start">
+                <span class="level-item">1 - Hibernate</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/2-SpringData-JPA/">
+            <span class="level-start">
+                <span class="level-item">2 - SpringData-JPA</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/3-Entity/">
+            <span class="level-start">
+                <span class="level-item">3 - Entity</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/ex1/">
+            <span class="level-start">
+                <span class="level-item">ex1</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/ex1/ex1-1/">
+            <span class="level-start">
+                <span class="level-item">ex1-1</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">1</span>
@@ -835,6 +932,28 @@
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2019/09/">
                 <span class="level-start">
                     <span class="level-item">9월 2019</span>
@@ -903,15 +1022,15 @@
             </h3>
             <ul class="menu-list">
             <li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/">
             <span class="level-start">
-                <span class="level-item">SpringBoot-Netty / build.gradle</span>
+                <span class="level-item">(Tutorial) Deploy-SpringBoot-Netty</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">6</span>
             </span>
         </a><ul><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/1-%EA%B8%B0%EB%B3%B8%EB%B0%B0%ED%8F%AC/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/1-%EA%B8%B0%EB%B3%B8%EB%B0%B0%ED%8F%AC/">
             <span class="level-start">
                 <span class="level-item">1 - 기본배포</span>
             </span>
@@ -919,7 +1038,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/2/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/2/">
             <span class="level-start">
                 <span class="level-item">2</span>
             </span>
@@ -927,7 +1046,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/3/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/3/">
             <span class="level-start">
                 <span class="level-item">3</span>
             </span>
@@ -935,7 +1054,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/4/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/4/">
             <span class="level-start">
                 <span class="level-item">4</span>
             </span>
@@ -943,7 +1062,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/5-SSL%EC%A0%81%EC%9A%A9/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/5-SSL%EC%A0%81%EC%9A%A9/">
             <span class="level-start">
                 <span class="level-item">5 - SSL적용</span>
             </span>
@@ -951,9 +1070,57 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/6/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/6/">
             <span class="level-start">
                 <span class="level-item">6</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/">
+            <span class="level-start">
+                <span class="level-item">SpringBoot-JPA</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/1-Hibernate/">
+            <span class="level-start">
+                <span class="level-item">1 - Hibernate</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/2-SpringData-JPA/">
+            <span class="level-start">
+                <span class="level-item">2 - SpringData-JPA</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/3-Entity/">
+            <span class="level-start">
+                <span class="level-item">3 - Entity</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/ex1/">
+            <span class="level-start">
+                <span class="level-item">ex1</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/ex1/ex1-1/">
+            <span class="level-start">
+                <span class="level-item">ex1-1</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">1</span>
@@ -1029,6 +1196,28 @@
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2019/09/">
                 <span class="level-start">
                     <span class="level-item">9월 2019</span>
@@ -1093,7 +1282,7 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2020 DongYeon Kim&nbsp;
+                &copy; 2021 DongYeon Kim&nbsp;
                 Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
                         href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
                 
@@ -1212,7 +1401,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 
-<a id="back-to-top" title="Zurück nach oben" href="javascript:;">
+<a id="back-to-top" title="Back to Top" href="javascript:;">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>

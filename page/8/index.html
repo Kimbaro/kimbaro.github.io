@@ -136,17 +136,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-07-29T20:50:07.000Z">2019-07-30</time>
+                <time class="level-item has-text-grey" datetime="2019-09-01T19:43:38.000Z">2019-09-02</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/SpringBoot-Netty-build-gradle/">SpringBoot-Netty / build.gradle</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/SpringBoot-Netty-build-gradle/1-%EA%B8%B0%EB%B3%B8%EB%B0%B0%ED%8F%AC/">1 - 기본배포</a>
+                <a class="has-link-grey -link" href="/categories/Tutorial-Deploy-SpringBoot-Netty/">(Tutorial) Deploy-SpringBoot-Netty</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Tutorial-Deploy-SpringBoot-Netty/4/">4</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    3분 읽기 (대략 460 단어)
+                    3분 읽기 (대략 398 단어)
                 </span>
                 
                 
@@ -155,29 +155,28 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/07/30/SpringBoot-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EC%9B%B9%EC%84%9C%EB%B2%84%EC%97%90-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0/">SpringBoot Netty서버 gradle 환경에서 배포하기 1</a>
+                <a class="has-link-black-ter" href="/2019/09/02/SpringBoot-Netty%E1%84%89%E1%85%A5%E1%84%87%E1%85%A5-gradle%E1%84%92%E1%85%AA%E1%86%AB%E1%84%80%E1%85%A7%E1%86%BC%E1%84%8B%E1%85%A6%E1%84%89%E1%85%A5-%E1%84%87%E1%85%A2%E1%84%91%E1%85%A9%E1%84%92%E1%85%A1%E1%84%80%E1%85%B54/">SpringBoot Netty서버 gradle 환경에서 배포하기 4</a>
             
         </h1>
         <div class="content">
             <blockquote>
-<h1 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h1><p>본 내용의 과정은 SpringBoot Netty를 gradle 환경에서 GCP Linux 서버에 배포하고 이후 SSL을 적용한<br><a href="https://kimbaro.github.io/categories/SpringBoot/SSL/">https://kimbaro.github.io/categories/SpringBoot/SSL/</a> 까지의 내용을 담았다. </p>
+<h1 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h1><p>이전글에서 파일 배포까지 완료되었다 해당 파일을 실행하여 접속해보자</p>
 </blockquote>
-<h2 id="앞서…"><a href="#앞서…" class="headerlink" title="앞서…"></a>앞서…</h2><p>본인은 SpringBoot 2.0을 처음접하며 만난 non-blocking 방식의 webflux를<br>함께 다뤄보았고 기존 blocking 방식의 jdbc를 벗어나 Reactive 에 내장되어 있는 mongodb-driver를 webflux와 함께 사용해 <a href="https://dzone.com/articles/reactive-microservices-with-spring-webflux-and-spr">Reactive Microservice</a>의 나만의 서버를 배포하려한다.</p>
-<hr>
-
-<h2 id="준비"><a href="#준비" class="headerlink" title="준비"></a>준비</h2><blockquote>
-<ul>
-<li>localhost환경에서 동작 가능한 Gradle 환경의 SpringBoot-netty</li>
-</ul>
-</blockquote>
-<p><a href="https://github.com/Kimbaro/springboot-sample.git">Sample-Project다운로드</a><br><br></p>
-<h2 id="배포용-snapshot을-생성한다"><a href="#배포용-snapshot을-생성한다" class="headerlink" title="배포용 snapshot을 생성한다."></a>배포용 snapshot을 생성한다.</h2><p>해당 프로젝트 폴더에 이동해 터미널에서 다음의 커맨드를 던져준다.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">.&#x2F;gradlew clean<br>.&#x2F;gradlew build<br></code></pre></td></tr></table></figure>
-<p>./gradlew clean은 빌드전에 디렉토리와 그래들 환경을 초기화한다.<br>./gradlew build는 배포를 위한 snapshow을 생성한다.<br><img src="/images/SpringBoot-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EC%9B%B9%EC%84%9C%EB%B2%84%EC%97%90-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0/1.png" alt=""></p>
-<p>build/libs 아래에 (프로젝트명)-0.0.1-SNAPSHOT.jar 의 디렉토리와 jar 파일의 생성을 확인 할 수 있다.<br><img src="/images/SpringBoot-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EC%9B%B9%EC%84%9C%EB%B2%84%EC%97%90-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0/2.png" alt=""><br><br><br>이제 해당 경로에서<br>다음의 커맨드를 날려주자 이후 성공적으로 빌드가 되는지 여부를 확인해본다.<br>로그는 다음과 같이 8080포트로 네티서버가 실행중임을 알 수 있다.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">java -jar (프로젝트명)-0.0.1-SNAPSHOT.jar<br></code></pre></td></tr></table></figure>
-<p><img src="/images/SpringBoot-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EC%9B%B9%EC%84%9C%EB%B2%84%EC%97%90-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0/3.png" alt=""><br><img src="/images/SpringBoot-gradle%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EC%9B%B9%EC%84%9C%EB%B2%84%EC%97%90-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0/4.png" alt=""></p>
-<p>로컬환경에서 배포가 완료되었다면 다음으로 GCP을 활용해 Cloud Compute 환경에서 리눅스를 설치하고<br>위와같이 배포하려한다.</p>
+<h2 id="배포"><a href="#배포" class="headerlink" title="배포"></a>배포</h2><p>스프링서버 배포를 위해선 java가 설치되어 있어야 한다.<br>해당 링크를 참고하여 설치하자 <a href="https://zetawiki.com/wiki/%EC%9A%B0%EB%B6%84%ED%88%AC_JDK_%EC%84%A4%EC%B9%98">리눅스우분투자바설치</a></p>
+<p>저장된 배포파일로 이동하여 다음의 커맨드를 입력한다.<br>로그를 보면 8080 포트로 현재 서버가 실행 중 임을 알리고 있다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">java -jar 배포파일.jar<br></code></pre></td></tr></table></figure>
+<p><img src="/images/Simple-springboot-tutorial4/1.png" alt=""><br></br><br>접속해보자 자신의 ‘아이피주소:8080’ 형태의 주소로 이뤄져있다.<br><img src="/images/Simple-springboot-tutorial4/2.png" alt=""></p>
+<h2 id="nohup-적용"><a href="#nohup-적용" class="headerlink" title="nohup 적용"></a>nohup 적용</h2><p>ssh 터미널 종료 시 java -jar로 실행된 서버또한 종료되는데 해당 프로세스의 종료를 막기위해 nohup을 활용한다.</p>
+<h3 id="쉘-스크립트-생성-및-실행"><a href="#쉘-스크립트-생성-및-실행" class="headerlink" title="- 쉘 스크립트 생성 및 실행"></a>- 쉘 스크립트 생성 및 실행</h3><p>nohup은 쉘 스크립트 파일을 실행한다. java -jar 명령어를 쉘 스크립트 파일에 입력해야한다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">vim start-server.sh<br></code></pre></td></tr></table></figure>
+<p>자신의 .jar 배포파일을 입력해주자<br><img src="/images/Simple-springboot-tutorial4/3.png" alt=""></p>
+<p>생성된 쉘 스크립트를 실행한다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">nohup .&#x2F;start-server.sh<br></code></pre></td></tr></table></figure>
+<p><img src="/images/Simple-springboot-tutorial4/4.png" alt=""></p>
+<p>만일 Permission 문제가 발생한다면 쉘스크립트와 스냅샷 파일의 권한을 변경해보자</p>
+<h3 id="프로세스-동작-확인"><a href="#프로세스-동작-확인" class="headerlink" title="- 프로세스 동작 확인"></a>- 프로세스 동작 확인</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">netstat -lntp | grep 포트번호<br></code></pre></td></tr></table></figure>
+<p><img src="/images/Simple-springboot-tutorial4/5.png" alt=""></p>
+<h3 id="ps"><a href="#ps" class="headerlink" title="- ps"></a>- ps</h3><p>서버단에서의 System.out.println 같은 출력문은 ‘nohup.out’에 로그가 남으니 참고.</p>
 <hr/>
 <hr/>
 <hr/>
@@ -218,7 +217,9 @@
             
             <li><a class="pagination-link has-text-black-ter" href="/page/9/">9</a></li>
             
-            <li><a class="pagination-link has-text-black-ter" href="/page/10/">10</a></li>
+            <li><span class="pagination-ellipsis has-text-black-ter">&hellip;</span></li>
+            
+            <li><a class="pagination-link has-text-black-ter" href="/page/14/">14</a></li>
             
         </ul>
     </nav>
@@ -263,7 +264,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            10
+                            14
                         </p>
                     </a>
                 </div>
@@ -275,7 +276,7 @@
                     </p>
                     <a href="/categories">
                         <p class="title has-text-weight-normal">
-                            14
+                            20
                         </p>
                     </a>
                 </div>
@@ -287,7 +288,7 @@
                     </p>
                     <a href="/tags">
                         <p class="title has-text-weight-normal">
-                            18
+                            26
                         </p>
                     </a>
                 </div>
@@ -342,7 +343,7 @@
         <h3 class="menu-label">
             태그 클라우드
         </h3>
-        <a href="/tags/Bluetooth/" style="font-size: 13.33px;">Bluetooth</a> <a href="/tags/GCP/" style="font-size: 16.67px;">GCP</a> <a href="/tags/Https/" style="font-size: 13.33px;">Https</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/SSH/" style="font-size: 13.33px;">SSH</a> <a href="/tags/SSL/" style="font-size: 13.33px;">SSL</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/deploy/" style="font-size: 16.67px;">deploy</a> <a href="/tags/gradle/" style="font-size: 13.33px;">gradle</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 16.67px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 13.33px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 13.33px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
+        <a href="/tags/Bluetooth/" style="font-size: 12.5px;">Bluetooth</a> <a href="/tags/Carla/" style="font-size: 10px;">Carla</a> <a href="/tags/Carla-0-9-7/" style="font-size: 10px;">Carla_0.9.7</a> <a href="/tags/Entity/" style="font-size: 10px;">Entity</a> <a href="/tags/GCP/" style="font-size: 17.5px;">GCP</a> <a href="/tags/Hibernate/" style="font-size: 12.5px;">Hibernate</a> <a href="/tags/Https/" style="font-size: 12.5px;">Https</a> <a href="/tags/JPA/" style="font-size: 15px;">JPA</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/ORM/" style="font-size: 12.5px;">ORM</a> <a href="/tags/SSH/" style="font-size: 12.5px;">SSH</a> <a href="/tags/SSL/" style="font-size: 12.5px;">SSL</a> <a href="/tags/Simulator/" style="font-size: 10px;">Simulator</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/Springboot/" style="font-size: 15px;">Springboot</a> <a href="/tags/deploy/" style="font-size: 17.5px;">deploy</a> <a href="/tags/gradle/" style="font-size: 12.5px;">gradle</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 17.5px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 12.5px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 12.5px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
     </div>
 </div>
     
@@ -362,9 +363,37 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/Carla/">
+                        <span class="tag">Carla</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Carla-0-9-7/">
+                        <span class="tag">Carla_0.9.7</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Entity/">
+                        <span class="tag">Entity</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/GCP/">
                         <span class="tag">GCP</span>
                         <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Hibernate/">
+                        <span class="tag">Hibernate</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -376,9 +405,23 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/JPA/">
+                        <span class="tag">JPA</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/Lambda/">
                         <span class="tag">Lambda</span>
                         <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/ORM/">
+                        <span class="tag">ORM</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -397,6 +440,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/Simulator/">
+                        <span class="tag">Simulator</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/Socket/">
                         <span class="tag">Socket</span>
                         <span class="tag is-grey">1</span>
@@ -407,6 +457,13 @@
                     <a class="tags has-addons" href="/tags/SpringBoot/">
                         <span class="tag">SpringBoot</span>
                         <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Springboot/">
+                        <span class="tag">Springboot</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -497,15 +554,15 @@
             </h3>
             <ul class="menu-list">
             <li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/">
             <span class="level-start">
-                <span class="level-item">SpringBoot-Netty / build.gradle</span>
+                <span class="level-item">(Tutorial) Deploy-SpringBoot-Netty</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">6</span>
             </span>
         </a><ul><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/1-%EA%B8%B0%EB%B3%B8%EB%B0%B0%ED%8F%AC/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/1-%EA%B8%B0%EB%B3%B8%EB%B0%B0%ED%8F%AC/">
             <span class="level-start">
                 <span class="level-item">1 - 기본배포</span>
             </span>
@@ -513,7 +570,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/2/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/2/">
             <span class="level-start">
                 <span class="level-item">2</span>
             </span>
@@ -521,7 +578,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/3/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/3/">
             <span class="level-start">
                 <span class="level-item">3</span>
             </span>
@@ -529,7 +586,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/4/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/4/">
             <span class="level-start">
                 <span class="level-item">4</span>
             </span>
@@ -537,7 +594,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/5-SSL%EC%A0%81%EC%9A%A9/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/5-SSL%EC%A0%81%EC%9A%A9/">
             <span class="level-start">
                 <span class="level-item">5 - SSL적용</span>
             </span>
@@ -545,9 +602,57 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/6/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/6/">
             <span class="level-start">
                 <span class="level-item">6</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/">
+            <span class="level-start">
+                <span class="level-item">SpringBoot-JPA</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/1-Hibernate/">
+            <span class="level-start">
+                <span class="level-item">1 - Hibernate</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/2-SpringData-JPA/">
+            <span class="level-start">
+                <span class="level-item">2 - SpringData-JPA</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/3-Entity/">
+            <span class="level-start">
+                <span class="level-item">3 - Entity</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/ex1/">
+            <span class="level-start">
+                <span class="level-item">ex1</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/ex1/ex1-1/">
+            <span class="level-start">
+                <span class="level-item">ex1-1</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">1</span>
@@ -623,6 +728,28 @@
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2019/09/">
                 <span class="level-start">
                     <span class="level-item">9월 2019</span>
@@ -691,15 +818,15 @@
             </h3>
             <ul class="menu-list">
             <li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/">
             <span class="level-start">
-                <span class="level-item">SpringBoot-Netty / build.gradle</span>
+                <span class="level-item">(Tutorial) Deploy-SpringBoot-Netty</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">6</span>
             </span>
         </a><ul><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/1-%EA%B8%B0%EB%B3%B8%EB%B0%B0%ED%8F%AC/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/1-%EA%B8%B0%EB%B3%B8%EB%B0%B0%ED%8F%AC/">
             <span class="level-start">
                 <span class="level-item">1 - 기본배포</span>
             </span>
@@ -707,7 +834,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/2/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/2/">
             <span class="level-start">
                 <span class="level-item">2</span>
             </span>
@@ -715,7 +842,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/3/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/3/">
             <span class="level-start">
                 <span class="level-item">3</span>
             </span>
@@ -723,7 +850,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/4/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/4/">
             <span class="level-start">
                 <span class="level-item">4</span>
             </span>
@@ -731,7 +858,7 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/5-SSL%EC%A0%81%EC%9A%A9/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/5-SSL%EC%A0%81%EC%9A%A9/">
             <span class="level-start">
                 <span class="level-item">5 - SSL적용</span>
             </span>
@@ -739,9 +866,57 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/SpringBoot-Netty-build-gradle/6/">
+        <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/6/">
             <span class="level-start">
                 <span class="level-item">6</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/">
+            <span class="level-start">
+                <span class="level-item">SpringBoot-JPA</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/1-Hibernate/">
+            <span class="level-start">
+                <span class="level-item">1 - Hibernate</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/2-SpringData-JPA/">
+            <span class="level-start">
+                <span class="level-item">2 - SpringData-JPA</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/SpringBoot-JPA/3-Entity/">
+            <span class="level-start">
+                <span class="level-item">3 - Entity</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/ex1/">
+            <span class="level-start">
+                <span class="level-item">ex1</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/ex1/ex1-1/">
+            <span class="level-start">
+                <span class="level-item">ex1-1</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">1</span>
@@ -817,6 +992,28 @@
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">3월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">2월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2019/09/">
                 <span class="level-start">
                     <span class="level-item">9월 2019</span>
@@ -881,7 +1078,7 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2020 DongYeon Kim&nbsp;
+                &copy; 2021 DongYeon Kim&nbsp;
                 Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
                         href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
                 
@@ -1000,7 +1197,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 
-<a id="back-to-top" title="Zurück nach oben" href="javascript:;">
+<a id="back-to-top" title="Back to Top" href="javascript:;">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>
