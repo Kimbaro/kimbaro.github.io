@@ -132,27 +132,21 @@
     
 <div class="card">
     
-    <div class="card-image">
-        <a href="/2020/02/17/Carla-simulator/" class="image is-7by1">
-            <img class="thumbnail" src="/thumbnails/test/thumbnail/%3C%20EXAMPLE.png%20%3E" alt="Carla simulator">
-        </a>
-    </div>
-    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-02-17T07:52:43.000Z">2020-02-17</time>
+                <time class="level-item has-text-grey" datetime="2020-03-19T12:13:44.000Z">2020-03-19</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/ex1/">ex1</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/ex1/ex1-1/">ex1-1</a>
+                <a class="has-link-grey -link" href="/categories/SpringBoot-JPA/">SpringBoot-JPA</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/SpringBoot-JPA/1-Hibernate/">1 - Hibernate</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    몇 초 읽기 (대략 0 단어)
+                    18분 읽기 (대략 2643 단어)
                 </span>
                 
                 
@@ -161,11 +155,143 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2020/02/17/Carla-simulator/">Carla simulator</a>
+                <a class="has-link-black-ter" href="/2020/03/19/JPA-Hibernate/">JPA-Hibernate</a>
             
         </h1>
         <div class="content">
-            
+            <h1 id="본문"><a href="#본문" class="headerlink" title="본문"></a>본문</h1><h2 id="JPA를-요리하자"><a href="#JPA를-요리하자" class="headerlink" title="JPA를 요리하자."></a>JPA를 요리하자.</h2><blockquote>
+<p><strong>ORM(Object Relational Mapping)</strong>은 객체관계매핑으로 관계형데이터베이스(RDBMS)와 1:1 매핑관계를 이룬 방식이다.<br>기존 JDBC의 비지니스 모델링 객체의 Entity는 DTO개념 그대로 DB와 Server간 데이터 교환만을 위해서 존재했다면,<br>ORM 방식을 통한 Entity는 관계형데이터베이스의 Row 단위로 1:1 매핑을 이뤄 해당 Entity 자원만 가지고 있다면 쉽게 CRUD가 가능하다.<br>신뢰할 수 있는 데이터 여부에 따라 영속성, 비영속성 관계로 부른다. </p>
+</blockquote>
+<p>ORM 방식 중 JAVA에서 차용한 기술명세가 JPA이다.<br>해당 ORM 프레임워크중 대표적인 것은 다음과 같다.</p>
+<ul>
+<li><strong>JPA(Java Persistence Api)</strong><ul>
+<li>Hibernate</li>
+<li>EclipseLink</li>
+<li>DataNucleus</li>
+</ul>
+</li>
+</ul>
+<p>SpringBoot는 Hibernate를 기본 제공자로 구성하기 때문에 이를 기반으로 JPA를 작성하도록 만든 Repository가 있다.</p>
+<ul>
+<li><strong>‘org.springframework.boot:spring-boot-starter-data-jpa’</strong></li>
+</ul>
+<p>해당 주소를 gradle에 적용만 해준다면 알아서 Initialize해준다. 우리는 data-jpa를 활용해 개발에만 집중할 수 있어 친절하다.</p>
+<h2 id="Hibernate를-간단하게-이용해보자"><a href="#Hibernate를-간단하게-이용해보자" class="headerlink" title="Hibernate를 간단하게 이용해보자."></a>Hibernate를 간단하게 이용해보자.</h2><p><img src="/images/JPA-Hibernate/1.svg" alt=""><br>,#참고하면 도움 될 주소, (이미지출처)<a href="https://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#architecture">Hibernate Document Link</a> </p>
+<p>위 주소의 userguide에서 가져온 관계도이다. Hibernate는 다음의 객체를 제공한다.</p>
+<table>
+<thead>
+<tr>
+<th><strong>클래스</strong></th>
+<th><strong>내용</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SessionFactory (org.hibernate.SessionFactory)</td>
+<td>SessionFactory는 말 그대로 Session생성하기 위한 공장이다. 사용자 요청에 따라 수십 수만개의 Session을 생성한다. 어플리케이션 전체 접근자는 이 하나의 객체를 공유한다.</td>
+</tr>
+<tr>
+<td>Session (org.hibernate.Session)</td>
+<td>우리는 Session의 구현체인 EntityManager를 다룰것이다. 이는 단일 스레드로 동작하며 JDBC를 내부에 포함하고 있어 DB와 Connection 역할을 담당한다.</td>
+</tr>
+<tr>
+<td>Transaction (org.hibernate.Transaction)</td>
+<td>EntityTransaction은 Connection된 이후 트랜잭션 영역을 관리한다.</td>
+</tr>
+</tbody></table>
+<h2 id="0-Requirements"><a href="#0-Requirements" class="headerlink" title="0. Requirements"></a>0. Requirements</h2><p>본 포스팅은 다음과 같은 환경임.</p>
+<blockquote>
+<p>Build Version</p>
+<ul>
+<li>Springboot 2.2.5.RELEASE</li>
+<li>Gradle 6.2.2</li>
+</ul>
+<p>Dependencies(implementation)</p>
+<ul>
+<li>org.springframework.boot:spring-boot-starter-data-jpa</li>
+<li>org.springframework.boot:spring-boot-starter-web</li>
+<li>org.springframework.boot:spring-boot-starter-data-jdbc</li>
+</ul>
+<p>Dependencies(compileOnly)</p>
+<ul>
+<li>org.projectlombok:lombok</li>
+</ul>
+<p>Dependencies(runtimeOnly)</p>
+<ul>
+<li>com.oracle.ojdbc:ojdbc8</li>
+</ul>
+<p>Dependencies(testCompile)</p>
+<ul>
+<li>junit:junit:4.12</li>
+</ul>
+<p>DBMS</p>
+<ul>
+<li>Oracle Database 11g Standard Edition One(se1) </li>
+</ul>
+<p>IDE Build Tool</p>
+<ul>
+<li>IntelliJ IDEA</li>
+</ul>
+</blockquote>
+<h2 id="1-datasource-작성-및-DDL설정"><a href="#1-datasource-작성-및-DDL설정" class="headerlink" title="1. datasource 작성 및 DDL설정"></a>1. datasource 작성 및 DDL설정</h2><p>Springboot 2.0 이상부턴 DBCP를 사용하지 않는다. HikariCP를 default로 사용하며 기존 datasource 설정은 그대로 사용하되 나머지 Pool에 대한 설정은<br>HikariCP가 담당한다.<br><a href="https://github.com/brettwooldridge/HikariCP">* DBCP2와 HikariCP 성능분석 보러가기</a></p>
+<h3 id="path-resources-application-yml"><a href="#path-resources-application-yml" class="headerlink" title="path : resources/application.yml"></a>path : resources/application.yml</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">datasource:</span><br>    <span class="hljs-attr">driver-class-name:</span> <span class="hljs-string">oracle.jdbc.OracleDriver</span><br>    <span class="hljs-attr">url:</span> <span class="hljs-string">jdbc:oracle:thin:@&lt;URL&gt;:&lt;PASSWORD&gt;/&lt;USERNAME&gt;</span><br>    <span class="hljs-attr">username:</span> <span class="hljs-string">&lt;USERNAME&gt;</span><br>    <span class="hljs-attr">password:</span> <span class="hljs-string">&lt;PASSWORD&gt;</span><br><br>    <span class="hljs-attr">hikari:</span><br>      <span class="hljs-attr">connection-timeout:</span> <span class="hljs-number">30000</span><br>      <span class="hljs-attr">maximum-pool-size:</span> <span class="hljs-number">5</span><br>      <span class="hljs-attr">minimum-idle:</span> <span class="hljs-number">5</span><br>      <span class="hljs-attr">validation-timeout:</span> <span class="hljs-number">5000</span><br>      <span class="hljs-attr">idle-timeout:</span> <span class="hljs-number">600000</span><br>      <span class="hljs-attr">max-lifetime:</span> <span class="hljs-number">1800000</span><br>      <span class="hljs-attr">leak-detection-threshold:</span> <span class="hljs-number">0</span><br><br>  <span class="hljs-attr">jpa:</span><br>    <span class="hljs-attr">hibernate:</span><br>      <span class="hljs-attr">ddl-auto:</span> <span class="hljs-string">update</span><br><br>    <span class="hljs-attr">show-sql:</span> <span class="hljs-literal">true</span><br>    <span class="hljs-attr">generate-ddl:</span> <span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
+<p><a href="https://javacan.tistory.com/entry/spring-boot-2-hikaricp-property">* hikariCP의 각 속성정보는 다음의 포스팅을 참고하였음.</a><br><a href="https://pravusid.kr/java/2018/10/10/spring-database-initialization.html">* DDL 설정관련 다음 포스팅 참고하였음.</a></p>
+<ul>
+<li><p>jpa.hibernate.ddl-auto</p>
+<ul>
+<li>none: 아무것도 실행하지 않는다 (대부분의 DB에서 기본값이다)</li>
+<li>create-drop: SessionFactory가 시작될 때 drop및 생성을 실행하고, SessionFactory가 종료될 때 drop을 실행한다 (in-memory DB의 경우 기본값이다)</li>
+<li>create: SessionFactory가 시작될 때 데이터베이스 drop을 실행하고 생성된 DDL을 실행한다.</li>
+<li>update: 변경된 스키마를 적용한다.</li>
+<li>validate: 변경된 스키마가 있다면 변경점을 출력하고 애플리케이션을 종료한다.</li>
+</ul>
+</li>
+<li><p>jpa.hibernate.show-sql</p>
+<ul>
+<li>true, false : DB에 전달한 쿼리를 로그에 띄울지 여부를 결정한다.</li>
+</ul>
+</li>
+<li><p>jpa.hibernate.generate-ddl</p>
+<ul>
+<li>true, false : jpa.hibernate.dll-auto 옵션을 사용할 것인지 여부를 결정한다.</li>
+</ul>
+</li>
+</ul>
+<p>JPA를 활용한다면 DB에 접근해 일일이 DDL을 보내지 않고도 쉽게 생성이 가능하다. 단, ddl-auto의 value값의 내용을 보면 알 수 있듯 잘못하다간 기존 적용하여 사용중인<br>DB를 날리는 수 있으니 다양한 테스트케이스를 확인할때만 해당 기능을 활용하는 것이 좋을 것이다. </p>
+<h2 id="2-자동기본키-매핑"><a href="#2-자동기본키-매핑" class="headerlink" title="2. 자동기본키 매핑"></a>2. 자동기본키 매핑</h2><p>JPA 기본키 매핑 </p>
+<ul>
+<li>JPA Primary Key<ul>
+<li>Automatic Primary Key</li>
+<li>Application Set Primary Key</li>
+<li>Composite Primary Key</li>
+<li>Embedded Primary Key</li>
+<li>Obtaining the Primary Key</li>
+</ul>
+</li>
+</ul>
+<p>해당 포스트는 <strong>@GeneratedValue</strong> 를 적용해 Oracle의 자동증가 시퀸스를 활용한  <strong>Automatic Primary Key</strong> 매핑을 다뤄본다.</p>
+<h3 id="Domain-객체-생성"><a href="#Domain-객체-생성" class="headerlink" title="Domain 객체 생성"></a>Domain 객체 생성</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.kimbaro.test.demo.domain;<br><br><span class="hljs-keyword">import</span> lombok.Builder;<br><span class="hljs-keyword">import</span> lombok.Data;<br><span class="hljs-keyword">import</span> org.hibernate.annotations.CreationTimestamp;<br><span class="hljs-keyword">import</span> org.hibernate.annotations.UpdateTimestamp;<br><br><span class="hljs-keyword">import</span> javax.persistence.*;<br><span class="hljs-keyword">import</span> javax.validation.constraints.NotNull;<br><span class="hljs-keyword">import</span> java.io.Serializable;<br><span class="hljs-keyword">import</span> java.sql.Timestamp;<br><br><span class="hljs-meta">@Entity</span><br><span class="hljs-meta">@Data</span><br><span class="hljs-meta">@Table</span>(<br>        name = <span class="hljs-string">"USER_INFO_DB"</span>,<br>        uniqueConstraints = &#123;<span class="hljs-meta">@UniqueConstraint</span>(<br>                name = <span class="hljs-string">"USER_INFO_UNIQ"</span>,<br>                columnNames = &#123;<span class="hljs-string">"NICKNAME"</span>&#125;)&#125;,<br>        indexes = &#123;<span class="hljs-meta">@Index</span>(<br>                name = <span class="hljs-string">"USER_INFO_IDX"</span>,<br>                columnList = <span class="hljs-string">"NICKNAME,NAME"</span>)&#125;)<br><span class="hljs-meta">@SequenceGenerator</span>(<br>        name = <span class="hljs-string">"USER_INFO_SEQ"</span>,<br>        sequenceName = <span class="hljs-string">"USER_INFO_SEQ_1"</span>,<br>        allocationSize = <span class="hljs-number">2</span>,<br>        initialValue = <span class="hljs-number">1</span>)<br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">USER_INFO</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Serializable</span> </span>&#123;<br><br>    <span class="hljs-meta">@Id</span><br>    <span class="hljs-meta">@GeneratedValue</span>(<br>            strategy = GenerationType.SEQUENCE,<br>            generator = <span class="hljs-string">"USER_INFO_SEQ"</span>)<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">long</span> ID;<br><br>    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"NICKNAME"</span>)<br>    <span class="hljs-meta">@NotNull</span><br>    <span class="hljs-keyword">private</span> String NICKNAME;<br><br>    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"NAME"</span>)<br>    <span class="hljs-meta">@NotNull</span><br>    <span class="hljs-keyword">private</span> String NAME;<br><br>    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"GENDER"</span>)<br>    <span class="hljs-meta">@NotNull</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">char</span> GENDER;<br><br>    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"AGE"</span>)<br>    <span class="hljs-meta">@NotNull</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> AGE;<br><br>    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"CREATE_DATE"</span>)<br>    <span class="hljs-meta">@CreationTimestamp</span><br>    <span class="hljs-keyword">private</span> Timestamp CREATE_DATE;<br><br>    <span class="hljs-meta">@Column</span>(name = <span class="hljs-string">"LOGIN_DATE"</span>)<br>    <span class="hljs-meta">@UpdateTimestamp</span><br>    <span class="hljs-keyword">private</span> Timestamp LOGIN_DATE;<br><br>    <span class="hljs-meta">@Builder</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">USER_INFO</span><span class="hljs-params">(String NICKNAME, String NAME, <span class="hljs-keyword">char</span> GENDER, <span class="hljs-keyword">int</span> AGE)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.NICKNAME = NICKNAME;<br>        <span class="hljs-keyword">this</span>.NAME = NAME;<br>        <span class="hljs-keyword">this</span>.GENDER = GENDER;<br>        <span class="hljs-keyword">this</span>.AGE = AGE;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">USER_INFO</span><span class="hljs-params">()</span> </span>&#123;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>@SequenceGenerator</strong>의 설정에 의해 <strong>“MY_FAVOLITE_SEQ_1”</strong> 이란 시퀸스가 생성될 것이다.<br><strong>@CreationTimestamp</strong>는 해당 Entity를 insert하는 경우 현재 시간을 반영하며, <strong>@UpdateTimestamp</strong>는 해당 id의 Entity가 DB와 매핑될때마다 그 시간대를 update한다.<br><a href="../Entity/">* 각 Annotation의 상세한 내용은 해당 링크를 참고하도록 한다.</a></p>
+<p><img src="/images/JPA-Hibernate/2.png" alt=""><br>이후 빌드 후 DB에 연결하여 내용을 보면 해당 테이블과 설정된 키 정보가 생성되어 있다.</p>
+<p><img src="/images/JPA-Hibernate/3.png" alt=""><br>ddl-auto의 값이 update이고 서버를 빌드할때마다 show-sql:true로 인해 db에 어떤 쿼리를 전달하는지 로그에 작성되어 있을 것이다.<br>해당 설정 정보가 DB서버와 다르다면 Entity에 적용된 설정으로 DB서버에 반영되므로 이에 주의하여 상황에 따라 ddl-auto의 값을 변경해줘야 한다.</p>
+<h2 id="3-Persistence-Context-설계"><a href="#3-Persistence-Context-설계" class="headerlink" title="3. Persistence Context 설계"></a>3. Persistence Context 설계</h2><p><em>자바 ORM표준 JPA프로그래밍 김영환 (저자)</em> 를 참고하면 다음과 같이 설명하고 있다.”Persistence Context”는 “영속성 컨텍스트”로 엔티티를 영구 저장하는 환경이다.<br>JPA에서 엔티티의 생명주기에 따라 다음과 같이 4가지 상태가 존재하는데</p>
+<ul>
+<li>비영속</li>
+<li>영속</li>
+<li>준영속</li>
+<li>삭제 </li>
+</ul>
+<p>각각의 상태에 따라 엔티티가 어떻게 이루는지 테스트 케이스를 작성하며 알아본다.</p>
+<h2 id="4-Test-case-작성"><a href="#4-Test-case-작성" class="headerlink" title="4. Test case 작성"></a>4. Test case 작성</h2><h3 id="Transaction"><a href="#Transaction" class="headerlink" title="Transaction"></a>Transaction</h3><p>처음 언급했던 Hibernate가 제공하는 EntityManagerFactory, EntityManager, EntityTransaction과 서비스로직을 작성해 hibernate_save()실행해본다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">hibernate_save</span><span class="hljs-params">()</span> </span>&#123;<br>    EntityManager em = emf.createEntityManager();<br>    EntityTransaction transaction = em.getTransaction();<br>    <span class="hljs-keyword">try</span> &#123;<br>        transaction.begin(); <span class="hljs-comment">//트랜잭션 시작</span><br><br>        <span class="hljs-comment">//서비스 로직 동작 영역</span><br>        save(em);<br><br>        transaction.commit(); <span class="hljs-comment">//트랜잭션 커밋</span><br>    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>        transaction.rollback(); <span class="hljs-comment">//트랜잭션 롤백</span><br>        e.printStackTrace();<br>    &#125;<br>&#125;<br><br><span class="hljs-meta">@Test</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">save</span><span class="hljs-params">(EntityManager em)</span> <span class="hljs-keyword">throws</span> Exception</span>&#123;<br>    USER_INFO user_info =<br>            <span class="hljs-keyword">new</span> USER_INFO().builder()<br>                    .NICKNAME(<span class="hljs-string">"kimbaro"</span>)<br>                    .NAME(<span class="hljs-string">"HongGilDong"</span>)<br>                    .AGE(<span class="hljs-number">11</span>).GENDER(<span class="hljs-string">'남'</span>)<br>                    .build();<br><br>    em.persist(user_info);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><img src="/images/JPA-Hibernate/4.png" alt=""></p>
+<p>table을 조회하니 Entity 객체에 대입한 값과 동일하게 매핑이 되어 있다. </p>
+<h3 id="비영속상태"><a href="#비영속상태" class="headerlink" title="비영속상태"></a>비영속상태</h3><p>23~28 Line을 보면 USER_INFO 라는 Entity객체가 초기화 되는 과정이 담겨있는데 해당 구간에서 USER_INFO에 대입된 값은 식별자(ID값)가 없는 상태이다.</p>
+<h3 id="영속상태"><a href="#영속상태" class="headerlink" title="영속상태"></a>영속상태</h3><p>이후 em.persist() 메서드를 불러오는데 이 경우 USER_INFO를 DB에 보내기 위한 식별자(ID)를 할당한 상태이다. 해당 객체 정보는 아직 DB에 저장된 상태는 아니지만<br>EntityManager가 관리하는 1차 캐시에 올라간 상태이다. 정상적으로 영속상태 인지 여부는 EntityManager.contains를 통해 확인해 볼 수 있다.<br><img src="/images/JPA-Hibernate/5.png" alt=""></p>
+<h3 id="준영속상태에서-영속상태로-병합"><a href="#준영속상태에서-영속상태로-병합" class="headerlink" title="준영속상태에서 영속상태로 병합"></a>준영속상태에서 영속상태로 병합</h3><p>persist()메서드를 통한 EntityManager 의 캐시에 객체가 담긴 경우 식별자 값이 해당 객체에 할당된다. 이후 EntityManager의 캐시에서<br>분리된다면 이를 준영속 상태라 한다. </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.kimbaro.test.demo;<br><br><span class="hljs-keyword">import</span> com.kimbaro.test.demo.domain.USER_INFO;<br><span class="hljs-keyword">import</span> org.junit.Assert;<br><span class="hljs-keyword">import</span> org.junit.jupiter.api.Test;<br><span class="hljs-keyword">import</span> org.springframework.boot.test.context.SpringBootTest;<br><br><span class="hljs-keyword">import</span> javax.persistence.*;<br><span class="hljs-keyword">import</span> javax.transaction.Transactional;<br><br><span class="hljs-meta">@SpringBootTest</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DemoApplicationTests</span> </span>&#123;<br><br>    <span class="hljs-comment">// 서버 빌드 시 초기화된 팩토리 객체를 불러온다.</span><br>    <span class="hljs-comment">// persistence unit의 name을 지정 하지 않은경우 default</span><br>    <span class="hljs-comment">// 팩토리는 서버를 빌드하며 초기화를 진행한다.</span><br>    <span class="hljs-meta">@PersistenceUnit</span><br>    <span class="hljs-keyword">private</span> EntityManagerFactory emf;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-meta">@Transactional</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">hibernate_save</span><span class="hljs-params">()</span> </span>&#123;<br>        EntityManager em = emf.createEntityManager();<br>        EntityTransaction transaction = em.getTransaction();<br>        USER_INFO user_info =<br>                <span class="hljs-keyword">new</span> USER_INFO().builder()<br>                        .NICKNAME(<span class="hljs-string">"kimbaro_5"</span>)<br>                        .NAME(<span class="hljs-string">"HongGilDong"</span>)<br>                        .AGE(<span class="hljs-number">11</span>).GENDER(<span class="hljs-string">'남'</span>)<br>                        .build();<br>        <span class="hljs-keyword">try</span> &#123;<br>            transaction.begin(); <span class="hljs-comment">//트랜잭션 시작</span><br>            <span class="hljs-comment">/*<br>            서비스 로직 동작 영역<br>            */</span><br>            save(user_info, em);<br><br>            transaction.commit(); <span class="hljs-comment">//트랜잭션 커밋</span><br>            em.close(); <span class="hljs-comment">// EntityManager 에 담긴 캐시를 모두 제거</span><br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            transaction.rollback(); <span class="hljs-comment">//트랜잭션 롤백</span><br>            e.printStackTrace();<br>        &#125;<br><br>        em = emf.createEntityManager();<br>        transaction = em.getTransaction();<br><br>        <span class="hljs-keyword">try</span> &#123;<br>            transaction.begin();<br>            <span class="hljs-comment">/*<br>            서비스 로직 동작 영역<br>            */</span><br>            save_merge(user_info, em);<br><br>            transaction.commit();<br>            em.close();   <span class="hljs-comment">// EntityManager 에 담긴 캐시를 모두 제거</span><br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            transaction.rollback();<br>            e.printStackTrace();<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">save</span><span class="hljs-params">(USER_INFO user_info, EntityManager em)</span><br>            <span class="hljs-keyword">throws</span> Exception </span>&#123;<br>        Assert.assertFalse(<span class="hljs-string">"비영속상태, 식별자 값이 할당되어 있지 않음."</span><br>                , em.contains(user_info));<br><br>        em.persist(user_info); <span class="hljs-comment">//EntityManager에 객체 전달</span><br>        Assert.assertTrue(<span class="hljs-string">"영속상태, 식별가 값이 할당되어 있고 1차 캐시에 올라간 상태."</span><br>                , em.contains(user_info));<br><br>        System.out.println(<span class="hljs-string">"영속상태 할당받은 식별자 값 em.persist() : "</span><br>                + user_info.getID());<br><br>        <span class="hljs-comment">//준영속상태(분리)</span><br>        <span class="hljs-comment">//EntityManager에 저장된 캐시에 user_info 변수의 객체를 분리시킴.</span><br>        em.detach(user_info);<br>        Assert.assertFalse(<span class="hljs-string">"준영속상태, 식별자값 할당 되어 있으나 캐시에 분리된 상태"</span><br>                , em.contains(user_info));<br><br>        <span class="hljs-comment">//detached된 상태 이므로 최종적으로 DB에 값이 저장되지 않음.</span><br>    &#125;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">save_merge</span><span class="hljs-params">(USER_INFO user_info, EntityManager em)</span><br>            <span class="hljs-keyword">throws</span> Exception </span>&#123;<br>        user_info.setNICKNAME(<span class="hljs-string">"GamJaDa2"</span>);<br>        Assert.assertFalse(<span class="hljs-string">"준영속상태, 식별자값 할당 되어 있으나 캐시에 분리된 상태"</span><br>                , em.contains(user_info));<br><br>        user_info = em.merge(user_info); <span class="hljs-comment">//병합</span><br>        System.out.println(<span class="hljs-string">"영속상태, 병합 후 자동기본키 매핑으로 기본키 값이 변환됨. : "</span><br>                + user_info.getID());<br>        Assert.assertTrue(<span class="hljs-string">"영속상태, 식별가 값이 할당되어 있고 1차 캐시에 올라간 상태."</span><br>                , em.contains(user_info));<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>해당 코드를 보면 em.detach() 메서드를 통해 분리시킴을 알 수 있다. <strong>분리된 상태에선 DB에 값이 조회되지 않는다.</strong><br>분리된 객체는 em.marge()를 통해 다시 병합하여 EntityManager의 캐시에 등록되고 마지막 커밋으로 DB에 insert된다.</p>
+<p><img src="/images/JPA-Hibernate/6.png" alt=""></p>
+
         </div>
         
         
@@ -202,7 +328,7 @@
             
             <li><span class="pagination-ellipsis has-text-black-ter">&hellip;</span></li>
             
-            <li><a class="pagination-link has-text-black-ter" href="/page/14/">14</a></li>
+            <li><a class="pagination-link has-text-black-ter" href="/page/15/">15</a></li>
             
         </ul>
     </nav>
@@ -247,7 +373,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            14
+                            15
                         </p>
                     </a>
                 </div>
@@ -259,7 +385,7 @@
                     </p>
                     <a href="/categories">
                         <p class="title has-text-weight-normal">
-                            20
+                            22
                         </p>
                     </a>
                 </div>
@@ -271,7 +397,7 @@
                     </p>
                     <a href="/tags">
                         <p class="title has-text-weight-normal">
-                            26
+                            28
                         </p>
                     </a>
                 </div>
@@ -326,7 +452,7 @@
         <h3 class="menu-label">
             태그 클라우드
         </h3>
-        <a href="/tags/Bluetooth/" style="font-size: 12.5px;">Bluetooth</a> <a href="/tags/Carla/" style="font-size: 10px;">Carla</a> <a href="/tags/Carla-0-9-7/" style="font-size: 10px;">Carla_0.9.7</a> <a href="/tags/Entity/" style="font-size: 10px;">Entity</a> <a href="/tags/GCP/" style="font-size: 17.5px;">GCP</a> <a href="/tags/Hibernate/" style="font-size: 12.5px;">Hibernate</a> <a href="/tags/Https/" style="font-size: 12.5px;">Https</a> <a href="/tags/JPA/" style="font-size: 15px;">JPA</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/ORM/" style="font-size: 12.5px;">ORM</a> <a href="/tags/SSH/" style="font-size: 12.5px;">SSH</a> <a href="/tags/SSL/" style="font-size: 12.5px;">SSL</a> <a href="/tags/Simulator/" style="font-size: 10px;">Simulator</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/Springboot/" style="font-size: 15px;">Springboot</a> <a href="/tags/deploy/" style="font-size: 17.5px;">deploy</a> <a href="/tags/gradle/" style="font-size: 12.5px;">gradle</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 17.5px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 12.5px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 12.5px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
+        <a href="/tags/Bluetooth/" style="font-size: 12.5px;">Bluetooth</a> <a href="/tags/Carla/" style="font-size: 10px;">Carla</a> <a href="/tags/Carla-0-9-7/" style="font-size: 10px;">Carla_0.9.7</a> <a href="/tags/Entity/" style="font-size: 10px;">Entity</a> <a href="/tags/GCP/" style="font-size: 17.5px;">GCP</a> <a href="/tags/Hibernate/" style="font-size: 12.5px;">Hibernate</a> <a href="/tags/Https/" style="font-size: 12.5px;">Https</a> <a href="/tags/JPA/" style="font-size: 15px;">JPA</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/ORM/" style="font-size: 12.5px;">ORM</a> <a href="/tags/SSH/" style="font-size: 12.5px;">SSH</a> <a href="/tags/SSL/" style="font-size: 12.5px;">SSL</a> <a href="/tags/Simulator/" style="font-size: 10px;">Simulator</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/Springboot/" style="font-size: 15px;">Springboot</a> <a href="/tags/chatting/" style="font-size: 10px;">chatting</a> <a href="/tags/deploy/" style="font-size: 17.5px;">deploy</a> <a href="/tags/gradle/" style="font-size: 12.5px;">gradle</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 17.5px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 12.5px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%EC%B1%84%ED%8C%85/" style="font-size: 10px;">채팅</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 12.5px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
     </div>
 </div>
     
@@ -451,6 +577,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/chatting/">
+                        <span class="tag">chatting</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/deploy/">
                         <span class="tag">deploy</span>
                         <span class="tag is-grey">4</span>
@@ -502,6 +635,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/">
                         <span class="tag">저전력</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/%EC%B1%84%ED%8C%85/">
+                        <span class="tag">채팅</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -588,6 +728,22 @@
         <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/6/">
             <span class="level-start">
                 <span class="level-item">6</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/">
+            <span class="level-start">
+                <span class="level-item">Reactor-Pattern</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/java-NIO/">
+            <span class="level-start">
+                <span class="level-item">java.NIO</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">1</span>
@@ -709,6 +865,17 @@
             아카이브
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/03/">
@@ -857,6 +1024,22 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/">
+            <span class="level-start">
+                <span class="level-item">Reactor-Pattern</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/java-NIO/">
+            <span class="level-start">
+                <span class="level-item">java.NIO</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
         <a class="level is-marginless" href="/categories/SpringBoot-JPA/">
             <span class="level-start">
                 <span class="level-item">SpringBoot-JPA</span>
@@ -973,6 +1156,17 @@
             아카이브
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/03/">

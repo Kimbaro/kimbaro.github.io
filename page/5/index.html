@@ -136,17 +136,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-09-10T18:58:50.000Z">2019-09-11</time>
+                <time class="level-item has-text-grey" datetime="2020-02-17T07:43:26.000Z">2020-02-17</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Tutorial-Deploy-SpringBoot-Netty/">(Tutorial) Deploy-SpringBoot-Netty</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Tutorial-Deploy-SpringBoot-Netty/6/">6</a>
+                <a class="has-link-grey -link" href="/categories/SpringBoot-JPA/">SpringBoot-JPA</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/SpringBoot-JPA/3-Entity/">3 - Entity</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    12분 읽기 (대략 1783 단어)
+                    7분 읽기 (대략 984 단어)
                 </span>
                 
                 
@@ -155,77 +155,116 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/09/11/SpringBoot-Netty-%E1%84%89%E1%85%A5%E1%84%87%E1%85%A5%E1%84%8B%E1%85%A6-SSL-%E1%84%8C%E1%85%A5%E1%86%A8%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%80%E1%85%B52/">SpringBoot Netty 서버에 SSL 적용기 2</a>
+                <a class="has-link-black-ter" href="/2020/02/17/JPA-Entity/">JPA Entity Annotation 정리</a>
             
         </h1>
         <div class="content">
-            <blockquote>
-<h1 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h1><p>이번장은 SSL (Secure Socket Layer) 인증서를 발급받고 이를 도메인이 적용된 서버에 적용하는 과정을 담았다.<br>SSL은 Certificate Authority(CA)라 불리는 서드 파티로부터 서버와 클라이언트간에 정보교환에 있어 암호를 적용한 방식을 말한다.</p>
+            <p><a href="http://acornpub.co.kr/book/jpa-programmig">본 내용은 자바 ORM 표준 JPA 프로그래임 (김영환 지음)을 참고하였음.</a></p>
+<blockquote>
+<p>Requirements</p>
+<ul>
+<li>Springboot 2.2.4.RELEASE</li>
+<li>Gradle 6.0.1</li>
+</ul>
+<p>Dependencies(implementation)</p>
+<ul>
+<li>org.springframework.boot:spring-boot-starter-data-jpa</li>
+<li>org.springframework.boot:spring-boot-starter-web</li>
+<li>org.springframework.boot:spring-boot-starter-data-jdbc</li>
+</ul>
+<p>Dependencies(compileOnly)</p>
+<ul>
+<li>org.projectlombok:lombok</li>
+</ul>
+<p>Dependencies(runtimeOnly)</p>
+<ul>
+<li>com.oracle.ojdbc:ojdbc8</li>
+</ul>
+<p>Dependencies(testCompile)</p>
+<ul>
+<li>junit:junit:4.12</li>
+</ul>
+<p>DBMS</p>
+<ul>
+<li>Oracle Database 11g Standard Edition One(se1) </li>
+</ul>
 </blockquote>
-<p><a href="https://12bme.tistory.com/80">SSL 개념정리</a></p>
-<h2 id="무료-SSL-Secure-Socket-Layer-인증서-발급받기"><a href="#무료-SSL-Secure-Socket-Layer-인증서-발급받기" class="headerlink" title="무료 SSL (Secure Socket Layer) 인증서 발급받기"></a>무료 SSL (Secure Socket Layer) 인증서 발급받기</h2><p><img src="/images/Simple-springboot-tutorial6-SSL/1.png" alt=""><br>인증서의 유효기간이 3개월로 짧은대신 무료이다.<br>현재 DNS 주소와 연결된 서버의 도메인명을 입력해 준다. 이후 “Create Free SSL Certificate” 클릭한다.<br><a href="https://www.sslforfree.com/">무료 SSL sslforfree</a><br></br><br><strong>“Manual Verification” -&gt; “Manually Verify Domain”</strong><br><img src="/images/Simple-springboot-tutorial6-SSL/2.png" alt=""></p>
-<ol>
-<li>“Automatic FTP Verification” - FTP 를 이용한 자동 처리 방식</li>
-<li>“Manual Verification” - 소유권 인증 파일을 다운로드받아 직업 업로드</li>
-<li>“Manual Verification” - DNS에 TXT 레코드로 소유권 인증 키를 추가</li>
+<p>Entity 맵핑에 있어 XML을 이용한 외부에서의 설정 방식과 Annotation을 이용한 내부에서의 설정 방식이 있다.<br>이중 사용이 간편하고 상대방이 보기에도 코드가 직관적인 장점을 지닌 Annotation방식을 이용하며,<br>다양한 상황에 따른 테이블의 제약조건을 가정하여 매핑 작업에 활용된 Annotation을 정리한다.</p>
+<h1 id="목차"><a href="#목차" class="headerlink" title="목차"></a>목차</h1><ol>
+<li>객체와 테이블 매핑<ul>
+<li><a href="#annotation-entity">@Entity</a></li>
+<li><a href="#annotation-table">@Table</a></li>
+</ul>
+</li>
+<li>기본 키 매핑<ul>
+<li><a href="#annotation-id">직접할당</a></li>
+<li><a href="#자동생성">자동생성(Sequence전략)</a></li>
+</ul>
+</li>
+<li>필드와 컬럼 매핑<ul>
+<li><a href="#annotation-column">@Column</a></li>
+</ul>
+</li>
+<li>연관관계 매핑<ul>
+<li><a href="#annotation-many-to-one">@ManyToOne</a></li>
+<li><a href="#annotation-join-column">@JoinColumn</a></li>
+</ul>
+</li>
 </ol>
-<p>다음의 3가지의 발급 방식이 있는데, 본인은 “Manual Verification”을 사용하였다.<br>도메인명을 입력하고 인증을 받기 위한 파일을 자신의 웹서버에 직접 업로드하여 인증파일을 발급받는다.<br>인증파일은 “Manually Verify Domain” 클릭하여 진행한다.<br></br><br><img src="/images/Simple-springboot-tutorial6-SSL/3.png" alt=""></p>
-<ol>
-<li>Download the following verification files by clicking on each link below 하위 목록<br>“Download File #1” , “Download File #2”를 받은 후,</li>
-<li>Verify successful upload by visiting the following links in your browser<br>아래의 경로를 생성하여 다운로드 파일을 업로드한다.<br>.well-known/acme-challenge/다운로드파일#1 , #2</li>
-</ol>
-<p><strong>자신의 프로젝트 아래에 resources 폴더에 위치하고있다.</strong><br><img src="/images/Simple-springboot-tutorial6-SSL/4.png" alt=""></p>
-<h2 id="path등록"><a href="#path등록" class="headerlink" title="path등록"></a>path등록</h2><p><strong>이미지 클릭 시 확대</strong><br><img src="/images/Simple-springboot-tutorial6-SSL/5.png" alt=""><br>Sample-Project에 Controller는 생성이 되어있다. 자신의 Spring-boot 프로젝트의 Controller에 해당 파일을 SSL인증 발급을 위해 경로를 설정해줘야한다.</p>
-<p>샘플프로젝트 - <a href="https://github.com/Kimbaro/springboot-sample.git">https://github.com/Kimbaro/springboot-sample.git</a></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// import </span><br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Value;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Bean;<br><span class="hljs-keyword">import</span> org.springframework.core.io.Resource;<br><span class="hljs-keyword">import</span> org.springframework.http.MediaType;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Controller;<br><span class="hljs-keyword">import</span> org.springframework.web.reactive.function.server.RouterFunction;<br><span class="hljs-keyword">import</span> org.springframework.web.reactive.function.server.ServerResponse;<br><br><span class="hljs-keyword">import</span> <span class="hljs-keyword">static</span> org.springframework.web.reactive.function.server.RequestPredicates.GET;<br><span class="hljs-keyword">import</span> <span class="hljs-keyword">static</span> org.springframework.web.reactive.function.server.RouterFunctions.route;<br><span class="hljs-keyword">import</span> <span class="hljs-keyword">static</span> org.springframework.web.reactive.function.server.ServerResponse.ok;<br><br><span class="hljs-comment">//class field</span><br> <span class="hljs-meta">@Bean</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> RouterFunction&lt;ServerResponse&gt; <span class="hljs-title">sslforfree1</span><span class="hljs-params">(@Value(<span class="hljs-string">"classpath:/.well-known/acme-challenge/&lt;인증서파일이름&gt;"</span>)</span> <span class="hljs-keyword">final</span> Resource indexHtml) </span>&#123;<br>        <span class="hljs-keyword">return</span> route(GET(<span class="hljs-string">"/.well-known/acme-challenge/&lt;인증서파일이름&gt;"</span>), request -&gt; ok().contentType(MediaType.TEXT_PLAIN).syncBody(indexHtml));<br>    &#125;<br><br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> RouterFunction&lt;ServerResponse&gt; <span class="hljs-title">sslforfree2</span><span class="hljs-params">(@Value(<span class="hljs-string">"classpath:/.well-known/acme-challenge/&lt;인증서파일이름&gt;"</span>)</span> <span class="hljs-keyword">final</span> Resource indexHtml) </span>&#123;<br>        <span class="hljs-keyword">return</span> route(GET(<span class="hljs-string">"/.well-known/acme-challenge/&lt;인증서파일이름&gt;"</span>), request -&gt; ok().contentType(MediaType.TEXT_PLAIN).syncBody(indexHtml));<br>    &#125;<br></code></pre></td></tr></table></figure>
-<h2 id="http-URL-포트포워딩"><a href="#http-URL-포트포워딩" class="headerlink" title="http://URL 포트포워딩"></a><a href="http://URL">http://URL</a> 포트포워딩</h2><p>SSL 검증을 위해 사이트에서 보여준 주소는 http 형식의 80포트이다. 파일 path를 잡아줬다해도 해당 사이트에서 접근하는 경로에 유의하여<br>80포트 접근 시 8080포트로 Redirect할 필요가 있다.(본인 환경에 따라 포트는 다를 수 있음.)<br><img src="/images/Simple-springboot-tutorial6-SSL/6.png" alt=""></p>
-<p>리눅스의 iptables를 활용해 규칙을 만들어준다.<br>80 포트 -&gt; 8080포트로 Redirect</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080<br></code></pre></td></tr></table></figure>
-<p>포트포워딩설정 확인</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">iptables -t nat -L --line-numbers<br></code></pre></td></tr></table></figure>
-<p><img src="/images/Simple-springboot-tutorial6-SSL/7.png" alt=""><br>잘못된 입력으로 인한 iptables 삭제 필요 시 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">iptables -t nat -D PREROUTING &lt;해당하는리스트번호입력&gt;<br></code></pre></td></tr></table></figure>
-
-<p><strong>규칙이 올바름에도 접속이 안될경우 자신의 GCP환경의 방화벽규칙을 확인한다. 또는 리눅스 환경에서 방화벽 접근 허용</strong></p>
-<h2 id="확인"><a href="#확인" class="headerlink" title="확인"></a>확인</h2><p><img src="/images/Simple-springboot-tutorial6-SSL/8.png" alt=""><br><img src="/images/Simple-springboot-tutorial6-SSL/9.png" alt=""></p>
-<h2 id="인증서-발급"><a href="#인증서-발급" class="headerlink" title="인증서 발급"></a>인증서 발급</h2><p><img src="/images/Simple-springboot-tutorial6-SSL/10.png" alt=""><br>아래의 “Download SSL Certificate” 클릭<br></br><br><img src="/images/Simple-springboot-tutorial6-SSL/11.png" alt=""><br>인증서 생성이 완료되었다. “Download All SSL Certificate Files” 클릭하여 파일을 받는다.</p>
-<p><img src="/images/Simple-springboot-tutorial6-SSL/12.png" alt=""><br>위 이미지와 같이 3개의 파일이 있어야 한다.</p>
+<h1 id="본문"><a href="#본문" class="headerlink" title="본문"></a>본문</h1><h2 id="1-객체와-테이블-매핑"><a href="#1-객체와-테이블-매핑" class="headerlink" title="1. 객체와 테이블 매핑"></a><strong>1. 객체와 테이블 매핑</strong></h2><h3 id="annotation-entity"><a href="#annotation-entity" class="headerlink" title="annotation entity"></a>annotation entity</h3><p>JPA를 사용하는 경우 DB 테이블과 매핑될 클래스는 @Entity가 붙는다. 이는 JPA 프레임워크에서 관리하며 다음과 같은 주의 사항이 있다.</p>
 <ul>
-<li>ca_bundle.crt</li>
-<li>certificate.crt</li>
-<li>private.key</li>
+<li><p>기본 생성자는 필수(public 또는 protected)</p>
+</li>
+<li><p>final 클래스 같은 상수와 추상객체인 enum,interface,inner 클래스에는 사용 불가.</p>
+</li>
+<li><p>맵핑할 객체에 final은 사용할 수 없다.</p>
+<p>기본 생성자가 없는 경우 아래와 같이 <strong>‘JpaSystemException’</strong> 에러가 발생하며 <strong>‘No default constructor for entity’</strong> 의 메시지로<br>사용자에게 기본 생성자가 선언되지 않았음을 알리고 있다.</p>
+</li>
 </ul>
-<h2 id="인증서-조합"><a href="#인증서-조합" class="headerlink" title="인증서 조합"></a>인증서 조합</h2><p>이제 해당 인증서를 조합하여 하나의 아카이브로 만들어야한다.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">openssl pkcs12 -export -out 생성할파일명.pfx -inkey private.key -in certificate.crt -certfile ca_bundle.crt<br></code></pre></td></tr></table></figure>
-<p><img src="/images/Simple-springboot-tutorial6-SSL/13.png" alt=""><br>생성된 pfx 형식의 파일이 있다 해당 파일이 <a href="https://URL">https://URL</a> 형식의 접근을 위한 인증서이다.</p>
-<h2 id="인증서-적용"><a href="#인증서-적용" class="headerlink" title="인증서 적용"></a>인증서 적용</h2><p><img src="/images/Simple-springboot-tutorial6-SSL/14.png" alt=""><br>서버에 자신의 SNAPSHOT 파일이 위치한 경로에 pfx형식의 자신의 인증서를 저장한다.</p>
-<p><img src="/images/Simple-springboot-tutorial6-SSL/15.png" alt=""><br>Spring-Boot의 설정파일인 Application.yml에 server의 내용을 수정한다.</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">port:</span> <span class="hljs-number">8445</span> <span class="hljs-comment">#SSL 사용할 포트 지정</span><br>  <span class="hljs-attr">ssl:</span><br>        <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br>        <span class="hljs-attr">key-store:</span> <span class="hljs-string">certificate_trco.pfx</span><br>        <span class="hljs-attr">key-store-type:</span> <span class="hljs-string">PKCS12</span><br>        <span class="hljs-attr">key-store-password:</span> <span class="hljs-number">123456</span>  <span class="hljs-comment"># pfx 생성 시 설정한 패스워드</span><br>       <span class="hljs-comment"># key-alias: trco.site # (필요시) Alias 명 지정. CSR 자동 생성시에는 CN 명</span><br></code></pre></td></tr></table></figure>
-</br>
-
-<h2 id="클라우드-플랫폼-방화벽-규칙-등록"><a href="#클라우드-플랫폼-방화벽-규칙-등록" class="headerlink" title="클라우드 플랫폼 방화벽 규칙 등록"></a>클라우드 플랫폼 방화벽 규칙 등록</h2><p><img src="/images/Simple-springboot-tutorial6-SSL/16.png" alt=""><br>GCP에 사용할 SSL포트를 허용해준다. 테스트해보자.</p>
-<p><img src="/images/Simple-springboot-tutorial6-SSL/17.png" alt=""><br>8445 포트로 정상 실행 확인<br></br><br><img src="/images/Simple-springboot-tutorial6-SSL/18.png" alt=""><br><a href="https://URL">https://URL</a><br></br><br><img src="/images/Simple-springboot-tutorial6-SSL/19.png" alt=""><br>인증서내용</p>
-<h2 id="https-URL-포트포워딩"><a href="#https-URL-포트포워딩" class="headerlink" title="https://URL 포트포워딩"></a><a href="https://URL">https://URL</a> 포트포워딩</h2><p>기본적으로 도메인 접근 시 http로 접근하며 임의로 사용자가 https를 명시해야만 SSL접속을 시작하기 때문에 다음의 포트 규칙이 필요하다.<br><strong>해당 포스팅에서 사용된 포트는 8445임에 주의한다.</strong></p>
+<p><img src="/images/JPA-Entity/1.png" alt=""></p>
+<h3 id="annotation-table"><a href="#annotation-table" class="headerlink" title="annotation table"></a>annotation table</h3><p>Entity 오브젝트와 매핑할 DB의 테이블 명을 지정한다. 각 속성은 아래와 같다.</p>
 <ul>
-<li>80포트 -&gt; 443포트(서버파일에서설정)<br><img src="/images/Simple-springboot-tutorial6-SSL/20.png" alt=""><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//사용자 환경에 따른 수정이 필요함.</span><br><span class="hljs-comment">//가능하면 OS의 iptables 규칙 443포트 리다이렉션 포트 설정을 요함.</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> http_port = <span class="hljs-number">80</span>;<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> https_port = <span class="hljs-number">443</span>;<br><span class="hljs-meta">@Bean</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">startRedirectServer</span><span class="hljs-params">()</span> </span>&#123;<br>    NettyReactiveWebServerFactory httpNettyReactiveWebServerFactory = <span class="hljs-keyword">new</span> NettyReactiveWebServerFactory(http_port);<br>    httpNettyReactiveWebServerFactory.getWebServer((request, response) -&gt; &#123;<br>        URI uri = request.getURI();<br>        URI httpsUri;<br>        <span class="hljs-keyword">try</span> &#123;<br>            httpsUri = <span class="hljs-keyword">new</span> URI(<span class="hljs-string">"https"</span>, uri.getUserInfo(), uri.getHost(), https_port, uri.getPath(), uri.getQuery(), uri.getFragment());<br>        &#125; <span class="hljs-keyword">catch</span> (URISyntaxException e) &#123;<br>            <span class="hljs-keyword">return</span> Mono.error(e);<br>        &#125;<br>        response.setStatusCode(HttpStatus.MOVED_PERMANENTLY);<br>        response.getHeaders().setLocation(httpsUri);<br>        <span class="hljs-keyword">return</span> response.setComplete();<br>    &#125;).start();<br>&#125;<br></code></pre></td></tr></table></figure>
-자신의 Spring-boot netty의 Controller에 위 코드를 명시한다.<br>80포트 (http-default) -&gt; 443 (https-default)</br>
-</br></li>
-<li>443포트 -&gt; 8445포트(운영체제 iptables)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8445<br>iptables -t nat -L -–line-numbers<br></code></pre></td></tr></table></figure>
-<img src="/images/Simple-springboot-tutorial6-SSL/21.png" alt=""><br>조회해 보니 이전에 인증서 파일발급을 위해 지정했던 80-&gt;8080규칙이 존재한다. 해당 규칙은 1번 line에 위치함을 알 수 있다.<br>(사용자마다 다르니 참고)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">iptables -t nat -D PREROUTING (해당하는리스트번호입력)<br></code></pre></td></tr></table></figure>
-해당하는 라인을 삭제 후 다시 조회해본다.</li>
+<li><p>uniqueConstraints</p>
+<ul>
+<li>DDL생성 시 Entity 오브젝트에서 복수개의 unique 제약조건을 지정하기 위해 사용된다. 각각의 uniqueConstraints의 지정된 값은 @Column의 name속성 값을 따른다.</li>
+<li>unique column은 각 속성, name과 columnNames로 구성되며 name의 경우 DDL을 DBMS에 전달하여 해당 내용으로 unique index를 생성한다.<br><img src="/images/JPA-Entity/3.png" alt=""><br><img src="/images/JPA-Entity/4.png" alt=""></li>
 </ul>
-<p><strong>iptables -t nat -L -–line-numbers</strong> </p>
-<p>이후 서버를 실행해 접속해보자.<br><img src="/images/Simple-springboot-tutorial6-SSL/22.png" alt=""><br>서버에선 80포트와 8445포트를 사용하며 80포트, 즉 http로 접근한 경우 linux iptables 규칙이 아닌 서버단에서 80포트-&gt;8445포트로 Redirect한다.<br><strong>만일 443포트, 즉 https로 접근한 경우 linux iptables 규칙에 의해 Redirect된다.</strong></p>
-<h1 id="결과"><a href="#결과" class="headerlink" title="결과"></a>결과</h1><h2 id="https-접근"><a href="#https-접근" class="headerlink" title="https 접근"></a>https 접근</h2><p><img src="/images/Simple-springboot-tutorial6-SSL/23.png" alt=""></p>
-<h2 id="http-접근"><a href="#http-접근" class="headerlink" title="http 접근"></a>http 접근</h2><p><img src="/images/Simple-springboot-tutorial6-SSL/24.png" alt=""><br><img src="/images/Simple-springboot-tutorial6-SSL/25.png" alt=""></p>
-<h1 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h1><ul>
-<li><a href="https://apost.kr/327">무료 SSL 보안 인증서 발급받기 (Free SSL Certificate)</a></li>
-<li><a href="https://www.securesign.kr/guides/SSL-Certificate-Convert-Format">SSL 인증서 변환 가이드</a></li>
+</li>
+<li><p>indexes</p>
+<ul>
+<li>RDBMS의 대용량 데이터를 관리하는 경우 검색 속도를 높히기 위한 작업이다.</li>
+<li>생성된 Table의 Column에 색인을 지정하여 따로 색인정보가 담긴 파일을 생성하고 select 요청 시 해당 Table을 전체 스캔하는 것이 아닌 색인화 된 Index 파일을 검색한다.</li>
+<li>Oracle의 경우 색인 알고리즘인 B-tree(binary search tree)를 적용하고 있다.</li>
+<li>Entity Mapping에서 사용된 @Index의 속성값 name은 색인 검색을 위한 파일 명, columnList는 색인을 위한 Column name이다.<br><img src="/images/JPA-Entity/5.png" alt=""><br><img src="/images/JPA-Entity/6.png" alt=""></li>
 </ul>
-<hr/>
-<hr/>
-<hr/>
+</li>
+<li><p>catalog</p>
+<ul>
+<li>맵핑할 DB catalog를 매핑한다.</li>
+</ul>
+</li>
+<li><p>schema</p>
+<ul>
+<li>schema를 매핑한다.</li>
+</ul>
+</li>
+<li><p>name </p>
+<ul>
+<li>맵핑할 DB table 이름을 지정한다.<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">@Table(name &#x3D; &quot;MY_FAVOLITE&quot;)<br></code></pre></td></tr></table></figure>
 
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-기본-키-매핑"><a href="#2-기본-키-매핑" class="headerlink" title="2. 기본 키 매핑"></a><strong>2. 기본 키 매핑</strong></h2><h3 id="직접할당"><a href="#직접할당" class="headerlink" title="직접할당"></a>직접할당</h3><p>Database의 Row Column 값을 구분을 위한 기본키(Primary Key)를 직접 할당한다.<br>    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">@Id<br>@Column(name &#x3D; &quot;ID&quot;)<br>private long id;<br></code></pre></td></tr></table></figure></p>
+<h3 id="자동생성"><a href="#자동생성" class="headerlink" title="자동생성"></a>자동생성</h3><p>대리키(Alternate key)를 사용한 방식. JPA에서의 기본키 생성 전략 은 다음과 같다.</p>
+<ul>
+<li>IDENTITY 전락 : 기본키 생성을 데이터베이스에 위임하여 관리한다 (MySQL, PostgreSQL 등)</li>
+<li>TABLE 전략 : 키 생성을 위한 테이블을 하나 만들고 이름과 값으로 컬럼을 만들어 데이터베이스 Sequence를 흉내낸다.</li>
+<li>SEQUENCE 전략 : 데이터베이스의 Sequence는 Unique 값을 순서대로 저장하는 하나의 오브젝트이다. JPA에선 Entity에 <em>@SequenceGenerator</em>를 선언하여 관리한다.</li>
+</ul>
+<p>*본 절에선 Oracle을 사용한 Sequence 전략을 다뤘음.</p>
+<h3 id="annotation-SequenceGenerator"><a href="#annotation-SequenceGenerator" class="headerlink" title="annotation SequenceGenerator"></a>annotation SequenceGenerator</h3><h2 id="3-필드와-컬럼-매핑"><a href="#3-필드와-컬럼-매핑" class="headerlink" title="3. 필드와 컬럼 매핑"></a><strong>3. 필드와 컬럼 매핑</strong></h2><h3 id="annotation-column"><a href="#annotation-column" class="headerlink" title="annotation column"></a>annotation column</h3><h2 id="4-연관관계-매핑"><a href="#4-연관관계-매핑" class="headerlink" title="4. 연관관계 매핑"></a><strong>4. 연관관계 매핑</strong></h2><h3 id="annotation-many-to-one"><a href="#annotation-many-to-one" class="headerlink" title="annotation many to one"></a>annotation many to one</h3><h3 id="annotation-join-column"><a href="#annotation-join-column" class="headerlink" title="annotation join column"></a>annotation join column</h3>
         </div>
         
         
@@ -264,7 +303,7 @@
             
             <li><span class="pagination-ellipsis has-text-black-ter">&hellip;</span></li>
             
-            <li><a class="pagination-link has-text-black-ter" href="/page/14/">14</a></li>
+            <li><a class="pagination-link has-text-black-ter" href="/page/15/">15</a></li>
             
         </ul>
     </nav>
@@ -309,7 +348,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            14
+                            15
                         </p>
                     </a>
                 </div>
@@ -321,7 +360,7 @@
                     </p>
                     <a href="/categories">
                         <p class="title has-text-weight-normal">
-                            20
+                            22
                         </p>
                     </a>
                 </div>
@@ -333,7 +372,7 @@
                     </p>
                     <a href="/tags">
                         <p class="title has-text-weight-normal">
-                            26
+                            28
                         </p>
                     </a>
                 </div>
@@ -388,7 +427,7 @@
         <h3 class="menu-label">
             태그 클라우드
         </h3>
-        <a href="/tags/Bluetooth/" style="font-size: 12.5px;">Bluetooth</a> <a href="/tags/Carla/" style="font-size: 10px;">Carla</a> <a href="/tags/Carla-0-9-7/" style="font-size: 10px;">Carla_0.9.7</a> <a href="/tags/Entity/" style="font-size: 10px;">Entity</a> <a href="/tags/GCP/" style="font-size: 17.5px;">GCP</a> <a href="/tags/Hibernate/" style="font-size: 12.5px;">Hibernate</a> <a href="/tags/Https/" style="font-size: 12.5px;">Https</a> <a href="/tags/JPA/" style="font-size: 15px;">JPA</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/ORM/" style="font-size: 12.5px;">ORM</a> <a href="/tags/SSH/" style="font-size: 12.5px;">SSH</a> <a href="/tags/SSL/" style="font-size: 12.5px;">SSL</a> <a href="/tags/Simulator/" style="font-size: 10px;">Simulator</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/Springboot/" style="font-size: 15px;">Springboot</a> <a href="/tags/deploy/" style="font-size: 17.5px;">deploy</a> <a href="/tags/gradle/" style="font-size: 12.5px;">gradle</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 17.5px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 12.5px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 12.5px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
+        <a href="/tags/Bluetooth/" style="font-size: 12.5px;">Bluetooth</a> <a href="/tags/Carla/" style="font-size: 10px;">Carla</a> <a href="/tags/Carla-0-9-7/" style="font-size: 10px;">Carla_0.9.7</a> <a href="/tags/Entity/" style="font-size: 10px;">Entity</a> <a href="/tags/GCP/" style="font-size: 17.5px;">GCP</a> <a href="/tags/Hibernate/" style="font-size: 12.5px;">Hibernate</a> <a href="/tags/Https/" style="font-size: 12.5px;">Https</a> <a href="/tags/JPA/" style="font-size: 15px;">JPA</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/ORM/" style="font-size: 12.5px;">ORM</a> <a href="/tags/SSH/" style="font-size: 12.5px;">SSH</a> <a href="/tags/SSL/" style="font-size: 12.5px;">SSL</a> <a href="/tags/Simulator/" style="font-size: 10px;">Simulator</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/Springboot/" style="font-size: 15px;">Springboot</a> <a href="/tags/chatting/" style="font-size: 10px;">chatting</a> <a href="/tags/deploy/" style="font-size: 17.5px;">deploy</a> <a href="/tags/gradle/" style="font-size: 12.5px;">gradle</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 17.5px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 12.5px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%EC%B1%84%ED%8C%85/" style="font-size: 10px;">채팅</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 12.5px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
     </div>
 </div>
     
@@ -513,6 +552,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/chatting/">
+                        <span class="tag">chatting</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/deploy/">
                         <span class="tag">deploy</span>
                         <span class="tag is-grey">4</span>
@@ -564,6 +610,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/">
                         <span class="tag">저전력</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/%EC%B1%84%ED%8C%85/">
+                        <span class="tag">채팅</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -650,6 +703,22 @@
         <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/6/">
             <span class="level-start">
                 <span class="level-item">6</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/">
+            <span class="level-start">
+                <span class="level-item">Reactor-Pattern</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/java-NIO/">
+            <span class="level-start">
+                <span class="level-item">java.NIO</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">1</span>
@@ -771,6 +840,17 @@
             아카이브
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/03/">
@@ -919,6 +999,22 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/">
+            <span class="level-start">
+                <span class="level-item">Reactor-Pattern</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/java-NIO/">
+            <span class="level-start">
+                <span class="level-item">java.NIO</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
         <a class="level is-marginless" href="/categories/SpringBoot-JPA/">
             <span class="level-start">
                 <span class="level-item">SpringBoot-JPA</span>
@@ -1035,6 +1131,17 @@
             아카이브
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/03/">

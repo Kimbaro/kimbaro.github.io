@@ -136,17 +136,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-09-04T21:59:58.000Z">2019-09-05</time>
+                <time class="level-item has-text-grey" datetime="2019-09-10T18:58:50.000Z">2019-09-11</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/">안드로이드 블루투스</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/Classic-%ED%86%B5%EC%8B%A0/">Classic 통신</a>
+                <a class="has-link-grey -link" href="/categories/Tutorial-Deploy-SpringBoot-Netty/">(Tutorial) Deploy-SpringBoot-Netty</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Tutorial-Deploy-SpringBoot-Netty/6/">6</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    15분 읽기 (대략 2221 단어)
+                    12분 읽기 (대략 1783 단어)
                 </span>
                 
                 
@@ -155,65 +155,73 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/09/05/%E1%84%8B%E1%85%A1%E1%86%AB%E1%84%83%E1%85%B3%E1%84%85%E1%85%A9%E1%84%8B%E1%85%B5%E1%84%83%E1%85%B3-Socket%E1%84%90%E1%85%A9%E1%86%BC%E1%84%89%E1%85%B5%E1%86%AB/">안드로이드 Classic 통신</a>
+                <a class="has-link-black-ter" href="/2019/09/11/SpringBoot-Netty-%E1%84%89%E1%85%A5%E1%84%87%E1%85%A5%E1%84%8B%E1%85%A6-SSL-%E1%84%8C%E1%85%A5%E1%86%A8%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%80%E1%85%B52/">SpringBoot Netty 서버에 SSL 적용기 2</a>
             
         </h1>
         <div class="content">
             <blockquote>
-<h1 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h1><p>안드로이드 Classic통신은 블루투스 3.0 이하의 버전을 말하며, 블루투스 4.0 이상은 BLE통신을 뜻한다.<br>블루투스 4.0이상의 모듈은 그 하위 버전을 포함하기도한다. 여기서 알아볼 것은 Classic한 블루투스 통신인 Socket통신이다.<br>안드로이드는 Android Bluetooth API를 통해 블루투스 기능에 관한 엑세스 권한을 제공한다. 이 글에서 제공하는 내용은 아래와 같은 과정의 Sample Project이다</p>
-<ul>
-<li>페어링된 블루투스 기기에 대한 로컬 블루투스 어댑터 쿼리</li>
-<li>RFCOMM 채널 설정</li>
-<li>블루투스 기기의 데이터 수신</li>
-</ul>
-<p>블루투스에 관한 자세한 정보는 Document를 참고하자.<br><a href="https://developer.android.com/guide/topics/connectivity/bluetooth?hl=ko">https://developer.android.com/guide/topics/connectivity/bluetooth?hl=ko</a></p>
-<p>해당 내용에 따른 Sample Project는 다음과 같다.<br><a href="https://github.com/Kimbaro/android-BluetoothClassicProtocol-Sample">https://github.com/Kimbaro/android-BluetoothClassicProtocol-Sample</a></p>
+<h1 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h1><p>이번장은 SSL (Secure Socket Layer) 인증서를 발급받고 이를 도메인이 적용된 서버에 적용하는 과정을 담았다.<br>SSL은 Certificate Authority(CA)라 불리는 서드 파티로부터 서버와 클라이언트간에 정보교환에 있어 암호를 적용한 방식을 말한다.</p>
 </blockquote>
-<h1 id="Pre-requisites"><a href="#Pre-requisites" class="headerlink" title="Pre-requisites"></a>Pre-requisites</h1><table>
-<thead>
-<tr>
-<th><strong>이름</strong></th>
-<th><strong>버전</strong></th>
-<th><strong>설명</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Android SDK</td>
-<td>28</td>
-<td>-</td>
-</tr>
-<tr>
-<td>Android Build Tools</td>
-<td>v28.0.0</td>
-<td>-</td>
-</tr>
-</tbody></table>
-<h1 id="리뷰"><a href="#리뷰" class="headerlink" title="리뷰"></a>리뷰</h1><p>블루투스 기능 사용을 위한 권한은 다음과 같다.</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">manifest</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.BLUETOOTH"</span> /&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.BLUETOOTH_ADMIN"</span> /&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">uses-permission</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.permission.ACCESS_COARSE_LOCATION"</span> /&gt;</span><br>    <br>    이하내용생략<br>    .<br>    .<br>    .<br></code></pre></td></tr></table></figure>
+<p><a href="https://12bme.tistory.com/80">SSL 개념정리</a></p>
+<h2 id="무료-SSL-Secure-Socket-Layer-인증서-발급받기"><a href="#무료-SSL-Secure-Socket-Layer-인증서-발급받기" class="headerlink" title="무료 SSL (Secure Socket Layer) 인증서 발급받기"></a>무료 SSL (Secure Socket Layer) 인증서 발급받기</h2><p><img src="/images/Simple-springboot-tutorial6-SSL/1.png" alt=""><br>인증서의 유효기간이 3개월로 짧은대신 무료이다.<br>현재 DNS 주소와 연결된 서버의 도메인명을 입력해 준다. 이후 “Create Free SSL Certificate” 클릭한다.<br><a href="https://www.sslforfree.com/">무료 SSL sslforfree</a><br></br><br><strong>“Manual Verification” -&gt; “Manually Verify Domain”</strong><br><img src="/images/Simple-springboot-tutorial6-SSL/2.png" alt=""></p>
+<ol>
+<li>“Automatic FTP Verification” - FTP 를 이용한 자동 처리 방식</li>
+<li>“Manual Verification” - 소유권 인증 파일을 다운로드받아 직업 업로드</li>
+<li>“Manual Verification” - DNS에 TXT 레코드로 소유권 인증 키를 추가</li>
+</ol>
+<p>다음의 3가지의 발급 방식이 있는데, 본인은 “Manual Verification”을 사용하였다.<br>도메인명을 입력하고 인증을 받기 위한 파일을 자신의 웹서버에 직접 업로드하여 인증파일을 발급받는다.<br>인증파일은 “Manually Verify Domain” 클릭하여 진행한다.<br></br><br><img src="/images/Simple-springboot-tutorial6-SSL/3.png" alt=""></p>
+<ol>
+<li>Download the following verification files by clicking on each link below 하위 목록<br>“Download File #1” , “Download File #2”를 받은 후,</li>
+<li>Verify successful upload by visiting the following links in your browser<br>아래의 경로를 생성하여 다운로드 파일을 업로드한다.<br>.well-known/acme-challenge/다운로드파일#1 , #2</li>
+</ol>
+<p><strong>자신의 프로젝트 아래에 resources 폴더에 위치하고있다.</strong><br><img src="/images/Simple-springboot-tutorial6-SSL/4.png" alt=""></p>
+<h2 id="path등록"><a href="#path등록" class="headerlink" title="path등록"></a>path등록</h2><p><strong>이미지 클릭 시 확대</strong><br><img src="/images/Simple-springboot-tutorial6-SSL/5.png" alt=""><br>Sample-Project에 Controller는 생성이 되어있다. 자신의 Spring-boot 프로젝트의 Controller에 해당 파일을 SSL인증 발급을 위해 경로를 설정해줘야한다.</p>
+<p>샘플프로젝트 - <a href="https://github.com/Kimbaro/springboot-sample.git">https://github.com/Kimbaro/springboot-sample.git</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// import </span><br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Value;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Bean;<br><span class="hljs-keyword">import</span> org.springframework.core.io.Resource;<br><span class="hljs-keyword">import</span> org.springframework.http.MediaType;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Controller;<br><span class="hljs-keyword">import</span> org.springframework.web.reactive.function.server.RouterFunction;<br><span class="hljs-keyword">import</span> org.springframework.web.reactive.function.server.ServerResponse;<br><br><span class="hljs-keyword">import</span> <span class="hljs-keyword">static</span> org.springframework.web.reactive.function.server.RequestPredicates.GET;<br><span class="hljs-keyword">import</span> <span class="hljs-keyword">static</span> org.springframework.web.reactive.function.server.RouterFunctions.route;<br><span class="hljs-keyword">import</span> <span class="hljs-keyword">static</span> org.springframework.web.reactive.function.server.ServerResponse.ok;<br><br><span class="hljs-comment">//class field</span><br> <span class="hljs-meta">@Bean</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> RouterFunction&lt;ServerResponse&gt; <span class="hljs-title">sslforfree1</span><span class="hljs-params">(@Value(<span class="hljs-string">"classpath:/.well-known/acme-challenge/&lt;인증서파일이름&gt;"</span>)</span> <span class="hljs-keyword">final</span> Resource indexHtml) </span>&#123;<br>        <span class="hljs-keyword">return</span> route(GET(<span class="hljs-string">"/.well-known/acme-challenge/&lt;인증서파일이름&gt;"</span>), request -&gt; ok().contentType(MediaType.TEXT_PLAIN).syncBody(indexHtml));<br>    &#125;<br><br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> RouterFunction&lt;ServerResponse&gt; <span class="hljs-title">sslforfree2</span><span class="hljs-params">(@Value(<span class="hljs-string">"classpath:/.well-known/acme-challenge/&lt;인증서파일이름&gt;"</span>)</span> <span class="hljs-keyword">final</span> Resource indexHtml) </span>&#123;<br>        <span class="hljs-keyword">return</span> route(GET(<span class="hljs-string">"/.well-known/acme-challenge/&lt;인증서파일이름&gt;"</span>), request -&gt; ok().contentType(MediaType.TEXT_PLAIN).syncBody(indexHtml));<br>    &#125;<br></code></pre></td></tr></table></figure>
+<h2 id="http-URL-포트포워딩"><a href="#http-URL-포트포워딩" class="headerlink" title="http://URL 포트포워딩"></a><a href="http://URL">http://URL</a> 포트포워딩</h2><p>SSL 검증을 위해 사이트에서 보여준 주소는 http 형식의 80포트이다. 파일 path를 잡아줬다해도 해당 사이트에서 접근하는 경로에 유의하여<br>80포트 접근 시 8080포트로 Redirect할 필요가 있다.(본인 환경에 따라 포트는 다를 수 있음.)<br><img src="/images/Simple-springboot-tutorial6-SSL/6.png" alt=""></p>
+<p>리눅스의 iptables를 활용해 규칙을 만들어준다.<br>80 포트 -&gt; 8080포트로 Redirect</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080<br></code></pre></td></tr></table></figure>
+<p>포트포워딩설정 확인</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">iptables -t nat -L --line-numbers<br></code></pre></td></tr></table></figure>
+<p><img src="/images/Simple-springboot-tutorial6-SSL/7.png" alt=""><br>잘못된 입력으로 인한 iptables 삭제 필요 시 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">iptables -t nat -D PREROUTING &lt;해당하는리스트번호입력&gt;<br></code></pre></td></tr></table></figure>
 
-<h2 id="패키지-구조"><a href="#패키지-구조" class="headerlink" title="패키지 구조"></a>패키지 구조</h2><p><strong>블루투스체크 -&gt; 기기연결</strong> 과정을 두 클래스로 나눠 진행하고 디바이스정보를 담고있는 Device클래스를 포함한다.<br>util.BT_check , util.BT_connect , util.Device<br><img src="/images/Android-Classic/1.png" alt=""><br></br></p>
-<h2 id="util-BT-check"><a href="#util-BT-check" class="headerlink" title="util.BT_check"></a>util.BT_check</h2><p>인스턴스를 불러오는 방법은 간단하다. 사용자가 위치한 activity , 블루투스 수신받은 데이터를 보여주기 위한 textView,<br>상황에 따라 textView를 다른 아이템으로 바꿔 사용 할 수 있겠다.</p>
-<p>여기서 BT_check 클래스는 그 activity와 textView를 인자로 전달받아 초기화한다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MainActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AppCompatActivity</span> </span>&#123;<br><br>Button button = <span class="hljs-keyword">null</span>;<br>    TextView textView = <span class="hljs-keyword">null</span>;<br>    Activity activity = <span class="hljs-keyword">null</span>;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span><span class="hljs-params">(Bundle savedInstanceState)</span> </span>&#123;<br>        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);<br>        setContentView(R.layout.activity_main);<br>        activity = <span class="hljs-keyword">this</span>;<br>        button = findViewById(R.id.bt1);<br>        textView = findViewById(R.id.tv1);<br>        button.setOnClickListener(<span class="hljs-keyword">new</span> View.OnClickListener() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span><span class="hljs-params">(View v)</span> </span>&#123;<br><br>                BT_check bt_check = <span class="hljs-keyword">new</span> BT_check(activity, textView);<br>                bt_check.checkBluetooth();<br></code></pre></td></tr></table></figure>
-<h2 id="util-BT-check-checkBluetooth"><a href="#util-BT-check-checkBluetooth" class="headerlink" title="util.BT_check.checkBluetooth()"></a>util.BT_check.checkBluetooth()</h2><p>블루투스 소켓 통신을 위한 메서드이며 블루투스의 전체적인 정보가 담긴 어댑터인 BluetoothAdapter를 생성하고<br>정상적으로 블루투스가 동작하는지 통신하기전 기기를 체크한다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BT_check</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> BluetoothAdapter mBluetoothAdapter = <span class="hljs-keyword">null</span>;<br>    <span class="hljs-keyword">private</span> Activity activity = <span class="hljs-keyword">null</span>;<br>    <span class="hljs-keyword">private</span> TextView textView;<br>    <br> <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">checkBluetooth</span><span class="hljs-params">()</span> </span>&#123;<br>        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();<br>        <span class="hljs-keyword">if</span> (mBluetoothAdapter == <span class="hljs-keyword">null</span>) &#123;<br>            <span class="hljs-comment">// 장치가 블루투스 지원하지 않는 경우</span><br>            Toast.makeText(activity.getApplicationContext(), <span class="hljs-string">"해당 모바일은 블루투스를 지원하지 않음"</span>, Toast.LENGTH_SHORT).show();<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-comment">// 장치가 블루투스 지원하는 경우</span><br>            <span class="hljs-keyword">if</span> (!mBluetoothAdapter.isEnabled()) &#123;<br>                <span class="hljs-comment">// 블루투스를 지원하지만 비활성 상태인 경우</span><br>                <span class="hljs-comment">// 블루투스를 활성 상태로 바꾸기 위해 사용자 동의 요첨</span><br>                Intent enableBtIntent = <span class="hljs-keyword">new</span> Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);<br>                activity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-comment">// 블루투스를 지원하며 활성 상태인 경우</span><br>                <span class="hljs-comment">// 페어링된 기기 목록을 보여주고 연결할 장치를 선택.</span><br>                selectDevice();<br>            &#125;<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
-<h2 id="util-BT-check-selectDevice"><a href="#util-BT-check-selectDevice" class="headerlink" title="util.BT_check.selectDevice()"></a>util.BT_check.selectDevice()</h2><p>페어링된 기기목록을 보여주고 연결할 장치를 선택한다. 해당 페어링 목록은 두 기기간의 연결프로세스가 성립되어 또는 성립된적이 있어서 언제든 사용할 수 있도록 디바이스가 캐싱해둔 페어링 목록을 뜻한다. 목록은 AlertDialog를 통해 띄워준다.<br>만일 사용자가 페어링 기기를 찾아 선택했다면 블루투스디바이스와의 연결을 위한 BT_connect.class를 호출한다 해당 객체의 생성자는 다음의 인자를 받아 초기화한다.<br>** 사용자가 위치한 액티비티, 검색된 블루투스목록, 블루투스어댑터 , 데이터가입력될 textView **</p>
-<p>결과적으로 BT_check.class에서 얻어온 정보를 BT_connect.class로 전달한다고 보면 된다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs java">Set&lt;BluetoothDevice&gt; mDevices;<br>   <span class="hljs-keyword">int</span> mPairedDeviceCount;<br><br>   <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">selectDevice</span><span class="hljs-params">()</span> </span>&#123;<br>       <span class="hljs-comment">//페어링되었던 기기 목록 획득</span><br>       mDevices = mBluetoothAdapter.getBondedDevices();<br>       <span class="hljs-comment">//페어링되었던 기기 갯수</span><br>       mPairedDeviceCount = mDevices.size();<br>       <span class="hljs-comment">//Alertdialog 생성(activity에는 context입력)</span><br>       AlertDialog.Builder builder = <span class="hljs-keyword">new</span> AlertDialog.Builder(activity);<br>       <span class="hljs-comment">//AlertDialog 제목 설정</span><br>       builder.setTitle(<span class="hljs-string">"등록된 디바이스"</span>);<br>       <br>       이하내용생략<br>       .<br>       .<br>       .<br>       <br>       builder.setItems(items, <span class="hljs-keyword">new</span> DialogInterface.OnClickListener() &#123;<br>                       <span class="hljs-comment">// 리스트 아이템 클릭 이벤트</span><br>                       <span class="hljs-meta">@Override</span><br>                       <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span><span class="hljs-params">(DialogInterface dialog, <span class="hljs-keyword">int</span> which)</span> </span>&#123;<br>                           Dialog dialog_ = (Dialog) dialog;<br>                           <span class="hljs-comment">// 연결할 장치를 선택하지 않고 '취소'를 누른 경우</span><br>                           <span class="hljs-keyword">if</span> (which == listItems.size() - <span class="hljs-number">1</span>) &#123;<br>                               Toast.makeText(dialog_.getContext(), <span class="hljs-string">"취소"</span>, Toast.LENGTH_SHORT).show();<br>                           &#125; <span class="hljs-keyword">else</span> &#123;<br>                               <span class="hljs-comment">//취소가 아닌 디바이스를 선택한 경우 해당 영역 실행</span><br>                               Toast.makeText(dialog_.getContext(), <span class="hljs-string">"선택 장치명 : "</span> + items[which].toString(), Toast.LENGTH_SHORT).show();<br>                               setDeviceName(items[which].toString());<br>       <br>                               <span class="hljs-comment">//타겟 액티비티 ,블루투스 검색 목록 , 검증된 블루투스 정보, 받아온 값 입력대상</span><br>                               BT_connect bt_connect<br>                                       = <span class="hljs-keyword">new</span> BT_connect(activity, getMDevices(), getMBluetoothAdapter(), textView);<br>       <br>                               <span class="hljs-comment">//본인이 선택한 블루투스이름</span><br>                               bt_connect.connectToSelectedDevice(getDeviceName());<br>                           &#125;<br>                       &#125;<br>                   &#125;);<br></code></pre></td></tr></table></figure>
-<h2 id="util-BT-connect"><a href="#util-BT-connect" class="headerlink" title="util.BT_connect"></a>util.BT_connect</h2><p>모든 준비가 끝났다. BT_check.class에서 생성된 데이터로 BT_connect.class가 구성되어있다. 그 외에도 소켓통신 및 이를 위한 스트림 객체등<br>통신 및 데이터를 처리하기위한 객체가 선언되어있다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BT_connect</span> </span>&#123;<br>    BluetoothSocket mSocket;<br>    InputStream mInputStream;<br>    OutputStream mOutputStream;<br>    Activity activity;<br>    BluetoothDevice mRemoteDevice;<br>    Set&lt;BluetoothDevice&gt; mDevices;<br>    BluetoothAdapter mBluetoothAdapter;<br>    <span class="hljs-keyword">byte</span>[] readBuffer;   <span class="hljs-comment">//수신 데이터</span><br>    <span class="hljs-keyword">int</span> readBufferPositon;  <span class="hljs-comment">//버퍼 내 수신 문자 저장 위치</span><br>    Thread mWorkerThread;<br>    <span class="hljs-keyword">byte</span> mDelimiter = <span class="hljs-number">10</span>;<br><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">BT_connect</span><span class="hljs-params">()</span> </span>&#123;<br>    &#125;<br><br>    <span class="hljs-comment">//데이터 출력 테스트용</span><br>    TextView textView;<br>    Button button;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">BT_connect</span><span class="hljs-params">(Activity activity, Set&lt;BluetoothDevice&gt; mDevices, BluetoothAdapter mBluetoothAdapter, TextView textView)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.activity = activity;<br>        <span class="hljs-keyword">this</span>.mDevices = mDevices;<br>        <span class="hljs-keyword">this</span>.mBluetoothAdapter = mBluetoothAdapter;<br>        <span class="hljs-keyword">this</span>.textView = textView;<br>        button = <span class="hljs-keyword">this</span>.activity.findViewById(R.id.bt1);<br>    &#125;<br>    <br>    이하내용생략<br>    .<br>    .<br>    .<br></code></pre></td></tr></table></figure>
-<h2 id="util-BT-connect-connectToSelectedDevice"><a href="#util-BT-connect-connectToSelectedDevice" class="headerlink" title="util.BT_connect.connectToSelectedDevice()"></a>util.BT_connect.connectToSelectedDevice()</h2><p>블루투스 데이터를 실시간으로 받기위해선 스레드가 필요하다. 스트림 객체는 Handler를 통해 생성하며 BluetoothSocket.getOutputStream() , BluetoothSocket.getInputStream() 두 메서드 선언으로 스트림이 연결된다.<br>소켓 Connect 상황에 따라 Handler에 다음의 값을 보내 상황에 따른 이벤트가 발생한다. </p>
+<p><strong>규칙이 올바름에도 접속이 안될경우 자신의 GCP환경의 방화벽규칙을 확인한다. 또는 리눅스 환경에서 방화벽 접근 허용</strong></p>
+<h2 id="확인"><a href="#확인" class="headerlink" title="확인"></a>확인</h2><p><img src="/images/Simple-springboot-tutorial6-SSL/8.png" alt=""><br><img src="/images/Simple-springboot-tutorial6-SSL/9.png" alt=""></p>
+<h2 id="인증서-발급"><a href="#인증서-발급" class="headerlink" title="인증서 발급"></a>인증서 발급</h2><p><img src="/images/Simple-springboot-tutorial6-SSL/10.png" alt=""><br>아래의 “Download SSL Certificate” 클릭<br></br><br><img src="/images/Simple-springboot-tutorial6-SSL/11.png" alt=""><br>인증서 생성이 완료되었다. “Download All SSL Certificate Files” 클릭하여 파일을 받는다.</p>
+<p><img src="/images/Simple-springboot-tutorial6-SSL/12.png" alt=""><br>위 이미지와 같이 3개의 파일이 있어야 한다.</p>
 <ul>
-<li>1인 경우 연결에 성공하여 스트림을 생성하는 단계</li>
-<li>-1인 경우 연결에 오류가 있어 소켓을 close하는 단계</li>
+<li>ca_bundle.crt</li>
+<li>certificate.crt</li>
+<li>private.key</li>
 </ul>
-<p>연결에 성공한 경우 데이터 수신을 처리하는  beginListenForData()를 실행한다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs java">.<br>.<br>.<br>위내용생략<br><br> <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">connectToSelectedDevice</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String selectedDeviceName)</span> </span>&#123;<br>        button.setText(<span class="hljs-string">"연결중 기다려주세요"</span>);<br><br>        <span class="hljs-comment">//handler는 thread에서 던지는 메세지를 보고 다음 동작을 수행시킨다.</span><br>        <span class="hljs-keyword">final</span> Handler mHandler = <span class="hljs-keyword">new</span> Handler() &#123;<br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">handleMessage</span><span class="hljs-params">(Message msg)</span> </span>&#123;<br>                <span class="hljs-keyword">if</span> (msg.what == <span class="hljs-number">1</span>) <span class="hljs-comment">// 연결 성공</span><br>                &#123;<br>                    <span class="hljs-keyword">try</span> &#123;<br>                        <span class="hljs-comment">//블루투스 기기와의 소켓통신을 위한 커넥션 실행</span><br>                        mOutputStream = mSocket.getOutputStream();<br>                        mInputStream = mSocket.getInputStream();<br><br>                        <span class="hljs-comment">// 데이터 수신 리스너</span><br>                        beginListenForData();<br>                        button.setText(<span class="hljs-string">"연결 성공"</span>);<br>                    &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>                        e.printStackTrace();<br>                    &#125;<br>                &#125; <span class="hljs-keyword">else</span> &#123;    <span class="hljs-comment">//연결 실패</span><br>                    Toast.makeText(activity, <span class="hljs-string">"연결실패! 연결상태를 확인해주세요"</span>, Toast.LENGTH_SHORT).show();<br>                    <span class="hljs-keyword">try</span> &#123;<br>                        mSocket.close();<br>                        button.setText(<span class="hljs-string">"연결 실패"</span>);<br>                    &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>                        e.printStackTrace();<br>                    &#125;<br>                &#125;<br>            &#125;<br>        &#125;;<br><br>        <span class="hljs-comment">//연결과정을 수행할 thread 생성</span><br>        Thread thread = <span class="hljs-keyword">new</span> Thread(<span class="hljs-keyword">new</span> Runnable() &#123;<br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;<br>                <span class="hljs-comment">//선택된 기기의 이름을 갖는 bluetooth device의 object</span><br>                mRemoteDevice = getDeviceFromBondedList(selectedDeviceName);<br>                UUID uuid = Device.DEVICE_UUID;<br><br>                <span class="hljs-keyword">try</span> &#123;<br>                    <span class="hljs-comment">// 소켓 생성</span><br>                    mSocket = mRemoteDevice.createRfcommSocketToServiceRecord(uuid);<br>                    <span class="hljs-comment">// RFCOMM 채널을 통한 연결, socket에 connect하는데 시간이 걸린다. 따라서 ui에 영향을 주지 않기 위해서는</span><br>                    <span class="hljs-comment">// Thread로 연결 과정을 수행해야 한다.</span><br>                    mSocket.connect();<br>                    mHandler.sendEmptyMessage(<span class="hljs-number">1</span>);<br>                &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>                    <span class="hljs-comment">// 블루투스 연결 중 오류 발생</span><br>                    mHandler.sendEmptyMessage(-<span class="hljs-number">1</span>);<br>                &#125;<br>            &#125;<br>        &#125;);<br>        <span class="hljs-comment">//연결 thread를 수행한다</span><br>        thread.start();<br>    &#125;<br></code></pre></td></tr></table></figure>
-<h2 id="util-BT-connect-beginListenForData"><a href="#util-BT-connect-beginListenForData" class="headerlink" title="util.BT_connect.beginListenForData()"></a>util.BT_connect.beginListenForData()</h2><p>블루투스 커넥션을 위한 해당 스레드과정에서, beginListenForData()에서 데이터를 받아 처리하기 위한 스레드가 한번더 실행된다.<br>Queue방식으로 블루투스기기로 부터 데이터를 수신하여 handler.post에서 데이터 처리 이벤트를 진행한다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//블루투스 수신 리스너</span><br>    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">beginListenForData</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">final</span> Handler handler = <span class="hljs-keyword">new</span> Handler();<br>        readBuffer = <span class="hljs-keyword">new</span> <span class="hljs-keyword">byte</span>[<span class="hljs-number">1024</span>];<br>        readBufferPositon = <span class="hljs-number">0</span>;<br><br>        mWorkerThread = <span class="hljs-keyword">new</span> Thread(<span class="hljs-keyword">new</span> Runnable() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;<br><br>                <span class="hljs-keyword">while</span> (!Thread.currentThread().isInterrupted()) &#123;<br><br>                    <span class="hljs-keyword">try</span> &#123;<br><br>                        <span class="hljs-keyword">int</span> bytesAvailable = mInputStream.available();<br>                        <span class="hljs-keyword">if</span> (bytesAvailable &gt; <span class="hljs-number">0</span>) &#123; <span class="hljs-comment">//데이터가 수신된 경우</span><br>                            <span class="hljs-keyword">byte</span>[] packetBytes = <span class="hljs-keyword">new</span> <span class="hljs-keyword">byte</span>[bytesAvailable];<br>                            mInputStream.read(packetBytes);<br>                            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; bytesAvailable; i++) &#123;<br>                                <span class="hljs-keyword">byte</span> b = packetBytes[i];<br>                                <span class="hljs-keyword">if</span> (b == mDelimiter) &#123;<br>                                    <span class="hljs-keyword">byte</span>[] encodedBytes = <span class="hljs-keyword">new</span> <span class="hljs-keyword">byte</span>[readBufferPositon];<br>                                    System.arraycopy(readBuffer, <span class="hljs-number">0</span>, encodedBytes, <span class="hljs-number">0</span>, encodedBytes.length);<br>                                    <span class="hljs-keyword">final</span> String data = <span class="hljs-keyword">new</span> String(encodedBytes, <span class="hljs-string">"US-ASCII"</span>);<br>                                    readBufferPositon = <span class="hljs-number">0</span>;<br>                                    handler.post(<span class="hljs-keyword">new</span> Runnable() &#123;<br>                                        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;<br>                                            <span class="hljs-comment">//===== 데이터 정상 수신 영역 =====</span><br>                                            <span class="hljs-comment">//수신된 데이터는 data변수에 의해 String형 변환되어 있음.</span><br>                                            textView.setText(data);<br>                                        &#125;<br>                                    &#125;);<br>                                &#125; <span class="hljs-keyword">else</span> &#123;<br>                                    readBuffer[readBufferPositon++] = b;<br>                                &#125;<br>                            &#125;<br>                        &#125;<br>                    &#125; <span class="hljs-keyword">catch</span> (UnsupportedEncodingException e) &#123;<br>                        e.printStackTrace();<br>                    &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>                        e.printStackTrace();<br>                    &#125;<br>                &#125;<br>            &#125;<br>        &#125;);<br>        <span class="hljs-comment">//데이터 수신 thread 시작</span><br>        mWorkerThread.start();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="인증서-조합"><a href="#인증서-조합" class="headerlink" title="인증서 조합"></a>인증서 조합</h2><p>이제 해당 인증서를 조합하여 하나의 아카이브로 만들어야한다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">openssl pkcs12 -export -out 생성할파일명.pfx -inkey private.key -in certificate.crt -certfile ca_bundle.crt<br></code></pre></td></tr></table></figure>
+<p><img src="/images/Simple-springboot-tutorial6-SSL/13.png" alt=""><br>생성된 pfx 형식의 파일이 있다 해당 파일이 <a href="https://URL">https://URL</a> 형식의 접근을 위한 인증서이다.</p>
+<h2 id="인증서-적용"><a href="#인증서-적용" class="headerlink" title="인증서 적용"></a>인증서 적용</h2><p><img src="/images/Simple-springboot-tutorial6-SSL/14.png" alt=""><br>서버에 자신의 SNAPSHOT 파일이 위치한 경로에 pfx형식의 자신의 인증서를 저장한다.</p>
+<p><img src="/images/Simple-springboot-tutorial6-SSL/15.png" alt=""><br>Spring-Boot의 설정파일인 Application.yml에 server의 내용을 수정한다.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">port:</span> <span class="hljs-number">8445</span> <span class="hljs-comment">#SSL 사용할 포트 지정</span><br>  <span class="hljs-attr">ssl:</span><br>        <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br>        <span class="hljs-attr">key-store:</span> <span class="hljs-string">certificate_trco.pfx</span><br>        <span class="hljs-attr">key-store-type:</span> <span class="hljs-string">PKCS12</span><br>        <span class="hljs-attr">key-store-password:</span> <span class="hljs-number">123456</span>  <span class="hljs-comment"># pfx 생성 시 설정한 패스워드</span><br>       <span class="hljs-comment"># key-alias: trco.site # (필요시) Alias 명 지정. CSR 자동 생성시에는 CN 명</span><br></code></pre></td></tr></table></figure>
+</br>
 
-<h2 id="마무리"><a href="#마무리" class="headerlink" title="마무리"></a>마무리</h2><p>해당 통신과정은 위에서 언급했듯이 Classic한 통신방법으로 기존 블루투스 3.0방식의 모듈에서 많이 활용된다.<br>모바일에서의 동작에 있어 안드로이드 버전에 따른 여러 제약사항이 BLE에 비해 크게 변경된 사항은 없다. 그냥 돌아다니는거 써도 될 정도로..</p>
-<p>인턴십때문에 현장에서 스마트밴드와 호흡기측정기를 블루투스통신 하는 과정이 있었는데 덕분에 BLE와 Socket통신을 실제업무에서 적용해 볼 수 있는 기회라 참 재밌었다.</p>
+<h2 id="클라우드-플랫폼-방화벽-규칙-등록"><a href="#클라우드-플랫폼-방화벽-규칙-등록" class="headerlink" title="클라우드 플랫폼 방화벽 규칙 등록"></a>클라우드 플랫폼 방화벽 규칙 등록</h2><p><img src="/images/Simple-springboot-tutorial6-SSL/16.png" alt=""><br>GCP에 사용할 SSL포트를 허용해준다. 테스트해보자.</p>
+<p><img src="/images/Simple-springboot-tutorial6-SSL/17.png" alt=""><br>8445 포트로 정상 실행 확인<br></br><br><img src="/images/Simple-springboot-tutorial6-SSL/18.png" alt=""><br><a href="https://URL">https://URL</a><br></br><br><img src="/images/Simple-springboot-tutorial6-SSL/19.png" alt=""><br>인증서내용</p>
+<h2 id="https-URL-포트포워딩"><a href="#https-URL-포트포워딩" class="headerlink" title="https://URL 포트포워딩"></a><a href="https://URL">https://URL</a> 포트포워딩</h2><p>기본적으로 도메인 접근 시 http로 접근하며 임의로 사용자가 https를 명시해야만 SSL접속을 시작하기 때문에 다음의 포트 규칙이 필요하다.<br><strong>해당 포스팅에서 사용된 포트는 8445임에 주의한다.</strong></p>
+<ul>
+<li>80포트 -&gt; 443포트(서버파일에서설정)<br><img src="/images/Simple-springboot-tutorial6-SSL/20.png" alt=""><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//사용자 환경에 따른 수정이 필요함.</span><br><span class="hljs-comment">//가능하면 OS의 iptables 규칙 443포트 리다이렉션 포트 설정을 요함.</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> http_port = <span class="hljs-number">80</span>;<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> https_port = <span class="hljs-number">443</span>;<br><span class="hljs-meta">@Bean</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">startRedirectServer</span><span class="hljs-params">()</span> </span>&#123;<br>    NettyReactiveWebServerFactory httpNettyReactiveWebServerFactory = <span class="hljs-keyword">new</span> NettyReactiveWebServerFactory(http_port);<br>    httpNettyReactiveWebServerFactory.getWebServer((request, response) -&gt; &#123;<br>        URI uri = request.getURI();<br>        URI httpsUri;<br>        <span class="hljs-keyword">try</span> &#123;<br>            httpsUri = <span class="hljs-keyword">new</span> URI(<span class="hljs-string">"https"</span>, uri.getUserInfo(), uri.getHost(), https_port, uri.getPath(), uri.getQuery(), uri.getFragment());<br>        &#125; <span class="hljs-keyword">catch</span> (URISyntaxException e) &#123;<br>            <span class="hljs-keyword">return</span> Mono.error(e);<br>        &#125;<br>        response.setStatusCode(HttpStatus.MOVED_PERMANENTLY);<br>        response.getHeaders().setLocation(httpsUri);<br>        <span class="hljs-keyword">return</span> response.setComplete();<br>    &#125;).start();<br>&#125;<br></code></pre></td></tr></table></figure>
+자신의 Spring-boot netty의 Controller에 위 코드를 명시한다.<br>80포트 (http-default) -&gt; 443 (https-default)</br>
+</br></li>
+<li>443포트 -&gt; 8445포트(운영체제 iptables)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8445<br>iptables -t nat -L -–line-numbers<br></code></pre></td></tr></table></figure>
+<img src="/images/Simple-springboot-tutorial6-SSL/21.png" alt=""><br>조회해 보니 이전에 인증서 파일발급을 위해 지정했던 80-&gt;8080규칙이 존재한다. 해당 규칙은 1번 line에 위치함을 알 수 있다.<br>(사용자마다 다르니 참고)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">iptables -t nat -D PREROUTING (해당하는리스트번호입력)<br></code></pre></td></tr></table></figure>
+해당하는 라인을 삭제 후 다시 조회해본다.</li>
+</ul>
+<p><strong>iptables -t nat -L -–line-numbers</strong> </p>
+<p>이후 서버를 실행해 접속해보자.<br><img src="/images/Simple-springboot-tutorial6-SSL/22.png" alt=""><br>서버에선 80포트와 8445포트를 사용하며 80포트, 즉 http로 접근한 경우 linux iptables 규칙이 아닌 서버단에서 80포트-&gt;8445포트로 Redirect한다.<br><strong>만일 443포트, 즉 https로 접근한 경우 linux iptables 규칙에 의해 Redirect된다.</strong></p>
+<h1 id="결과"><a href="#결과" class="headerlink" title="결과"></a>결과</h1><h2 id="https-접근"><a href="#https-접근" class="headerlink" title="https 접근"></a>https 접근</h2><p><img src="/images/Simple-springboot-tutorial6-SSL/23.png" alt=""></p>
+<h2 id="http-접근"><a href="#http-접근" class="headerlink" title="http 접근"></a>http 접근</h2><p><img src="/images/Simple-springboot-tutorial6-SSL/24.png" alt=""><br><img src="/images/Simple-springboot-tutorial6-SSL/25.png" alt=""></p>
+<h1 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h1><ul>
+<li><a href="https://apost.kr/327">무료 SSL 보안 인증서 발급받기 (Free SSL Certificate)</a></li>
+<li><a href="https://www.securesign.kr/guides/SSL-Certificate-Convert-Format">SSL 인증서 변환 가이드</a></li>
+</ul>
 <hr/>
 <hr/>
 <hr/>
@@ -256,7 +264,7 @@
             
             <li><span class="pagination-ellipsis has-text-black-ter">&hellip;</span></li>
             
-            <li><a class="pagination-link has-text-black-ter" href="/page/14/">14</a></li>
+            <li><a class="pagination-link has-text-black-ter" href="/page/15/">15</a></li>
             
         </ul>
     </nav>
@@ -301,7 +309,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            14
+                            15
                         </p>
                     </a>
                 </div>
@@ -313,7 +321,7 @@
                     </p>
                     <a href="/categories">
                         <p class="title has-text-weight-normal">
-                            20
+                            22
                         </p>
                     </a>
                 </div>
@@ -325,7 +333,7 @@
                     </p>
                     <a href="/tags">
                         <p class="title has-text-weight-normal">
-                            26
+                            28
                         </p>
                     </a>
                 </div>
@@ -380,7 +388,7 @@
         <h3 class="menu-label">
             태그 클라우드
         </h3>
-        <a href="/tags/Bluetooth/" style="font-size: 12.5px;">Bluetooth</a> <a href="/tags/Carla/" style="font-size: 10px;">Carla</a> <a href="/tags/Carla-0-9-7/" style="font-size: 10px;">Carla_0.9.7</a> <a href="/tags/Entity/" style="font-size: 10px;">Entity</a> <a href="/tags/GCP/" style="font-size: 17.5px;">GCP</a> <a href="/tags/Hibernate/" style="font-size: 12.5px;">Hibernate</a> <a href="/tags/Https/" style="font-size: 12.5px;">Https</a> <a href="/tags/JPA/" style="font-size: 15px;">JPA</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/ORM/" style="font-size: 12.5px;">ORM</a> <a href="/tags/SSH/" style="font-size: 12.5px;">SSH</a> <a href="/tags/SSL/" style="font-size: 12.5px;">SSL</a> <a href="/tags/Simulator/" style="font-size: 10px;">Simulator</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/Springboot/" style="font-size: 15px;">Springboot</a> <a href="/tags/deploy/" style="font-size: 17.5px;">deploy</a> <a href="/tags/gradle/" style="font-size: 12.5px;">gradle</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 17.5px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 12.5px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 12.5px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
+        <a href="/tags/Bluetooth/" style="font-size: 12.5px;">Bluetooth</a> <a href="/tags/Carla/" style="font-size: 10px;">Carla</a> <a href="/tags/Carla-0-9-7/" style="font-size: 10px;">Carla_0.9.7</a> <a href="/tags/Entity/" style="font-size: 10px;">Entity</a> <a href="/tags/GCP/" style="font-size: 17.5px;">GCP</a> <a href="/tags/Hibernate/" style="font-size: 12.5px;">Hibernate</a> <a href="/tags/Https/" style="font-size: 12.5px;">Https</a> <a href="/tags/JPA/" style="font-size: 15px;">JPA</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/ORM/" style="font-size: 12.5px;">ORM</a> <a href="/tags/SSH/" style="font-size: 12.5px;">SSH</a> <a href="/tags/SSL/" style="font-size: 12.5px;">SSL</a> <a href="/tags/Simulator/" style="font-size: 10px;">Simulator</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/Springboot/" style="font-size: 15px;">Springboot</a> <a href="/tags/chatting/" style="font-size: 10px;">chatting</a> <a href="/tags/deploy/" style="font-size: 17.5px;">deploy</a> <a href="/tags/gradle/" style="font-size: 12.5px;">gradle</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 17.5px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 12.5px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%EC%B1%84%ED%8C%85/" style="font-size: 10px;">채팅</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 12.5px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
     </div>
 </div>
     
@@ -505,6 +513,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/chatting/">
+                        <span class="tag">chatting</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/deploy/">
                         <span class="tag">deploy</span>
                         <span class="tag is-grey">4</span>
@@ -556,6 +571,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/">
                         <span class="tag">저전력</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/%EC%B1%84%ED%8C%85/">
+                        <span class="tag">채팅</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -642,6 +664,22 @@
         <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/6/">
             <span class="level-start">
                 <span class="level-item">6</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/">
+            <span class="level-start">
+                <span class="level-item">Reactor-Pattern</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/java-NIO/">
+            <span class="level-start">
+                <span class="level-item">java.NIO</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">1</span>
@@ -763,6 +801,17 @@
             아카이브
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/03/">
@@ -911,6 +960,22 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/">
+            <span class="level-start">
+                <span class="level-item">Reactor-Pattern</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/java-NIO/">
+            <span class="level-start">
+                <span class="level-item">java.NIO</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
         <a class="level is-marginless" href="/categories/SpringBoot-JPA/">
             <span class="level-start">
                 <span class="level-item">SpringBoot-JPA</span>
@@ -1027,6 +1092,17 @@
             아카이브
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/03/">

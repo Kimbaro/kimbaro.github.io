@@ -136,17 +136,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-03-22T01:36:07.000Z">2020-03-22</time>
+                <time class="level-item has-text-grey" datetime="2020-11-24T02:17:48.000Z">2020-11-24</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/SpringBoot-JPA/">SpringBoot-JPA</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/SpringBoot-JPA/2-SpringData-JPA/">2 - SpringData-JPA</a>
+                <a class="has-link-grey -link" href="/categories/Reactor-Pattern/">Reactor-Pattern</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Reactor-Pattern/java-NIO/">java.NIO</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    몇 초 읽기 (대략 1 단어)
+                    26분 읽기 (대략 3836 단어)
                 </span>
                 
                 
@@ -155,11 +155,253 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2020/03/22/SpringData-JPA/">Spring Data JPA</a>
+                <a class="has-link-black-ter" href="/2020/11/24/NIO-Chat/">java.NIO 패키지를 활용한 Reactor-Pattern 채팅</a>
             
         </h1>
         <div class="content">
-            <p><strong>writting..</strong></p>
+            <h1 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h1><blockquote>
+<p>Old I/O의 문제점 과 이를 개선한 New I/O<br>프로젝트파일 : <a href="https://github.com/Kimbaro/SocketChatApp.git">https://github.com/Kimbaro/SocketChatApp.git</a></p>
+<p>Requirements</p>
+<ul>
+<li>IntelliJ IDEA </li>
+<li>IntelliJ Plugin, UI Designer(Java Swing GUI)</li>
+<li>Java (openjdk 1.8.0_232)</li>
+<li>Apache Commons Codec 1.14</li>
+</ul>
+<p>Main Function</p>
+<ul>
+<li>Old I/O pattern의 ServerSocket을 New I/O Reactor Pattern의 ServerSocketChannel로 변경 적용하여 기존 동기화 방식의 소켓채팅을 비동기 방식의 소켓 채팅으로 변경.</li>
+<li>하나의 채팅프로그램에서 동적으로 변경 가능한 BroadCast통신과 UniCast통신 적용.</li>
+<li>클라이언트 임의의 비밀키를 생성하고 데이터 암호화를 적용하고 해당 데이터를 클라이언트와 서버와의 공개키를 활용한 이중암호화를 적용한 대칭키암호 AES256 알고리즘 적용한 암호화 통신 적용.</li>
+</ul>
+</blockquote>
+<p>네트워크 프로그래밍의 <strong><em>기존 소켓 통신</em></strong>은 아래와 같은 패턴을 따른다.</p>
+<p>클라이언트가 Connect()를 수립한 경우 서버의 accept()에 의해 Client Socket이 반환된다 이를 동기중인 클라이언트소켓이라 생각해도 무방하다. </p>
+<p>해당 소켓을 활용해 I/O를 로직의 반복루프를 통해 새로 들어온 데이터가 있는지 체크 한다.<br>이 경우 데이터를 체크하고 보내고 받기 위한 작업은 SubThread에서 처리한다.</p>
+<div style="text-align : center;">
+<img src="/images/NIO-Chat/1.png" width="300"/>
+</div>
+
+<p>위 그림과 같이 기존의 과정의 경우 문제가 발생할 수 있다.<br>클라이언트(접속자)가 많아 질수록 그만큼 스레드는 클라이언트 접속자에 맞춰 계속해서 늘려가야 한다.<br>이 경우 메모리 구조상 Stack영역과 Heap영역의 무분별한 할당이 진행될 것이다.</p>
+<p>아래 그림 처럼, 새로운 클라이언트의 접속(붉은색)이 발생(Accept)할 때 MainThread는 SubThread(주황색)를 생성한다. N명의 접속이 발생할 경우<br>접속한 N명의 수에따라 SubThread를 계속해서 생성하며 과도한 접속이 발생할 경우 그에 따른 부담이 발생할 수 있다.</p>
+<div style="text-align : center;">
+<img src="/images/NIO-Chat/2.png" width="600"/>
+</div>
+
+<p><strong><em>이런 무분별한 메모리 영역 낭비를 보완하여 NIO란 방식이 고안되었다.</em></strong><br>NIO를 Non-blocking Input/Output 또는 New Input/Output이라 부르고 있다.<br>Java에선 JDK1.4부터 이를 지원하기 시작하였으며, </p>
+<ol>
+<li>Client가 연결을 시도할 경우 해당 클라이언트를 구분하기 위한 채널(SocketChannel) 객체를 생성한다. </li>
+<li>이후 Selector객체는 각 채널(SocketChannel)의 소켓 연결 이벤트(Connect, Accept, Read, Write)에 반응하여 이벤트가 발생한 채널의 키를 반환한다. </li>
+</ol>
+<p>상황에 반응(Reactor)하여 작업을 시도하는데 여기서 키는 서버와 연결된 Client의 대상을 구분하기 위한 식별자이며<br>네트워크정보를 포함하고 있다.</p>
+<p>아래의 이미지와 같다.</p>
+<div style="text-align : center;">
+<img src="/images/NIO-Chat/3.png" width="600"/>
+</div>
+
+<p>이러한 과정을 Reactor-Pattern이라 하며 우리말로 반응형 패턴이라 볼 수 있다.<br>이제 해당 패턴을 적용한 채팅프로그램을 리뷰한다.<br>java.nio 패키지에서 활용되는 주요 클래스의 역할을 알아본다.</p>
+<div style="text-align : center;">
+<img src="/images/NIO-Chat/4.png" width="600"/>
+</div>
+
+<ol>
+<li>SocketChannels : 소켓을 통해 non-blocking read를 할 수 있도록 지원하는 connection.</li>
+<li>Selector : Selector는 어느 channel set 이 IO event 를 가지고 있는지를 알려준다. Selector.select() 는 I/O 이벤트가 발생한 채널 키를 return한다.<br>return channel이 없다면 계속 기다리게(block) 된다. </li>
+</ol>
+<p><strong><em>2번의 과정에 의해 block된 Selector를 강제로 동작 시켜주는 것이 Selector.wakeup()이다.</em></strong></p>
+<ol start="3">
+<li>Selector.selectedKeys()는 이벤트가 발생한 키, 즉 SelectionKey 를 return 해 준다. Reactor는 이 SelectionKey를 보고 어떤 handler로 넘겨줄 지를 결정한다.</li>
+<li>SelectionKey : Selector와 Channel간의 관계를 표현해주는 객체이다. Selector가 제공한 SelectionKey를 이용해 Reactor는 채널에서 발생하는 I/O 이벤트로 수행할 작업을 선택할 수 있다. ServerSocketChannel에 selector를 등록하면 key를 준다. 이 key가 SelectionKey 이다.</li>
+</ol>
+<h1 id="리뷰"><a href="#리뷰" class="headerlink" title="리뷰"></a>리뷰</h1><h2 id="Part-1-NIO를-위한-객체-생성-NiochatServer-class"><a href="#Part-1-NIO를-위한-객체-생성-NiochatServer-class" class="headerlink" title="Part 1. NIO를 위한 객체 생성 (NiochatServer.class)"></a>Part 1. NIO를 위한 객체 생성 (NiochatServer.class)</h2><div style="text-align : center;">
+<img src="/images/NIO-Chat/5.png" width="600" alt="NIO를 위한 객체 생성 (NiochatServer.class)"/>
+</div>
+
+<p>13 : Runnable을 implements하고 있음을 유의한다.<br>17 : Server의 SocketChannel을 생성한다. 클라이언트의 accept를 수립하는 역할을 한다.<br>18 : 생성된 모든 채널 정보와 각 채널의 이벤트 정보를 담고 있는 역할을 한다.<br>28<del>29 : Selector와 SecverSocketChannel 객체는 open() 메서드로 초기화 한다.<br>31</del>33 : ServerSocketChannel의 메서드는 다음과 같다.</p>
+<ul>
+<li>socket() : ServerSocket을 반환한다. 이후 네트워크에 IP,PORT를 바인딩한다.</li>
+<li>configureBlocking() : true인 경우 Blocking, false인 경우 Non-Blocking</li>
+<li>register() : Selector(선택자)에 서버의 채널정보(Key)를 등록하고 OP_ACCEPT 이벤트를 발생한다.</li>
+</ul>
+<h2 id="Part-2-이벤트-반응-Reactor-NiochatServer-class"><a href="#Part-2-이벤트-반응-Reactor-NiochatServer-class" class="headerlink" title="Part 2. 이벤트 반응(Reactor) (NiochatServer.class)"></a>Part 2. 이벤트 반응(Reactor) (NiochatServer.class)</h2><div style="text-align : center;">
+<img src="/images/NIO-Chat/6.png" width="600" alt="이벤트 반응(Reactor) (NiochatServer.class)"/>
+</div>
+
+<p>45 : 저장된 Keys 중 이벤트(Connect, Accept, Read, Write)가 감지될 때 까지 Block상태로 대기한다. 이벤트가 발생할 경우 이에 반응해 해당하는 클라이언트(Key)를 SelectionKey객체로 반환한다.<br>51 : Selector와 SelectionKey를 인자로 받아 이벤트를 처리 작업을 진행한다. (EventManager내부로직은 아래서 다시 설명.)<br>53 : 인자로 받은 SelectionKey중 OP_ACCEPT와 같은 이벤트인 경우 해당 클라이언트(Key)를 accept 하기 위한 메서드 이다.<br>55 : 인자로 받은 SelectionKey중 OP_ACCEPT를 제외한 다른 이벤트인 경우 subThread를 생성해 read/write 또는 disConnect여부를 처리 후 종료한다.</p>
+<ul>
+<li>참고 - SelectionKey에서 제공 중인 이벤트 상수는 다음과 같다.<div style="text-align : center;">
+<img src="/images/NIO-Chat/7.png" width="600" alt="SelectionKey에서 제공 중인 이벤트 상수"/>
+</div>
+
+</li>
+</ul>
+<h2 id="Part-3-이벤트-처리-EventManager-class-Thread"><a href="#Part-3-이벤트-처리-EventManager-class-Thread" class="headerlink" title="Part 3. 이벤트 처리 (EventManager.class Thread)"></a>Part 3. 이벤트 처리 (EventManager.class Thread)</h2><div style="text-align : center;">
+<img src="/images/NIO-Chat/8.png" width="600" alt="이벤트 처리 (EventManager.class Thread)"/>
+</div>
+
+<p>19 : EventManager객체는 Runnable을 implement 하고 있음을 유의한다.<br>24<del>26 : Selector.select()에 의해 반응한 이벤트정보가 담긴 SelectionKey를 인자로 받는다.<br>33</del>50 : 인자로 받은 SelectionKey에 담긴 이벤트가 무엇인지 key.interestOps() 함수로 반환 받으며, switch-case를 통해 어떤 이벤트인지 판단한다. 본 채팅 프로그램에서 구현한 이벤트는 송/수신 부분이다.</p>
+<p>서버는 해당하는 키채널에게 수신받을 준비가 되었음. READ =&gt; SelectionKey.OP_READ<br>서버는 해당하는 키채널에게 송신할 준비가 되었음. WRITE =&gt; SelectionKey.OP_WRITE<br><strong><em>Selector가 처리할 수 있는 이벤트 요소가 무엇이 있는지는 이미지(SelectionKey에서 제공 중인 이벤트 상수)를 참고.</em></strong></p>
+<h2 id="Part-4-Function-1"><a href="#Part-4-Function-1" class="headerlink" title="Part 4. (Function 1)"></a>Part 4. (Function 1)</h2><ul>
+<li>OP_ACCEPT 이벤트 기능 구현, EventManager.handleAccept(Selection key)<div style="text-align : center;">
+<img src="/images/NIO-Chat/9.png" width="600" alt="OP_ACCEPT 이벤트 기능 구현, EventManager.handleAccept(Selection key)"/>
+</div>
+
+</li>
+</ul>
+<p>54 : (그림6 52번 라인 참고) Selector가 OP_ACCEPT이벤트를 감지할 경우 대상 키를 반환받아 SelectionKey.accept()로 서버에 접속을 수용한다. 이 경우 Selector내부에 해당 클라이언트의 네트워크 정보가 담긴 Key 채널을 저장한다.<br>58 : 해당 클라이언트의 이벤트처리 동작을 non-blocking으로 수행한다. true인 경우 blocking으로 수행한다.<br>59 : Selector에 최종적으로 클라이언트 채널을 등록하며 해당 채널의 이벤트 상태를 OP_READ로 대기한다. =&gt; OP_READ로 지정하여 클라이언트가 connect하면서 보낸 메시지를 읽는다.</p>
+<h2 id="Part-5-Function-2"><a href="#Part-5-Function-2" class="headerlink" title="Part 5. (Function 2)"></a>Part 5. (Function 2)</h2><ul>
+<li>OP_READ 이벤트 기능 구현, EventManager.handleRead(Selection key)<div style="text-align : center;">
+<img src="/images/NIO-Chat/10.png" width="600" alt="OP_READ 이벤트 기능 구현, EventManager.handleRead(Selection key)"/>
+</div>
+
+</li>
+</ul>
+<p>70 : 이벤트 변경감지된 클라이언트키(Selection key)를 인자로 key.channel() 메서드를 통해 해당 키의 네트워크정보가 담긴 채널 객체 SocketChannel을 생성한다.<br>74 : 클라이언트가 보낸 데이터는 바이트버퍼로 이뤄져 있으며, SocketChannel.read(ByteBuffer dst)에서 매개변수로 지정된 ByteBuffer 값 만큼 단위로 끊어 읽는다. 읽어낸 값은 StringBuilder에 의해 대용량문자데이터를 입력받아 초기화한다.<br>84 : 클라이언트가 종료하여 클라이언트의 Write Thread가 0byte를 보낸다면 서버는 데이터를 “exit:”로 초기화하여 EventManager.strAPI() 함수에서 처리한다.</p>
+<h2 id="Part-6-Function-3"><a href="#Part-6-Function-3" class="headerlink" title="Part 6. (Function 3)"></a>Part 6. (Function 3)</h2><ul>
+<li>OP_WRITE 이벤트 기능 구현, EventManager.handleWrite(Selection key)<div style="text-align : center;">
+<img src="/images/NIO-Chat/11.png" width="600" alt="OP_WRITE 이벤트 기능 구현, EventManager.handleWrite(Selection key)"/>
+</div>
+
+</li>
+</ul>
+<p>97 : 해당 클라이언트 Key에 부착된 ClientOption을 반환받는다. 클라이언트의 전반적인 기능과 정보가 담겨있고 이벤트 진행여부를 스위치 하기위한 정보가 담겨있다.<br>99 : ClientOption에 1:1 대화를 위한 상대방 클라이언트 Key가 저장되어 있는지 파악한다. 해당 if구문으로 해당 클라이언트가 브로드캐스트상태인지 유니캐스트상태인지 구분하고 있다.<br>100 : 신규로 채팅방에 접속한 클라이언트인지 여부를 구분한다. 신규 유저인 경우 서버에서 채팅방 참여중인 클라이언트 모두에게 join: 기능의 메시지를 뿌려 소개한다.<br>105 - 116 : 현재 채팅방에 접속중인 클라이언트 닉네임을 ‘,’콤마 단위로 구분해 문자열로 저장한다.<br>118 - 119 : 서버가 클라이언트에게 보내는 내용은 다음과 같다.<br>join:{클라이언트닉네임}:{ClientNickname1,ClientNickname2,ClientNickname3, . . .}<br>이후 해당 내용을 브로드캐스팅한다.<br>121 : 만일 신규접속자가 아닌 경우 클라이언트 메시지를 read하여 브로드캐스팅한다.<br>125 : 99번 라인에서 1:1대화를 위한 상대방 클라이언트 Key가 Null이 아니라면 클라이언트와 1:1 대화를 요구하는 파트너의 키를 인자로 유니캐스트를 진행한다.<br>134 : Selector의 이벤트 상태를 OP_READ로 변경하여 클라이언트로부터 데이터를 받을 준비를 한다.<br>135 : Selector.select()에서 블로킹 상태를 깨워 로직을 진행한다.</p>
+<h2 id="Part-7-Function-4"><a href="#Part-7-Function-4" class="headerlink" title="Part 7. (Function 4)"></a>Part 7. (Function 4)</h2><ul>
+<li>브로드캐스팅 동작 구현, EventManager.broadcast(String msg)<div style="text-align : center;">
+<img src="/images/NIO-Chat/12.png" width="600" alt="브로드캐스팅 동작 구현, EventManager.broadcast(String msg)"/>
+</div>
+
+</li>
+</ul>
+<p>138 : Selector.keys()를 통해 등록된 채널(Key)를 반환한다.<br>139 : 해당 채널이 유효한지 판단 하는 key.isValid()와 네트워크 정보가 담긴 channel()를 반환해 유효하며 네트워크 정보가 담겨 있는지 여부를 파악 후 SocketChannel의 인스턴스를 반환한다.<br>142 : SocketChannel.write()는 서버가 해당 소켓 채널에 메시지를 보낸다.</p>
+<h2 id="Part-8-Function-5"><a href="#Part-8-Function-5" class="headerlink" title="Part 8. (Function 5)"></a>Part 8. (Function 5)</h2><ul>
+<li>유니캐스팅 동작 구현, EventManager.unicast(String msg, SelectionKey partnerKey)<div style="text-align : center;">
+<img src="/images/NIO-Chat/13.png" width="600" alt="유니캐스팅 동작 구현, EventManager.unicast(String msg, SelectionKey partnerKey)"/>
+</div>
+
+</li>
+</ul>
+<p>155 : unicast()의 두 번째 매개변수인 partnerKey는 클라이언트간 1:1 대화를 위한 상대방 키 정보이다.<br>158~163 : 두 채널 정보가 담긴 whisperUsers 배열을 for-each 루틴으로 두 채널에 메시지를 보내는 과정이다.</p>
+<h2 id="Part-9-Function-6"><a href="#Part-9-Function-6" class="headerlink" title="Part 9. (Function 6)"></a>Part 9. (Function 6)</h2><ul>
+<li>서버와 클라이언트간 약속된 명령어 EventManager.strAPI(String data, clientKey)<div style="text-align : center;">
+<img src="/images/NIO-Chat/14.png" width="600" alt="서버와 클라이언트간 약속된 명령어 EventManager.strAPI(String data, clientKey)"/>
+</div>
+
+</li>
+</ul>
+<p>모든 String data값은 split‘:’ 을 통해 분류된다. </p>
+<table>
+<thead>
+<tr>
+<th><strong>APIs</strong></th>
+<th><strong>형식</strong></th>
+<th><strong>기능</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>join:</td>
+<td>join:{user nickname value}</td>
+<td>신규 참여자 임을 서버에 알리며 닉네임을 포함한다.</td>
+</tr>
+<tr>
+<td>message:</td>
+<td>message:{message}</td>
+<td>채팅메시지를 포함한다.</td>
+</tr>
+<tr>
+<td>exit:</td>
+<td>exit:</td>
+<td>클라이언트 채팅 종료</td>
+</tr>
+<tr>
+<td>whisper:</td>
+<td>whisper:{partner nickname value}:{message}</td>
+<td>1:1 채팅을 위해 파트너 닉네임과 메시지를 포함한다.</td>
+</tr>
+<tr>
+<td>envelope:</td>
+<td>envelope:{private key@data}</td>
+<td>AES256 대칭키 암호화 데이터를 전송한다.</td>
+</tr>
+<tr>
+<td>unknown Type</td>
+<td>-</td>
+<td>아무런 타입도 없다면 message: 로 처리한다.</td>
+</tr>
+</tbody></table>
+<h2 id="Part-9-1-API-type-join"><a href="#Part-9-1-API-type-join" class="headerlink" title="Part 9.1 (API type = join)"></a>Part 9.1 (API type = join)</h2><ul>
+<li>join: 의 이벤트 처리<div style="text-align : center;">
+<img src="/images/NIO-Chat/15.png" width="600" alt="join: 의 이벤트 처리"/>
+</div>
+
+</li>
+</ul>
+<p>클라이언트는 connect 요청 시 join: 메시지를 함께 전송한다.<br>해당 클라이언트의 채널은 SelectionKey.attach()에 독점자원인 ClientOption을 초기화하여 해당 클라이언트의 다양한 상황에 따른 스위치 역할을 한다. </p>
+<h2 id="Part-9-2-API-type-message"><a href="#Part-9-2-API-type-message" class="headerlink" title="Part 9.2 (API type = message)"></a>Part 9.2 (API type = message)</h2><ul>
+<li>message: 의 이벤트 처리<div style="text-align : center;">
+<img src="/images/NIO-Chat/16.png" width="600" alt="message: 의 이벤트 처리"/>
+</div>
+
+</li>
+</ul>
+<p>메시지를 split하여 해당 클라이언트의 attacment객체의 ClientOption에 문자열을 할당한다.<br>이후 SelectionKey.interestOps()로 현재 SelectionKey의 이벤트처리 유형을 OP_WRITE로 변경하고 Selector.wakeup()로 block 상태인 Selector.select() 스레드를 동작 시킨다.</p>
+<h2 id="Part-9-3-API-type-exit"><a href="#Part-9-3-API-type-exit" class="headerlink" title="Part 9.3 (API type = exit)"></a>Part 9.3 (API type = exit)</h2><ul>
+<li>exit: 의 이벤트 처리<div style="text-align : center;">
+<img src="/images/NIO-Chat/17.png" width="600" alt="exit: 의 이벤트 처리"/>
+</div>
+
+</li>
+</ul>
+<p>exit인 경우 해당 채널을 닫고 =&gt; SelectionKey.channel().close()<br>해당 내용을 각 클라이언트에게 브로드캐스팅한다. </p>
+<h2 id="Part-9-4-API-type-envelope"><a href="#Part-9-4-API-type-envelope" class="headerlink" title="Part 9.4 (API type = envelope)"></a>Part 9.4 (API type = envelope)</h2><ul>
+<li>envelope: 의 이벤트 처리</li>
+</ul>
+<div style="text-align : center;">
+<img src="/images/NIO-Chat/18.png" width="600" alt="암호화 시퀀스흐름"/>
+</div>
+
+<p>본 어플리케이션에서 암호화는 두단계로 이뤄진다.<br>공유키(Public Key)는 클라이언트와 서버만 알고 있는 암호키 이다.<br>클라이언트는 비밀키(Private Key)를 공유키로 자신을 암호화한다.<br>비밀키는 클라이언트가 작성한 평문(Plain Message)를 암호화한다.</p>
+<div style="text-align : center;">
+<img src="/images/NIO-Chat/19.png" width="600" alt="암호화 시퀀스흐름"/>
+</div>
+
+<p>이후 문자를 조합해 서버로 보낸다. 형식은 다음과 같이.<br>envelope:{공유키로 암호화된 비밀키}@{비밀키로 암호화된 암호문} 의 형식으로 이뤄져 있다.<br>위 이미지는 클라이언트에서 처리하는 암호화 과정이다.</p>
+<h1 id="동작"><a href="#동작" class="headerlink" title="동작"></a>동작</h1><h2 id="1-메시지-암호화-및-송-수신"><a href="#1-메시지-암호화-및-송-수신" class="headerlink" title="1. 메시지 암호화 및 송/수신"></a>1. 메시지 암호화 및 송/수신</h2><div style="text-align : center;">
+<img src="/images/NIO-Chat/20.png" width="600"/>
+</div>
+<div style="text-align : center;">
+<img src="/images/NIO-Chat/21.png" width="600"/>
+</div>
+
+<p>팝업에서 확인 클릭 시 암호화된 메시지로 변환 채팅 내용을 보면 ‘@’가 확인됨. 해당 문자 기준 좌측은 암호화된 키, 우측은 암호화된 문자로 구분함.</p>
+<div style="text-align : center;">
+<img src="/images/NIO-Chat/22.png" width="600"/>
+</div>
+
+<p>클라이언트에서의 암호화 전송 시 로그    </p>
+<div style="text-align : center;">
+<img src="/images/NIO-Chat/23.png" width="600"/>
+</div>
+
+<p>서버에서의 암호화 수신 시 로그. 복호화 정상 확인.</p>
+<h2 id="2-귓속말-1-1-채팅-테스트"><a href="#2-귓속말-1-1-채팅-테스트" class="headerlink" title="2. 귓속말(1:1) 채팅 테스트"></a>2. 귓속말(1:1) 채팅 테스트</h2><div style="text-align : center;">
+<img src="/images/NIO-Chat/24.png" width="600"/>
+</div>
+<div style="text-align : center;">
+<img src="/images/NIO-Chat/26.png" width="600"/>
+</div>
+
+<p>test123이 test3과 test2각각의 사용자에게 메시지를 보냈다.<br>결과, 보낸 대상 외 다른 사용자는 해당 메시지를 확인하지 못하게 된다.</p>
+<h1 id="Report"><a href="#Report" class="headerlink" title="Report"></a>Report</h1><p><strong><em>비동기 방식의 시스템 전망</em></strong><br>간단히 java를 활용해 비동기적인 채팅앱을 만들어 보았다. 느낀점은 다음과 같다.<br>기존 NIO방식은 java의 내부 패키지인 java.NIO에서 제공하고 있었으나, 이러한 비동기적 패턴을 SpringBoot Framwork의 MSA기반이 되는 Project Reactor 에서 채택하여 개별적으로 reactor.netty.tcp ,udp, http와 같은 패키지를 제공함에 따라 비동기방식의 Reactor-Pattern의 채팅을 구현할 수 있게 되었다.<br>중요한 포인트는 Project-Reactor는 SpringBoot MSA환경 최적화된 프레임워크이다. 이에 단순히 java project를 통한 채팅앱이 아닌 reactor.netty 패키지를 활용하기에 적합한 SpringBoot위에서 채팅 서버를 적용할수 있을 뿐더러<br>TCP 외에도 HTTP, UDP 같은 통신프로토콜을 적용한 채팅기능을 구현해 볼 수 있지 않을까?</p>
+<p>기존 Back-End의 MVC 패턴구조에서 마이크로서비스아키텍처가 유행함에 따라 Reactor-Netty 서버는 꼭 알아야할 부분이며, 레퍼런스와 워크숍을 제공하고 있어 스타트가이드라인으로 많은 정보를 쉽게 얻을 수 있다.</p>
+<ul>
+<li><a href="https://projectreactor.io/docs/netty/release/reference/index.html#about-doc">https://projectreactor.io/docs/netty/release/reference/index.html#about-doc</a></li>
+<li><a href="https://violetagg.github.io/reactor-netty-workshop/#_tcp_server_and_client">https://violetagg.github.io/reactor-netty-workshop/#_tcp_server_and_client</a></li>
+</ul>
+<p>reactor-pattern을 이해하기위해 java.NIO를 참조해 간단한 앱을 제작하며 시스템구조와 동작과정을 이해할 수 있게되었다.<br>언젠가, 귀차니즘을 물리치는 날이 온다면,<br>java.NIO가 아닌 reactor.netty 패키지를 활용한 NIO 통신을 다뤄보고 이를 SpringBoot에 적용하여 HTTP와 TCP, UDP 다음의 3가지 통신을 유연하게 풀어내보고 싶다.</p>
+<p>자료를 정리하다보니, 마침 SpringBoot-netty 에서의 채팅을 구현한 우아한리뷰가 있었다. 올려놓고 나중에 봐야지,</p>
+<ul>
+<li><a href="https://woowabros.github.io/experience/2020/06/19/chat-app.html">https://woowabros.github.io/experience/2020/06/19/chat-app.html</a> </li>
+</ul>
 
         </div>
         
@@ -193,7 +435,7 @@
             
             <li><span class="pagination-ellipsis has-text-black-ter">&hellip;</span></li>
             
-            <li><a class="pagination-link has-text-black-ter" href="/page/14/">14</a></li>
+            <li><a class="pagination-link has-text-black-ter" href="/page/15/">15</a></li>
             
         </ul>
     </nav>
@@ -238,7 +480,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            14
+                            15
                         </p>
                     </a>
                 </div>
@@ -250,7 +492,7 @@
                     </p>
                     <a href="/categories">
                         <p class="title has-text-weight-normal">
-                            20
+                            22
                         </p>
                     </a>
                 </div>
@@ -262,7 +504,7 @@
                     </p>
                     <a href="/tags">
                         <p class="title has-text-weight-normal">
-                            26
+                            28
                         </p>
                     </a>
                 </div>
@@ -317,7 +559,7 @@
         <h3 class="menu-label">
             태그 클라우드
         </h3>
-        <a href="/tags/Bluetooth/" style="font-size: 12.5px;">Bluetooth</a> <a href="/tags/Carla/" style="font-size: 10px;">Carla</a> <a href="/tags/Carla-0-9-7/" style="font-size: 10px;">Carla_0.9.7</a> <a href="/tags/Entity/" style="font-size: 10px;">Entity</a> <a href="/tags/GCP/" style="font-size: 17.5px;">GCP</a> <a href="/tags/Hibernate/" style="font-size: 12.5px;">Hibernate</a> <a href="/tags/Https/" style="font-size: 12.5px;">Https</a> <a href="/tags/JPA/" style="font-size: 15px;">JPA</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/ORM/" style="font-size: 12.5px;">ORM</a> <a href="/tags/SSH/" style="font-size: 12.5px;">SSH</a> <a href="/tags/SSL/" style="font-size: 12.5px;">SSL</a> <a href="/tags/Simulator/" style="font-size: 10px;">Simulator</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/Springboot/" style="font-size: 15px;">Springboot</a> <a href="/tags/deploy/" style="font-size: 17.5px;">deploy</a> <a href="/tags/gradle/" style="font-size: 12.5px;">gradle</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 17.5px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 12.5px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 12.5px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
+        <a href="/tags/Bluetooth/" style="font-size: 12.5px;">Bluetooth</a> <a href="/tags/Carla/" style="font-size: 10px;">Carla</a> <a href="/tags/Carla-0-9-7/" style="font-size: 10px;">Carla_0.9.7</a> <a href="/tags/Entity/" style="font-size: 10px;">Entity</a> <a href="/tags/GCP/" style="font-size: 17.5px;">GCP</a> <a href="/tags/Hibernate/" style="font-size: 12.5px;">Hibernate</a> <a href="/tags/Https/" style="font-size: 12.5px;">Https</a> <a href="/tags/JPA/" style="font-size: 15px;">JPA</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/ORM/" style="font-size: 12.5px;">ORM</a> <a href="/tags/SSH/" style="font-size: 12.5px;">SSH</a> <a href="/tags/SSL/" style="font-size: 12.5px;">SSL</a> <a href="/tags/Simulator/" style="font-size: 10px;">Simulator</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/Springboot/" style="font-size: 15px;">Springboot</a> <a href="/tags/chatting/" style="font-size: 10px;">chatting</a> <a href="/tags/deploy/" style="font-size: 17.5px;">deploy</a> <a href="/tags/gradle/" style="font-size: 12.5px;">gradle</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 17.5px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 12.5px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%EC%B1%84%ED%8C%85/" style="font-size: 10px;">채팅</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 12.5px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
     </div>
 </div>
     
@@ -442,6 +684,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/chatting/">
+                        <span class="tag">chatting</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/deploy/">
                         <span class="tag">deploy</span>
                         <span class="tag is-grey">4</span>
@@ -493,6 +742,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/">
                         <span class="tag">저전력</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/%EC%B1%84%ED%8C%85/">
+                        <span class="tag">채팅</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -579,6 +835,22 @@
         <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/6/">
             <span class="level-start">
                 <span class="level-item">6</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/">
+            <span class="level-start">
+                <span class="level-item">Reactor-Pattern</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/java-NIO/">
+            <span class="level-start">
+                <span class="level-item">java.NIO</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">1</span>
@@ -700,6 +972,17 @@
             아카이브
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/03/">
@@ -848,6 +1131,22 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/">
+            <span class="level-start">
+                <span class="level-item">Reactor-Pattern</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/java-NIO/">
+            <span class="level-start">
+                <span class="level-item">java.NIO</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
         <a class="level is-marginless" href="/categories/SpringBoot-JPA/">
             <span class="level-start">
                 <span class="level-item">SpringBoot-JPA</span>
@@ -964,6 +1263,17 @@
             아카이브
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/03/">

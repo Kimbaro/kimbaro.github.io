@@ -136,17 +136,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-09-01T19:43:38.000Z">2019-09-02</time>
+                <time class="level-item has-text-grey" datetime="2019-09-02T14:47:33.000Z">2019-09-02</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Tutorial-Deploy-SpringBoot-Netty/">(Tutorial) Deploy-SpringBoot-Netty</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Tutorial-Deploy-SpringBoot-Netty/4/">4</a>
+                <a class="has-link-grey -link" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/">안드로이드 블루투스</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/BLE-%ED%86%B5%EC%8B%A0/">BLE 통신</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    3분 읽기 (대략 398 단어)
+                    8분 읽기 (대략 1139 단어)
                 </span>
                 
                 
@@ -155,28 +155,54 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/09/02/SpringBoot-Netty%E1%84%89%E1%85%A5%E1%84%87%E1%85%A5-gradle%E1%84%92%E1%85%AA%E1%86%AB%E1%84%80%E1%85%A7%E1%86%BC%E1%84%8B%E1%85%A6%E1%84%89%E1%85%A5-%E1%84%87%E1%85%A2%E1%84%91%E1%85%A9%E1%84%92%E1%85%A1%E1%84%80%E1%85%B54/">SpringBoot Netty서버 gradle 환경에서 배포하기 4</a>
+                <a class="has-link-black-ter" href="/2019/09/02/%E1%84%8B%E1%85%A1%E1%86%AB%E1%84%83%E1%85%B3%E1%84%85%E1%85%A9%E1%84%8B%E1%85%B5%E1%84%83%E1%85%B3-BLE-%E1%84%90%E1%85%A9%E1%86%BC%E1%84%89%E1%85%B5%E1%86%AB/">안드로이드 BLE 통신</a>
             
         </h1>
         <div class="content">
             <blockquote>
-<h1 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h1><p>이전글에서 파일 배포까지 완료되었다 해당 파일을 실행하여 접속해보자</p>
+<h1 id="개요"><a href="#개요" class="headerlink" title="개요"></a>개요</h1><p>구글이 깃에 올려둔 Sample project 중에서 블루투스 BLE의 코드는 API21 이상의 버전과 호완성 문제를 보인다.<br>타겟을 21로 낮추면 되겠지만 앱을 플레이스토어에 배포하기 위해선 정책이 바뀌어 API28(Android Pie)이상을 타겟으로 잡아야한다.<br>이로인한 문제는 다음과 같고 필수적으로 변경시켜야한다.</p>
+<ul>
+<li>BluetoothAdapter 클래스의 stopLeScan 과 startLeScan 을 지원하지 않는다.<br>BluetoothLeScanner 클래스를 사용한 stopScan, startScan 두 메서드를 사용해야한다.<br><img src="/images/Android-BLE/1.png" alt=""></br></li>
+<li>블루투스 통신에 있어서 위치권한과 GPS를 함께 사용한다.<br>갤럭시S8 기기에서 테스트 했었는데, 위치권한 뿐 아니라 GPS가 켜있어야 함을 알 수 있었다.<br><a href="https://stackoverflow.com/questions/33043582/bluetooth-low-energy-startscan-on-android-6-0-does-not-find-devices/33045489#33045489">https://stackoverflow.com/questions/33043582/bluetooth-low-energy-startscan-on-android-6-0-does-not-find-devices/33045489#33045489</a></br>
+
+</li>
+</ul>
+<p>구글이 제공한 기존의 샘플은 다음과 같다.<br><a href="https://github.com/googlesamples/android-BluetoothLeGatt.git">https://github.com/googlesamples/android-BluetoothLeGatt.git</a></p>
+<p>위 문제에 따른 수정본은 다음과 같다.<br><a href="https://github.com/Kimbaro/android-BluetoothLeGatt-API28.git">https://github.com/Kimbaro/android-BluetoothLeGatt-API28.git</a></p>
 </blockquote>
-<h2 id="배포"><a href="#배포" class="headerlink" title="배포"></a>배포</h2><p>스프링서버 배포를 위해선 java가 설치되어 있어야 한다.<br>해당 링크를 참고하여 설치하자 <a href="https://zetawiki.com/wiki/%EC%9A%B0%EB%B6%84%ED%88%AC_JDK_%EC%84%A4%EC%B9%98">리눅스우분투자바설치</a></p>
-<p>저장된 배포파일로 이동하여 다음의 커맨드를 입력한다.<br>로그를 보면 8080 포트로 현재 서버가 실행 중 임을 알리고 있다.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">java -jar 배포파일.jar<br></code></pre></td></tr></table></figure>
-<p><img src="/images/Simple-springboot-tutorial4/1.png" alt=""><br></br><br>접속해보자 자신의 ‘아이피주소:8080’ 형태의 주소로 이뤄져있다.<br><img src="/images/Simple-springboot-tutorial4/2.png" alt=""></p>
-<h2 id="nohup-적용"><a href="#nohup-적용" class="headerlink" title="nohup 적용"></a>nohup 적용</h2><p>ssh 터미널 종료 시 java -jar로 실행된 서버또한 종료되는데 해당 프로세스의 종료를 막기위해 nohup을 활용한다.</p>
-<h3 id="쉘-스크립트-생성-및-실행"><a href="#쉘-스크립트-생성-및-실행" class="headerlink" title="- 쉘 스크립트 생성 및 실행"></a>- 쉘 스크립트 생성 및 실행</h3><p>nohup은 쉘 스크립트 파일을 실행한다. java -jar 명령어를 쉘 스크립트 파일에 입력해야한다.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">vim start-server.sh<br></code></pre></td></tr></table></figure>
-<p>자신의 .jar 배포파일을 입력해주자<br><img src="/images/Simple-springboot-tutorial4/3.png" alt=""></p>
-<p>생성된 쉘 스크립트를 실행한다.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">nohup .&#x2F;start-server.sh<br></code></pre></td></tr></table></figure>
-<p><img src="/images/Simple-springboot-tutorial4/4.png" alt=""></p>
-<p>만일 Permission 문제가 발생한다면 쉘스크립트와 스냅샷 파일의 권한을 변경해보자</p>
-<h3 id="프로세스-동작-확인"><a href="#프로세스-동작-확인" class="headerlink" title="- 프로세스 동작 확인"></a>- 프로세스 동작 확인</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">netstat -lntp | grep 포트번호<br></code></pre></td></tr></table></figure>
-<p><img src="/images/Simple-springboot-tutorial4/5.png" alt=""></p>
-<h3 id="ps"><a href="#ps" class="headerlink" title="- ps"></a>- ps</h3><p>서버단에서의 System.out.println 같은 출력문은 ‘nohup.out’에 로그가 남으니 참고.</p>
+<h1 id="Pre-requisites"><a href="#Pre-requisites" class="headerlink" title="Pre-requisites"></a>Pre-requisites</h1><table>
+<thead>
+<tr>
+<th><strong>이름</strong></th>
+<th><strong>버전</strong></th>
+<th><strong>설명</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Android SDK</td>
+<td>28</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Android Build Tools</td>
+<td>v28.0.3</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<h1 id="리뷰"><a href="#리뷰" class="headerlink" title="리뷰"></a>리뷰</h1><h2 id="변경점-BluetoothLeScanner-관련"><a href="#변경점-BluetoothLeScanner-관련" class="headerlink" title="변경점, BluetoothLeScanner 관련"></a>변경점, BluetoothLeScanner 관련</h2><p>BluetoothAdapter클래스를 대신해 BluetoothLeScanner를 추가</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> LeDeviceListAdapter mLeDeviceListAdapter;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> mScanning;<br>    <span class="hljs-keyword">private</span> Handler mHandler;<br><br>    <span class="hljs-comment">//추가 API21 이상부터 스캔을 위해선 다음의 클래스 사용</span><br>    <span class="hljs-keyword">private</span> BluetoothLeScanner mBLEScanner;<br><br>    <span class="hljs-keyword">private</span> BluetoothAdapter mBluetoothAdapter;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> REQUEST_ENABLE_BT = <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> MY_PERMISSIONS_REQUEST = <span class="hljs-number">2</span>;<br>    <br>    이하내용생략<br>    .<br>    .<br>    .<br></code></pre></td></tr></table></figure>
+
+<p>BluetoothAdapter의 스캔기능은 사용하지 않으나 Adapter 본연의 역할은 수행하고 있다.<br>onCreate()에서 BluetoothManager의 정보를 getAdapter()를 선언하여 BluetoothAdapter에 제공하고 이 블루투스 정보를 BluetoothLeScanner 객체에 전달하고 있다.</p>
+<p>결론으로 전체적인 흐름은 다음과 같다.<br>*<em>BluetoothManager =&gt; BluetoothAdapter =&gt; BluetoothLeScanner =&gt; 스캔기능 수행 *</em></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> BluetoothLeScanner mBLEScanner;<br><span class="hljs-keyword">private</span> BluetoothAdapter mBluetoothAdapter;<br><span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span><span class="hljs-params">(Bundle savedInstanceState)</span> </span>&#123;<br>        .<br>        .<br>        .<br>        위내용생략<br>        <br>        <span class="hljs-keyword">final</span> BluetoothManager bluetoothManager =<br>                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);<br>        mBluetoothAdapter = bluetoothManager.getAdapter();<br><br>        <span class="hljs-comment">// Checks if Bluetooth is supported on the device.</span><br>        <span class="hljs-keyword">if</span> (mBluetoothAdapter == <span class="hljs-keyword">null</span>) &#123;<br>            Toast.makeText(<span class="hljs-keyword">this</span>, R.string.error_bluetooth_not_supported, Toast.LENGTH_SHORT).show();<br>            finish();<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>        <span class="hljs-comment">//추가</span><br>        mBLEScanner = mBluetoothAdapter.getBluetoothLeScanner();<br>        <span class="hljs-comment">// Checks if Bluetooth LE Scanner is available.</span><br>        <span class="hljs-keyword">if</span> (mBLEScanner == <span class="hljs-keyword">null</span>) &#123;<br>            Toast.makeText(<span class="hljs-keyword">this</span>, <span class="hljs-string">"Can not find BLE Scanner"</span>, Toast.LENGTH_SHORT).show();<br>            finish();<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="변경점-BLE통신-콜백-클래스-변경"><a href="#변경점-BLE통신-콜백-클래스-변경" class="headerlink" title="변경점, BLE통신 콜백 클래스 변경"></a>변경점, BLE통신 콜백 클래스 변경</h2><p>BluetoothAdapter의 스캔기능이 지원되지 않으면서 그에따라 BluetoothAdapter.LeScanCallback 또한 사용하지 않는다.<br>LeScanCallback은 interface로 단독적으로 오버라이딩하였으나 BluetoothLeScanner에 사용되는 콜백클래스인 ScanCallback은 Object를 상속받는 abstract 추상객체로 이뤄져있다.<br><img src="/images/Android-BLE/2.png" alt=""></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs java">  <span class="hljs-keyword">private</span> ScanCallback mScanCallback = <span class="hljs-keyword">new</span> ScanCallback() &#123;<br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onScanResult</span><span class="hljs-params">(<span class="hljs-keyword">int</span> callbackType, ScanResult result)</span> </span>&#123;<br>            <span class="hljs-keyword">super</span>.onScanResult(callbackType, result);<br>            processResult(result);<br>        &#125;<br><br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onBatchScanResults</span><span class="hljs-params">(List&lt;ScanResult&gt; results)</span> </span>&#123;<br>            <span class="hljs-keyword">super</span>.onBatchScanResults(results);<br>            <span class="hljs-keyword">for</span> (ScanResult result : results) &#123;<br>                processResult(result);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onScanFailed</span><span class="hljs-params">(<span class="hljs-keyword">int</span> errorCode)</span> </span>&#123;<br>            <span class="hljs-keyword">super</span>.onScanFailed(errorCode);<br>        &#125;<br><br>        <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">processResult</span><span class="hljs-params">(<span class="hljs-keyword">final</span> ScanResult result)</span> </span>&#123;<br>            runOnUiThread(<span class="hljs-keyword">new</span> Runnable() &#123;<br>                <span class="hljs-meta">@Override</span><br>                <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;<br>                    mLeDeviceListAdapter.addDevice(result.getDevice());<br>                    mLeDeviceListAdapter.notifyDataSetChanged();<br>                &#125;<br>            &#125;);<br>        &#125;<br>    &#125;;<br><br>    <span class="hljs-comment">// 사용하지 않음.</span><br><span class="hljs-comment">//    private BluetoothAdapter.LeScanCallback mLeScanCallback =</span><br><span class="hljs-comment">//            new BluetoothAdapter.LeScanCallback() &#123;</span><br><span class="hljs-comment">//</span><br><span class="hljs-comment">//                @Override</span><br><span class="hljs-comment">//                public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) &#123;</span><br><span class="hljs-comment">//                    runOnUiThread(new Runnable() &#123;</span><br><span class="hljs-comment">//                        @Override</span><br><span class="hljs-comment">//                        public void run() &#123;</span><br><span class="hljs-comment">//                            mLeDeviceListAdapter.addDevice(device);</span><br><span class="hljs-comment">//                            mLeDeviceListAdapter.notifyDataSetChanged();</span><br><span class="hljs-comment">//                        &#125;</span><br><span class="hljs-comment">//                    &#125;);</span><br><span class="hljs-comment">//                &#125;</span><br><span class="hljs-comment">//            &#125;;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="추가-GPS의-사용"><a href="#추가-GPS의-사용" class="headerlink" title="추가, GPS의 사용"></a>추가, GPS의 사용</h2><p>블루투스 기능을 사용하기 위해선 위치권한 허용 뿐만 아니라 해당 GPS가 켜있어야한다. 그렇지 않으면 기능사용이 불가하므로 이를 방지한다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//AlertDialog</span><br> <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">alertCheckGPS</span><span class="hljs-params">()</span> </span>&#123;<br>        AlertDialog.Builder builder = <span class="hljs-keyword">new</span> AlertDialog.Builder(<span class="hljs-keyword">this</span>);<br>        builder.setMessage(<span class="hljs-string">"GPS를 허용해 주셔야 앱 이용이 가능합니다."</span>)<br>                .setCancelable(<span class="hljs-keyword">false</span>)<br>                .setPositiveButton(<span class="hljs-string">"GPS 설정"</span>,<br>                        <span class="hljs-keyword">new</span> DialogInterface.OnClickListener() &#123;<br>                            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span><span class="hljs-params">(DialogInterface dialog, <span class="hljs-keyword">int</span> id)</span> </span>&#123;<br>                                moveConfigGPS();<br>                            &#125;<br>                        &#125;)<br>                .setNegativeButton(<span class="hljs-string">"취소"</span>,<br>                        <span class="hljs-keyword">new</span> DialogInterface.OnClickListener() &#123;<br>                            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span><span class="hljs-params">(DialogInterface dialog, <span class="hljs-keyword">int</span> id)</span> </span>&#123;<br>                                dialog.cancel();<br>                                restart();<br>                            &#125;<br>                        &#125;);<br>        AlertDialog alert = builder.create();<br>        alert.show();<br>    &#125;<br><br>    <span class="hljs-comment">// GPS 설정화면으로 이동</span><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">moveConfigGPS</span><span class="hljs-params">()</span> </span>&#123;<br>        Intent gpsOptionsIntent = <span class="hljs-keyword">new</span> Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);<br>        startActivityForResult(gpsOptionsIntent, MY_PERMISSIONS_REQUEST);<br>    &#125;<br>    <br>    <span class="hljs-comment">//재시작</span><br> <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">restart</span><span class="hljs-params">()</span></span>&#123;<br>        Intent i = getBaseContext().getPackageManager().<br>                getLaunchIntentForPackage(getBaseContext().getPackageName());<br>        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);<br>        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);<br>        startActivity(i);<br>    &#125;<br>     <span class="hljs-meta">@Override</span><br>        <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onActivityResult</span><span class="hljs-params">(<span class="hljs-keyword">int</span> requestCode, <span class="hljs-keyword">int</span> resultCode, Intent data)</span> </span>&#123;<br>            <span class="hljs-comment">// User chose not to enable Bluetooth.</span><br>            <span class="hljs-keyword">if</span> (requestCode == REQUEST_ENABLE_BT &amp;&amp; resultCode == Activity.RESULT_CANCELED) &#123;<br>                finish();<br>                <span class="hljs-keyword">return</span>;<br>            &#125;<br>            <span class="hljs-keyword">if</span> (requestCode == MY_PERMISSIONS_REQUEST) &#123;<br>                <span class="hljs-keyword">if</span> (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) &#123;<br>                    Toast.makeText(getApplicationContext(), <span class="hljs-string">"GPS가 꺼져있습니다."</span>, Toast.LENGTH_LONG).show();<br>                    <span class="hljs-comment">//앱 재실행</span><br>                    restart();<br>                &#125;<br>            &#125;<br>            <span class="hljs-keyword">super</span>.onActivityResult(requestCode, resultCode, data);<br>        &#125;<br><span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span><span class="hljs-params">(Bundle savedInstanceState)</span> </span>&#123;<br>        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);<br>        getActionBar().setTitle(R.string.title_devices);<br><br>        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);<br><br>    <span class="hljs-comment">//버전체크</span><br>        <span class="hljs-keyword">if</span> (Build.VERSION.SDK_INT &gt;= <span class="hljs-number">23</span> &amp;&amp; (ContextCompat.checkSelfPermission(<span class="hljs-keyword">this</span>, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) || (ContextCompat.checkSelfPermission(<span class="hljs-keyword">this</span>, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) &#123;<br>            ActivityCompat.requestPermissions(<span class="hljs-keyword">this</span>,<br>                    <span class="hljs-keyword">new</span> String[]&#123;Manifest.permission.ACCESS_FINE_LOCATION,<br>                            Manifest.permission.ACCESS_COARSE_LOCATION&#125;, MY_PERMISSIONS_REQUEST);<br>        &#125;<br>        <span class="hljs-comment">//GPS 설정여부</span><br>        <span class="hljs-keyword">if</span>(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))&#123;<br>            alertCheckGPS();<br>        &#125;<br>        <br>        이하내용생략<br>            .<br>            .<br>            .<br></code></pre></td></tr></table></figure>
+
+<h2 id="마무리"><a href="#마무리" class="headerlink" title="마무리"></a>마무리</h2><p>안드로이드 API23을 타겟으로 앱 개발했다가 큰 낭패를 보았다. 막상 만들꺼 다 만들어놓고 배포하자니 API28이상만 배포 가능하다고하니..<br>삽질을 많이 해버렸다.</p>
 <hr/>
 <hr/>
 <hr/>
@@ -219,7 +245,7 @@
             
             <li><span class="pagination-ellipsis has-text-black-ter">&hellip;</span></li>
             
-            <li><a class="pagination-link has-text-black-ter" href="/page/14/">14</a></li>
+            <li><a class="pagination-link has-text-black-ter" href="/page/15/">15</a></li>
             
         </ul>
     </nav>
@@ -264,7 +290,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            14
+                            15
                         </p>
                     </a>
                 </div>
@@ -276,7 +302,7 @@
                     </p>
                     <a href="/categories">
                         <p class="title has-text-weight-normal">
-                            20
+                            22
                         </p>
                     </a>
                 </div>
@@ -288,7 +314,7 @@
                     </p>
                     <a href="/tags">
                         <p class="title has-text-weight-normal">
-                            26
+                            28
                         </p>
                     </a>
                 </div>
@@ -343,7 +369,7 @@
         <h3 class="menu-label">
             태그 클라우드
         </h3>
-        <a href="/tags/Bluetooth/" style="font-size: 12.5px;">Bluetooth</a> <a href="/tags/Carla/" style="font-size: 10px;">Carla</a> <a href="/tags/Carla-0-9-7/" style="font-size: 10px;">Carla_0.9.7</a> <a href="/tags/Entity/" style="font-size: 10px;">Entity</a> <a href="/tags/GCP/" style="font-size: 17.5px;">GCP</a> <a href="/tags/Hibernate/" style="font-size: 12.5px;">Hibernate</a> <a href="/tags/Https/" style="font-size: 12.5px;">Https</a> <a href="/tags/JPA/" style="font-size: 15px;">JPA</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/ORM/" style="font-size: 12.5px;">ORM</a> <a href="/tags/SSH/" style="font-size: 12.5px;">SSH</a> <a href="/tags/SSL/" style="font-size: 12.5px;">SSL</a> <a href="/tags/Simulator/" style="font-size: 10px;">Simulator</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/Springboot/" style="font-size: 15px;">Springboot</a> <a href="/tags/deploy/" style="font-size: 17.5px;">deploy</a> <a href="/tags/gradle/" style="font-size: 12.5px;">gradle</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 17.5px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 12.5px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 12.5px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
+        <a href="/tags/Bluetooth/" style="font-size: 12.5px;">Bluetooth</a> <a href="/tags/Carla/" style="font-size: 10px;">Carla</a> <a href="/tags/Carla-0-9-7/" style="font-size: 10px;">Carla_0.9.7</a> <a href="/tags/Entity/" style="font-size: 10px;">Entity</a> <a href="/tags/GCP/" style="font-size: 17.5px;">GCP</a> <a href="/tags/Hibernate/" style="font-size: 12.5px;">Hibernate</a> <a href="/tags/Https/" style="font-size: 12.5px;">Https</a> <a href="/tags/JPA/" style="font-size: 15px;">JPA</a> <a href="/tags/Lambda/" style="font-size: 10px;">Lambda</a> <a href="/tags/ORM/" style="font-size: 12.5px;">ORM</a> <a href="/tags/SSH/" style="font-size: 12.5px;">SSH</a> <a href="/tags/SSL/" style="font-size: 12.5px;">SSL</a> <a href="/tags/Simulator/" style="font-size: 10px;">Simulator</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/SpringBoot/" style="font-size: 20px;">SpringBoot</a> <a href="/tags/Springboot/" style="font-size: 15px;">Springboot</a> <a href="/tags/chatting/" style="font-size: 10px;">chatting</a> <a href="/tags/deploy/" style="font-size: 17.5px;">deploy</a> <a href="/tags/gradle/" style="font-size: 12.5px;">gradle</a> <a href="/tags/%EB%B0%B0%ED%8F%AC/" style="font-size: 17.5px;">배포</a> <a href="/tags/%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4/" style="font-size: 12.5px;">블루투스</a> <a href="/tags/%EC%86%8C%EC%BC%93/" style="font-size: 10px;">소켓</a> <a href="/tags/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/" style="font-size: 20px;">스프링부트</a> <a href="/tags/%EC%9E%98-%EC%95%8C%EB%A0%A4%EC%A7%84-%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">잘 알려진 포트</a> <a href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/" style="font-size: 10px;">저전력</a> <a href="/tags/%EC%B1%84%ED%8C%85/" style="font-size: 10px;">채팅</a> <a href="/tags/%ED%86%B5%EC%8B%A0/" style="font-size: 12.5px;">통신</a> <a href="/tags/%ED%8F%AC%ED%8A%B8/" style="font-size: 10px;">포트</a>
     </div>
 </div>
     
@@ -468,6 +494,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/chatting/">
+                        <span class="tag">chatting</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/deploy/">
                         <span class="tag">deploy</span>
                         <span class="tag is-grey">4</span>
@@ -519,6 +552,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/%EC%A0%80%EC%A0%84%EB%A0%A5/">
                         <span class="tag">저전력</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/%EC%B1%84%ED%8C%85/">
+                        <span class="tag">채팅</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -605,6 +645,22 @@
         <a class="level is-marginless" href="/categories/Tutorial-Deploy-SpringBoot-Netty/6/">
             <span class="level-start">
                 <span class="level-item">6</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/">
+            <span class="level-start">
+                <span class="level-item">Reactor-Pattern</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/java-NIO/">
+            <span class="level-start">
+                <span class="level-item">java.NIO</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">1</span>
@@ -726,6 +782,17 @@
             아카이브
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/03/">
@@ -874,6 +941,22 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/">
+            <span class="level-start">
+                <span class="level-item">Reactor-Pattern</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Reactor-Pattern/java-NIO/">
+            <span class="level-start">
+                <span class="level-item">java.NIO</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
         <a class="level is-marginless" href="/categories/SpringBoot-JPA/">
             <span class="level-start">
                 <span class="level-item">SpringBoot-JPA</span>
@@ -990,6 +1073,17 @@
             아카이브
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/11/">
+                <span class="level-start">
+                    <span class="level-item">11월 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/03/">
