@@ -230,7 +230,7 @@
 <img src="/images/NIO-Chat/5.png" width="600" alt="NIO를 위한 객체 생성 (NiochatServer.class)"/>
 </div>
 
-<p>13 : Runnable을 implements하고 있음을 유의한다.<br>17 : Server의 SocketChannel을 생성한다. 클라이언트의 accept를 수립하는 역할을 한다.<br>18 : 생성된 모든 채널 정보와 각 채널의 이벤트 정보를 담고 있는 역할을 한다.<br>28<del>29 : Selector와 SecverSocketChannel 객체는 open() 메서드로 초기화 한다.<br>31</del>33 : ServerSocketChannel의 메서드는 다음과 같다.</p>
+<p>13 : Runnable을 implements하고 있음을 유의한다.<br>17 : Server의 SocketChannel을 생성한다. 클라이언트의 accept를 수립하는 역할을 한다.<br>18 : 생성된 모든 채널 정보와 각 채널의 이벤트 정보를 담고 있는 역할을 한다.<br>28 - 29 : Selector와 SecverSocketChannel 객체는 open() 메서드로 초기화 한다.<br>31 - 33 : ServerSocketChannel의 메서드는 다음과 같다.</p>
 <ul>
 <li>socket() : ServerSocket을 반환한다. 이후 네트워크에 IP,PORT를 바인딩한다.</li>
 <li>configureBlocking() : true인 경우 Blocking, false인 경우 Non-Blocking</li>
@@ -252,7 +252,7 @@
 <img src="/images/NIO-Chat/8.png" width="600" alt="이벤트 처리 (EventManager.class Thread)"/>
 </div>
 
-<p>19 : EventManager객체는 Runnable을 implement 하고 있음을 유의한다.<br>24<del>26 : Selector.select()에 의해 반응한 이벤트정보가 담긴 SelectionKey를 인자로 받는다.<br>33</del>50 : 인자로 받은 SelectionKey에 담긴 이벤트가 무엇인지 key.interestOps() 함수로 반환 받으며, switch-case를 통해 어떤 이벤트인지 판단한다. 본 채팅 프로그램에서 구현한 이벤트는 송/수신 부분이다.</p>
+<p>19 : EventManager객체는 Runnable을 implement 하고 있음을 유의한다.<br>24 - 26 : Selector.select()에 의해 반응한 이벤트정보가 담긴 SelectionKey를 인자로 받는다.<br>33 - 50 : 인자로 받은 SelectionKey에 담긴 이벤트가 무엇인지 key.interestOps() 함수로 반환 받으며, switch-case를 통해 어떤 이벤트인지 판단한다. 본 채팅 프로그램에서 구현한 이벤트는 송/수신 부분이다.</p>
 <p>서버는 해당하는 키채널에게 수신받을 준비가 되었음. READ =&gt; SelectionKey.OP_READ<br>서버는 해당하는 키채널에게 송신할 준비가 되었음. WRITE =&gt; SelectionKey.OP_WRITE<br><strong><em>Selector가 처리할 수 있는 이벤트 요소가 무엇이 있는지는 이미지(SelectionKey에서 제공 중인 이벤트 상수)를 참고.</em></strong></p>
 <h2 id="Part-4-Function-1"><a href="#Part-4-Function-1" class="headerlink" title="Part 4. (Function 1)"></a>Part 4. (Function 1)</h2><ul>
 <li>OP_ACCEPT 이벤트 기능 구현, EventManager.handleAccept(Selection key)<div style="text-align : center;">
@@ -293,7 +293,7 @@
 
 </li>
 </ul>
-<p>155 : unicast()의 두 번째 매개변수인 partnerKey는 클라이언트간 1:1 대화를 위한 상대방 키 정보이다.<br>158~163 : 두 채널 정보가 담긴 whisperUsers 배열을 for-each 루틴으로 두 채널에 메시지를 보내는 과정이다.</p>
+<p>155 : unicast()의 두 번째 매개변수인 partnerKey는 클라이언트간 1:1 대화를 위한 상대방 키 정보이다.<br>158 - 163 : 두 채널 정보가 담긴 whisperUsers 배열을 for-each 루틴으로 두 채널에 메시지를 보내는 과정이다.</p>
 <h2 id="Part-9-Function-6"><a href="#Part-9-Function-6" class="headerlink" title="Part 9. (Function 6)"></a>Part 9. (Function 6)</h2><ul>
 <li>서버와 클라이언트간 약속된 명령어 EventManager.strAPI(String data, clientKey)<div style="text-align : center;">
 <img src="/images/NIO-Chat/14.png" width="600" alt="서버와 클라이언트간 약속된 명령어 EventManager.strAPI(String data, clientKey)"/>
@@ -1471,7 +1471,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 
-<a id="back-to-top" title="Zurück nach oben" href="javascript:;">
+<a id="back-to-top" title="Back to Top" href="javascript:;">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>
