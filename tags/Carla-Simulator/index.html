@@ -201,8 +201,8 @@
 </blockquote>
 <h2 id="들어가기-앞서"><a href="#들어가기-앞서" class="headerlink" title="들어가기 앞서"></a>들어가기 앞서</h2><p><a href="https://carla.readthedocs.io/en/0.9.9/tuto_A_add_map/" title="카라 도큐먼트 맵 생성">Carla Document</a>에 신규 맵 생성에 관한 내용이 삭제/변경됨에 따라 RoadRunner를 통한 생성 방법만 명시하고 있어 기존 신규 맵 생성에 관한 내용을 공유함.</p>
 <ul>
-<li><a href="/images/Carla-simulator/FBX-적용.pdf">OpenDRIVE 적용</a></li>
-<li><a href="/images/Carla-simulator/OpenDRIVE-적용.pdf">FBX 적용</a></li>
+<li><a href="/images/Carla-simulator/OpenDRIVE-적용.pdf">OpenDRIVE 적용</a></li>
+<li><a href="/images/Carla-simulator/FBX-적용.pdf">FBX 적용</a></li>
 </ul>
 <h1 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h1><h2 id="과제내용"><a href="#과제내용" class="headerlink" title="과제내용"></a>과제내용</h2><p>최근 자율주행을 위한 기술개발 과정에서 실세계의 다양한 학습데이터를 활용한 딥러닝 기술이 활발히 이용되고 있다. 그러나 자율주행 알고리즘의 성능에 핵심적인 역할을 하는 날씨, 도로환경, 교통정보 등의 다양하게 변화하는 상황을 반영하기 위한 학습데이터 수집 과정은 다양한 시공간적 한계가 발생하게 된다.<br>또한 학습 데이터 수집을 위한 Camera, Lidar, GPS 등 고성능의 센서도 함께 요구되며 이에 따른 고비용의 센서의 활용 측면에서도 고려하지 않을 수 없다.<br>다양한 상황을 반영하는 학습데이터 수집에 있어서 이러한 과정들은 엄청난 비용 및 시간이 소요되는 문제가 발생할 뿐더러 실세계에서 다양한 시나리오 속 자율주행 차량의 학습 데이터 수집 과정에서도 주행 중의 안정적인 측면 또한 고려해야 한다. </p>
 <p>이에 본 연구에서는 기존의 고정밀 공간정보를 이용하여 실세계를 모사한 가상환경 기반의 자율주행 시뮬레이션 시스템을 설계 및 구현하고자 한다.<br>개발되는 시스템은 시공간적 한계를 극복하고 비용 및 시간 효율적으로 다양한 상황의 자율주행을 위한 학습데이터를 수집할 수 있을 것으로 기대된다.<br>구체적으로 가상환경은 브이월드의 3차원 공간정보와 국토지리정보원 정밀도로지도를 융합하여 구축하며, 자율주행 시뮬레이션 시스템은 <a href="http://proceedings.mlr.press/v78/dosovitskiy17a/dosovitskiy17a.pdf" title="CARLA, 2017, CARLA: An Open Urban Driving Simulator">CARLA</a>의 오픈소스를 확장하여 설계 및 구현한다.<br>이를 기반으로 학습데이터 수집을 위한 차량인 Data Collection Vehicle(DCV)를 타겟으로 컴퓨터 스스로 목적지를 판별하는 목적지자율주행이나 클라이언트가 선정한 임의 목적지를 주행하는 목적지임의주행을 제공하며 주행 차량의 운전 성향을 설정하여 공격적이거나 방어적인 운전을 수행하고 차량을 추월하거나 신호를 무시하는 행동을 취할 수 있다.<br>데이터 수집을 위한 센서 활용에 있어서 가상환경의 특성상 탈부착이나 고장의 발생 등 여러 고려해야할 상황으로 부터 자유롭다. 실세계 주행환경을 반영하여 시공간적 제약을 받는 날씨, 도로환경, 교통정보를 자유롭게 반영할 수도 있다.<br>학습데이터 수집 뿐만 아니라 실세계 신호체계를 반영하여 교통정보를 모니터링도 가능하다. 본 연구에서는 실세계 정밀도로지도를 반영한 가상환경에서의 데이터 수집과 차량 주행을 수행하는 시스템을 설계하고 구현한 내용을 소개한다</p>
@@ -1608,7 +1608,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 
-<a id="back-to-top" title="Back to Top" href="javascript:;">
+<a id="back-to-top" title="Zurück nach oben" href="javascript:;">
     <i class="fas fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>
